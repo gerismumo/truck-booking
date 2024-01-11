@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 const DashHeader = () => {
   return (
-    <nav className="flex flex-col bg-white fixed w-[100%] py-[20px] px-[20px] shadow-md">
+    <nav className="flex flex-col bg-white fixed w-[100%] py-[20px] px-[20px] shadow-md z-[1]">
         <div className="flex flex-row justify-between items-center">
             <div className="flex items-center">
                 <h2 className='text-[20px] font-[700]'>Truck Dashboard</h2>

@@ -6,7 +6,7 @@ const Dashboard = () => {
   return (
     <>
     <DashHeader />
-    <div className="absolute mt-[90px]">
+    <div className="absolute mt-[90px] flex flex-col w-[100%]">
         <Outlet />
     </div>
     </>
