@@ -10,7 +10,7 @@ const DashHeader = () => {
             </div>
             <div className="flex justify-center gap-[50px] items-center">
                 <Link to='' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>Home</Link>
-                <Link to='' 
+                <Link to='stations' 
                 className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
                     Add Route
                 </Link>
