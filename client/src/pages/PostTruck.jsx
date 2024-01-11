@@ -79,6 +79,7 @@ const PostTruck = () => {
             placeholder=' No. Plate' 
             name='numberPlate'
             value={formData.numberPlate}
+            onChange={(e) => setFormData({...formData, numberPlate:e.target.value})}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <label htmlFor="truckImage" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Image:</label>
@@ -86,6 +87,7 @@ const PostTruck = () => {
             name="truckImage" 
             id="truckImage" 
             value={formData.truckImage}
+            onChange={(e) => setFormData({...formData, truckImage: e.target.value})}
              className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <label htmlFor="driverName" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Driver name:</label>
@@ -93,6 +95,7 @@ const PostTruck = () => {
             placeholder='John Doe'
             name='driverName'
             value={formData.driverName}
+            onChange={(e) => setFormData({...formData, driverName: e.target.value})}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
              />
             <label htmlFor="driverLicense" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Driver License:</label>
@@ -102,6 +105,7 @@ const PostTruck = () => {
             min={0}
             placeholder='License no.'
             value={formData.driverLicense}
+            onChange={(e) => setFormData({...formData, driverLicense: e.target.value})}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <label htmlFor="nationalId" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Identity:</label>
@@ -110,6 +114,7 @@ const PostTruck = () => {
             placeholder='National Identity no.'
             name='nationalId'
             value={formData.nationalId}
+            onChange={(e) => setFormData({...formData, nationalId: e.target.value})}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <label htmlFor="route" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Route</label>
@@ -118,6 +123,7 @@ const PostTruck = () => {
                     <label htmlFor="from" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>From:</label>
                     <select name="startRoute" id="startRoute"
                     value={formData.startRoute}
+                    onChange={(e) => setFormData({...formData, startRoute: e.target.value})}
                     className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                     >
                         {townsRoutes.map((town) => (
@@ -129,6 +135,7 @@ const PostTruck = () => {
                     <label htmlFor="from" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>To:</label>
                     <select name="endRoute" id="endRoute"
                     value={formData.endRoute}
+                    onChange={(e) => setFormData({...formData, endRoute: e.target.value})}
                     className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                     >
                         {townsRoutes.toReversed().map((town) => (
