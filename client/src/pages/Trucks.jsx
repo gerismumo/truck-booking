@@ -30,8 +30,18 @@ const Trucks = () => {
                 </td>
                 <td className='px-[20px] py-[10px] border border-[#ddd]'>John Doe</td>
                 <td className='px-[20px] py-[10px] border border-[#ddd]'>1234707</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>Mombasa</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>Nakuru</td>
+                <td className='px-[20px] py-[10px] border border-[#ddd]'>
+                  <div className="flex flex-col">
+                    <p className='font-[500]'>From:</p>
+                    <span>Mombasa</span>
+                  </div>
+                  </td>
+                <td className='px-[20px] py-[10px] border border-[#ddd]'>
+                  <div className="flex flex-col">
+                    <p className='font-[500]'>To:</p>
+                    <span>Mombasa</span>
+                  </div>
+                </td>
                 <td className='px-[20px] py-[10px] border border-[#ddd]'>Active</td>
                 <td className='px-[20px] py-[10px] border border-[#ddd]'>On Delivery</td>
                 <td className='px-[20px] py-[10px] border border-[#ddd]'>Unavailable</td>

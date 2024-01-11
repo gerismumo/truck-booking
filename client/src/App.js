@@ -4,6 +4,7 @@ import HomeDash from './pages/HomeDash';
 import PostTruck from './pages/PostTruck';
 import Stations from './pages/Stations';
 import Trucks from './pages/Trucks';
+import TruckTypes from './pages/TruckTypes';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path='stations' element={<Stations />}/>
           <Route path='addTruck' element={<PostTruck />}/>
           <Route path='trucksList' element={<Trucks />}/>
+          <Route path='truckTypes' element={<TruckTypes />}/>
         </Route>
       </Routes>
     </Router>
