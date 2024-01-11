@@ -1,8 +1,15 @@
 import React from 'react'
+import { Outlet } from 'react-router-dom'
+import DashHeader from './DashHeader'
 
 const Dashboard = () => {
   return (
-    <div>Dashboard</div>
+    <>
+    <DashHeader />
+    <div className="absolute mt-[90px]">
+        <Outlet />
+    </div>
+    </>
   )
 }
 
