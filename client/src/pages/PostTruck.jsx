@@ -40,11 +40,19 @@ const PostTruck = () => {
         nationalId: '',
         startRoute: '',
         endRoute: '',
-    })
+    });
 
+    const[truckImages, setTruckImages] = useState([]);
+
+    const handleFileChange = (event) => {
+        setTruckImages(Array.from(event.target.files));
+
+      }; 
+      
     const handleTruckAddition = (e) => {
         e.preventDefault();
         console.log(formData)
+        console.log(truckImages)
     }
   return (
     <div className="flex  justify-center px-[60px] overflow-auto">    
@@ -83,11 +91,10 @@ const PostTruck = () => {
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <label htmlFor="truckImage" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Image:</label>
-            <input type="file" 
+            <input type="file" accept="image/*" multiple
             name="truckImage" 
             id="truckImage" 
-            value={formData.truckImage}
-            onChange={(e) => setFormData({...formData, truckImage: e.target.value})}
+            onChange={handleFileChange}
              className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <label htmlFor="driverName" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Driver name:</label>
