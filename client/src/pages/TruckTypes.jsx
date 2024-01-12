@@ -7,21 +7,21 @@ export const API_URL = `${process.env.REACT_App_API_URL}/api`;
 export const useTruckTypeList = () => {
     const[truckTypeList, setTruckTypeList] = useState([]);
 
-    useEffect(() => {
-        const truckTypeData= async() => {
-            try {
-                const response = await axios.get(API_URL + '/getTruckTypes');
-                console.log(response)
-                const success = response.data.success;
-                if(success) {
-                    setTruckTypeList(response.data.data);
+        useEffect(() => {
+            const truckTypeData= async() => {
+                try {
+                    const response = await axios.get(API_URL + '/getTruckTypes');
+                    console.log(response)
+                    const success = response.data.success;
+                    if(success) {
+                        setTruckTypeList(response.data.data);
+                    }
+                }catch (error) {
+                    console.error(error.message);
                 }
-            }catch (error) {
-                console.error(error.message);
             }
-        }
-        truckTypeData();
-    },[API_URL]);
+            truckTypeData();
+        },[]);
 
     return { truckTypeList, setTruckTypeList };
 }
@@ -55,6 +55,7 @@ const TruckTypes = () => {
 
             const response = await axios.post(API_URL + '/addTruckType', Data);
             console.log(response);
+            useTruckTypeList()
         } catch (error) {
             console.error(error.message);
         } 
@@ -63,14 +64,12 @@ const TruckTypes = () => {
     
 
 
-    const[editForm, setEditForm] = useState(null);
     const[editTruckTypeName, setEditTruckName] = useState('');
     const[editFile, setEditFile] = useState(null);
 
     const handleOpenEditForm = (id) => {
         setCurrentEditId(id);
         const currentEdit = truckTypeList.find(truck => truck._id === id);
-        setEditForm(currentEdit);
         setEditTruckName(currentEdit.truck_type);
         setOpenEdit(!openEdit);
     } 
@@ -88,6 +87,7 @@ const TruckTypes = () => {
 
             const response = await axios.put(`${API_URL}/updateTruckType/${currentEditId}`, editForm);
             console.log(response);
+            useTruckTypeList()
         } catch (error) {
             console.error(error.message);
         }
@@ -99,6 +99,7 @@ const TruckTypes = () => {
         try {
             const response = await axios.delete(`${API_URL}/deleteTruckType/${id}`);
             console.log(response);
+            useTruckTypeList()
         }catch (error) {
             console.error(error.message);
         }
