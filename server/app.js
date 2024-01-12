@@ -3,7 +3,7 @@ const app = express();
 const dotenv = require('dotenv');
 const cors = require('cors');
 
-dotenv.config({path: './Db/.env'});
+dotenv.config({path: './Database/.env'});
 
 app.use(cors());
 app.use(express.json());
@@ -14,11 +14,11 @@ const router =  require('./routes/routes')
 app.use('/api', router);
 
 const port = process.env.PORT;
-const pool = require('./Db/Config')
+const database = require('./Database/Db')
 
 const startServer = async () => {
     try {
-      await pool(); 
+        database.createConnection(); 
   
       app.listen(port, () => {
         console.log(`Server listening on port ${port}`);

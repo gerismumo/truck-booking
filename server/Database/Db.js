@@ -10,7 +10,7 @@ const config = {
     // port: process.env.DB_PORT
 }
 
-const pool = async () => {
+const createConnection = async () => {
     const connection =   mysql.createConnection(config);;
     try {
         await new Promise((resolve, reject) => {
@@ -31,4 +31,4 @@ const pool = async () => {
 }
 
 
-module.exports = pool;
+module.exports = {createConnection};

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { trucksTypes } from './PostTruck';
 import icons from './services/icons';
 
@@ -21,10 +21,7 @@ const TruckTypes = () => {
         }));
     }
 
-
-
     const API_URL = `${process.env.REACT_App_API_URL}/api`;
-    console.log(API_URL);
 
     const handleAddTruckType = async (e) => {
         e.preventDefault();
@@ -37,10 +34,21 @@ const TruckTypes = () => {
             console.log(response);
         } catch (error) {
             console.error(error.message);
-        }
-        
+        } 
     }
 
+    useEffect(() => {
+        const truckTypeList = async() => {
+            try {
+                const response = await axios.get(API_URL + '/getTruckTypes');
+                console.log(response);
+            }catch (error) {
+                console.error(error.message);
+            }
+        }
+        truckTypeList();
+    },[API_URL]);
+    
     const handleOpenEditForm = (id) => {
         setCurrentEditId(id);
         setOpenEdit(!openEdit);

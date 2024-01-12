@@ -1,2 +1,2 @@
-const pool = require('../Db/Config');
+const pool = require('../Database/Db');
 
