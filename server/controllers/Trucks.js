@@ -15,35 +15,34 @@ const insertData = async(req, res) => {
     const truckImages = req.file;
     const uniqueId = uuid.v4();
 
-    console.log(truckImages);
-    console.log(truckType,
-        truckModel,
-        numberPlate,
-        driverName,
-        driverLicense,
-        nationalId,
-        startRoute,
-        endRoute);
-
-    // try {
-    //     const connection = await database.createConnection();
-    //     const data = await connection.query(
-    //         queries.truckType.trucKTypeAddition,
-    //          [uniqueId, truckTypeName,truckImage.buffer]
-    //          );
-    //          res.json({success:true, message:'Successfully addition'});
-    //     return data;    
-    // }catch(error) {
-    //     console.error('Error inserting values into the database', error.message);
-    //     res.json({success: false, message: error.message});
-    // }
+    try {
+        const connection = await database.createConnection();
+        const data = await connection.query(
+            queries.trucks.add,
+             [uniqueId, 
+                truckType,
+                truckModel,
+                numberPlate,
+                truckImages.buffer,
+                driverName,
+                driverLicense,
+                nationalId,
+                startRoute,
+                endRoute]
+             );
+             res.json({success:true, message:'Successfully addition'});
+        return data;    
+    }catch(error) {
+        console.error('Error inserting values into the database', error.message);
+        res.json({success: false, message: error.message});
+    }
 }
 
 const selectData = async(req, res) => {
     try {
         const connection = await database.createConnection();
         const result =  await new  Promise((resolve, reject)  => {
-            connection.query(queries.truckType.getTruckTypes, (err, result) => {
+            connection.query(queries.trucks.get, (err, result) => {
                 if(err) {
                     reject(err);
                 }else {
@@ -65,7 +64,7 @@ const deleteData = async(req, res) => {
 
     try{
         const connection = await database.createConnection();
-        const data = await connection.query(queries.truckType.deleteTruckTypes, id);
+        const data = await connection.query(queries.trucks.delete, id);
         res.json({success: true, message: 'Deleted successfully'});
         return data;
     }catch(error) {
@@ -75,13 +74,32 @@ const deleteData = async(req, res) => {
 
 const updateData = async(req, res) => {
     const id = req.params.id;
-    const  editFile = req.file;
-    const {editTruckType} = req.body;
+    const  truckImages = req.file;
+    const  {
+        truckType,
+        truckModel,
+        numberPlate,
+        driverName,
+        driverLicense,
+        nationalId,
+        startRoute,
+        endRoute} = req.body;
     try {
         const connection = await database.createConnection();
 
         const data  = await  new Promise((resolve, reject) => {
-            connection.query(queries.truckType.updateTruckTypes, [editTruckType, editFile.buffer, id], (err, result) => {
+            connection.query(queries.trucks.update, [
+                truckType,
+                truckModel,
+                numberPlate,
+                truckImages.buffer,
+                driverName,
+                driverLicense,
+                nationalId,
+                startRoute,
+                endRoute,
+                id
+            ], (err, result) => {
                 if(err) {
                     reject(err);
                 }else{

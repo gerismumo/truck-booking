@@ -1,6 +1,44 @@
-import React from 'react'
-import icons from './services/icons'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { API_URL } from './TruckTypes';
+import icons from './services/icons';
+
+export const useTrucksData = () => {
+  const[trucksList, setTrucksList] = useState([]);
+
+  useEffect(() => {
+    const trucksData = async() => {
+      try {
+        const response = await axios.get(API_URL +'/getTrucks');
+
+        const success = response.data.success;
+        if(success) {
+          setTrucksList(response.data.data);
+        }
+        console.log(response);
+      }catch(error) {
+        console.error(error.message);
+      }
+    }
+    trucksData();
+  }, []);
+
+  return {trucksList, setTrucksList};
+}
 const Trucks = () => {
+  const {trucksList} = useTrucksData();
+  
+
+  const handleDeleteTruck = async(id) => {
+    console.log(id);
+    try {
+      const response = await axios.delete(`${API_URL}/deleteTrucks/${id}`);
+      console.log(response);
+    }catch (error) {
+      console.error(error.message);
+    }
+  }
+
   return (
     <div className="flex justify-center py-[30px] px-[20px]">
       <div className="">
@@ -18,38 +56,41 @@ const Trucks = () => {
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Track Truck</th>
           </thead>
           <tbody>
-            <React.Fragment>
-              <tr>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>Box Truck</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>Scannia</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>Kcp 6797</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>
-                  <img src="../../images/fesarta.jpg-1704007371558-281930063.jpg" alt="" 
-                  className='w-[100px] h-[70px]'
-                  />
-                </td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>John Doe</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>1234707</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>
-                  <div className="flex flex-col">
-                    <p className='font-[500]'>From:</p>
-                    <span>Mombasa</span>
-                  </div>
+            {trucksList.map((trucks) => (
+              <React.Fragment>
+                <tr>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_type}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_model}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.number_plate}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>
+                    <img src={URL.createObjectURL(new Blob([new Uint8Array(trucks.truck_image.data)],{type: 'image/jpeg', }))} alt="" 
+                    className='w-[100px] h-[70px]'
+                    />
                   </td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>
-                  <div className="flex flex-col">
-                    <p className='font-[500]'>To:</p>
-                    <span>Mombasa</span>
-                  </div>
-                </td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>Active</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>On Delivery</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'>Unavailable</td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.edit}</span></td>
-                <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.delete}</span></td>
-              </tr>
-            </React.Fragment>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.driver_name}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.driver_license}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>
+                    <div className="flex flex-col">
+                      <p className='font-[500]'>From:</p>
+                      <span>{trucks.start_route}</span>
+                    </div>
+                    </td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>
+                    <div className="flex flex-col">
+                      <p className='font-[500]'>To:</p>
+                      <span>{trucks.end_route}</span>
+                    </div>
+                  </td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>Active</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>On Delivery</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>Unavailable</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.edit}</span></td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleDeleteTruck(trucks.id)}>{icons.delete}</span></td>
+                </tr>
+              </React.Fragment>
+            ))}
+            
           </tbody>
         </table>
       </div>

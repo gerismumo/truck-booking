@@ -26,6 +26,9 @@ router.put('/updateRoute/:id', townRoutes.updateData);
 //trucks apis
 
 router.post('/addTruck', upload.single('truckImages'),Trucks.insertData);
+router.get('/getTrucks', Trucks.selectData);
+router.delete('/deleteTrucks/:id', Trucks.deleteData);
+
 
 
 
