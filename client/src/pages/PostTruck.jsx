@@ -1,19 +1,7 @@
 import React, { useState } from 'react';
+import { useTruckTypeList } from './TruckTypes';
 
-export const trucksTypes = [
-    { id: 1, value: "any", label: "Any" },
-    { id: 2, value: "rigid", label: "Rigid Truck" },
-    { id: 3, value: "articulated", label: "Articulated Truck" },
-    { id: 4, value: "box", label: "Box Lorry" },
-    { id: 5, value: "flatbed", label: "Flatbed Lorry" },
-    { id: 6, value: "tipper", label: "Tipper Lorry" },
-    { id: 7, value: "refrigerated", label: "Refrigerated Lorry" },
-    { id: 8, value: "curtain-side", label: "Curtain-side Lorry" },
-    { id: 9, value: "low-loader", label: "Low-Loader Lorry" },
-    { id: 10, value: "car", label: "Car Transporter" },
-    { id: 11, value: "skip", label: "Skip Homes" },
-    { id: 12, value: "livestock", label: "Livestock Lorry" }
-]
+
 
 export const townsRoutes = [
     { id: 1, town: "Mombasa" },
@@ -30,6 +18,8 @@ export const townsRoutes = [
   ];
 
 const PostTruck = () => {
+    const {truckTypeList} = useTruckTypeList();
+
     const [formData , setFormData ] = useState({
         truckType: '',
         truckModel: '',
@@ -66,8 +56,8 @@ const PostTruck = () => {
             onChange={(e) => setFormData({ ...formData, truckType: e.target.value})}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             >
-                {trucksTypes.map((truck) => (
-                    <option key={truck.id} value={truck.value}>{truck.label}</option>
+                {truckTypeList.map((truck) => (
+                    <option key={truck._id} value={truck.truck_type}>{truck.truck_type}</option>
                 ))}
             </select>
             <label htmlFor="model" 
