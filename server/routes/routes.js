@@ -20,7 +20,7 @@ router.put('/updateTruckType/:id',upload.single('editFile'), updateData);
 router.post('/addRoute', townRoutes.insertData);
 router.get('/getRoutes', townRoutes.selectData);
 router.delete('/deleteRoute/:id', townRoutes.deleteData);
-router.put('/updateData/:id', townRoutes.updateData);
+router.put('/updateRoute/:id', townRoutes.updateData);
 
 
 

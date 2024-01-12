@@ -3,8 +3,10 @@ const queries  = require('../queries/queries');
 const uuid = require('uuid');
 
 const insertData = async(req, res) => {
-    const { route } = req.body;
+    const  formData  = req.body;
     const uniqueId = uuid.v4();
+    const route = formData.stationName;
+
     try {
         const connection = await database.createConnection();
         const data = await connection.query(
@@ -42,7 +44,7 @@ const selectData = async(req, res) => {
 
 const deleteData = async(req, res) => {
     const id = req.params.id;
-
+    console.log(id);
     try{
         const connection = await database.createConnection();
         const data = await connection.query(queries.townRoutes.delete, id);
@@ -55,7 +57,9 @@ const deleteData = async(req, res) => {
 
 const updateData = async(req, res) => {
     const id = req.params.id;
-    const {route} = req.body;
+    const editData = req.body;
+    const route = editData.editRouteName;
+    
     try {
         const connection = await database.createConnection();
 

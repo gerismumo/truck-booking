@@ -1,25 +1,11 @@
 import React, { useState } from 'react';
 import { useTruckTypeList } from './TruckTypes';
+import { useRoutesList } from './Stations';
 
-
-
-export const townsRoutes = [
-    { id: 1, town: "Mombasa" },
-    { id: 2, town: "Mariakani" },
-    { id: 3, town: "Voi" },
-    { id: 4, town: "Mtito Andei" },
-    { id: 5, town: "Kibwezi" },
-    { id: 6, town: "Emali" },
-    { id: 7, town: "Athi River" },
-    { id: 8, town: "Nairobi" },
-    { id: 9, town: "Nakuru" },
-    { id: 10, town: "Kericho" },
-    { id: 11, town: "Kisumu" }
-  ];
 
 const PostTruck = () => {
     const {truckTypeList} = useTruckTypeList();
-
+    const {routesList} =useRoutesList();
     const [formData , setFormData ] = useState({
         truckType: '',
         truckModel: '',
@@ -123,8 +109,8 @@ const PostTruck = () => {
                     onChange={(e) => setFormData({...formData, startRoute: e.target.value})}
                     className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                     >
-                        {townsRoutes.map((town) => (
-                            <option key={town.id} value={town.town}>{town.town}</option>
+                        {routesList.map((town) => (
+                            <option key={town.id} value={town.route_name}>{town.route_name}</option>
                         ))}
                     </select>
                 </div>
@@ -135,8 +121,8 @@ const PostTruck = () => {
                     onChange={(e) => setFormData({...formData, endRoute: e.target.value})}
                     className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                     >
-                        {townsRoutes.toReversed().map((town) => (
-                            <option key={town.id} value={town.town}>{town.town}</option>
+                        {routesList.toReversed().map((town) => (
+                            <option key={town.id} value={town.route_name}>{town.route_name}</option>
                         ))}
                     </select>
                 </div>
