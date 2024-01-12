@@ -4,6 +4,7 @@ const multer = require('multer');
 
 const { insertData,selectData,deleteData,updateData, } = require('../controllers/truckType');
 const townRoutes = require('../controllers/townRoutes');
+const Trucks = require('../controllers/Trucks');
 
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
@@ -21,6 +22,10 @@ router.post('/addRoute', townRoutes.insertData);
 router.get('/getRoutes', townRoutes.selectData);
 router.delete('/deleteRoute/:id', townRoutes.deleteData);
 router.put('/updateRoute/:id', townRoutes.updateData);
+
+//trucks apis
+
+router.post('/addTruck', upload.single('truckImages'),Trucks.insertData);
 
 
 

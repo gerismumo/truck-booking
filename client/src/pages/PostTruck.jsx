@@ -1,7 +1,7 @@
+import axios from 'axios';
 import React, { useState } from 'react';
-import { useTruckTypeList } from './TruckTypes';
 import { useRoutesList } from './Stations';
-
+import { API_URL, useTruckTypeList } from './TruckTypes';
 
 const PostTruck = () => {
     const {truckTypeList} = useTruckTypeList();
@@ -10,7 +10,6 @@ const PostTruck = () => {
         truckType: '',
         truckModel: '',
         numberPlate: '',
-        truckImage: '',
         driverName: '',
         driverLicense: '',
         nationalId: '',
@@ -18,17 +17,31 @@ const PostTruck = () => {
         endRoute: '',
     });
 
-    const[truckImages, setTruckImages] = useState([]);
+    const[truckImages, setTruckImages] = useState(null);
 
-    const handleFileChange = (event) => {
-        setTruckImages(Array.from(event.target.files));
-
-      }; 
       
-    const handleTruckAddition = (e) => {
+    const handleTruckAddition = async(e) => {
         e.preventDefault();
         console.log(formData)
-        console.log(truckImages)
+
+        const Data = new FormData();
+        Data.append('truckImages',truckImages);
+        Data.append('truckType', formData.truckType);
+        Data.append('truckModel', formData.truckModel);
+        Data.append('numberPlate', formData.numberPlate);
+        Data.append('driverName', formData.driverName);
+        Data.append('driverLicense', formData.driverLicense);
+        Data.append('nationalId', formData.nationalId);
+        Data.append('startRoute', formData.startRoute);
+        Data.append('endRoute', formData.endRoute);
+
+        try {
+            const response = await axios.post(API_URL + '/addTruck', Data);
+            console.log(response);
+
+        }catch (error) {
+            console.error(error.message);
+        }
     }
   return (
     <div className="flex  justify-center px-[60px] overflow-auto">    
@@ -68,9 +81,7 @@ const PostTruck = () => {
             />
             <label htmlFor="truckImage" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Image:</label>
             <input type="file" accept="image/*" multiple
-            name="truckImage" 
-            id="truckImage" 
-            onChange={handleFileChange}
+            onChange={(e) => setTruckImages(e.target.files[0])}
              className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <label htmlFor="driverName" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Driver name:</label>
