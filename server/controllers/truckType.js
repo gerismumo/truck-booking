@@ -5,13 +5,12 @@ const uuid = require('uuid');
 const insertData = async(req, res) => {
     const { truckTypeName } = req.body;
     const truckImage = req.file;
-    console.log(truckImage);
     const uniqueId = uuid.v4();
     try {
         const connection = await database.createConnection();
         const data = await connection.query(
             queries.truckType.trucKTypeAddition,
-             [uniqueId, truckTypeName,JSON.stringify(truckImage)]
+             [uniqueId, truckTypeName,truckImage.buffer]
              );
              res.json({success:true, message:'Successfully addition'});
         return data;    
@@ -25,7 +24,7 @@ const selectData = async(req, res) => {
     try {
         const connection = await database.createConnection();
         const result =  await new  Promise((resolve, reject)  => {
-            connection.query('SELECT * FROM truck_types', (err, result) => {
+            connection.query(queries.truckType.getTruckTypes, (err, result) => {
                 if(err) {
                     reject(err);
                 }else {
@@ -46,7 +45,7 @@ const deleteData = async(req, res) => {
     const id = req.params.id;
 
     try{
-        const connection = database.createConnection();
+        const connection = await database.createConnection();
         const data = await connection.query(queries.truckType.deleteTruckTypes, id);
         res.json({success: true, message: 'Deleted successfully'});
         return data;
@@ -57,12 +56,20 @@ const deleteData = async(req, res) => {
 
 const updateData = async(req, res) => {
     const id = req.params.id;
-    const file = req.file;
-    const {name} = req.body;
-
+    const  editFile = req.file;
+    const {editTruckType} = req.body;
     try {
-        const connection = database.createConnection();
-        const data  = await connection.query(queries.truckType.updateTruckTypes, [name, file, id]);
+        const connection = await database.createConnection();
+
+        const data  = await  new Promise((resolve, reject) => {
+            connection.query(queries.truckType.updateTruckTypes, [editTruckType, editFile.buffer, id], (err, result) => {
+                if(err) {
+                    reject(err);
+                }else{
+                    resolve(result);
+                }
+            });
+        });
         res.json({success: true, message:'Successfully updated'});
         return data;
     }catch (error){

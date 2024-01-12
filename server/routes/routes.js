@@ -11,8 +11,8 @@ router.post('/addTruckType',upload.single('file') ,insertData);
 
 router.get('/getTruckTypes', selectData);
 
-router.delete('/deleteTruckTypes', deleteData);
-router.put('/updateTruckTypes', updateData);
+router.delete('/deleteTruckType/:id', deleteData);
+router.put('/updateTruckType/:id',upload.single('editFile'), updateData);
 
 
 

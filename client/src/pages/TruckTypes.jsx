@@ -1,11 +1,36 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { trucksTypes } from './PostTruck';
 import icons from './services/icons';
+
+export const API_URL = `${process.env.REACT_App_API_URL}/api`;
+
+export const useTruckTypeList = () => {
+    const[truckTypeList, setTruckTypeList] = useState([]);
+
+    useEffect(() => {
+        const truckTypeData= async() => {
+            try {
+                const response = await axios.get(API_URL + '/getTruckTypes');
+                console.log(response)
+                const success = response.data.success;
+                if(success) {
+                    setTruckTypeList(response.data.data);
+                }
+            }catch (error) {
+                console.error(error.message);
+            }
+        }
+        truckTypeData();
+    },[API_URL]);
+
+    return { truckTypeList, setTruckTypeList };
+}
+
 
 const TruckTypes = () => {
     const[openEdit, setOpenEdit] = useState(false);
     const[currentEditId, setCurrentEditId] = useState(null);
+    const { truckTypeList } = useTruckTypeList();
 
     const [formData, setFormData] = useState({
         truckTypeName:'',
@@ -21,8 +46,6 @@ const TruckTypes = () => {
         }));
     }
 
-    const API_URL = `${process.env.REACT_App_API_URL}/api`;
-
     const handleAddTruckType = async (e) => {
         e.preventDefault();
         try {
@@ -36,23 +59,50 @@ const TruckTypes = () => {
             console.error(error.message);
         } 
     }
-
-    useEffect(() => {
-        const truckTypeList = async() => {
-            try {
-                const response = await axios.get(API_URL + '/getTruckTypes');
-                console.log(response);
-            }catch (error) {
-                console.error(error.message);
-            }
-        }
-        truckTypeList();
-    },[API_URL]);
     
+    
+
+
+    const[editForm, setEditForm] = useState(null);
+    const[editTruckTypeName, setEditTruckName] = useState('');
+    const[editFile, setEditFile] = useState(null);
+
     const handleOpenEditForm = (id) => {
         setCurrentEditId(id);
+        const currentEdit = truckTypeList.find(truck => truck._id === id);
+        setEditForm(currentEdit);
+        setEditTruckName(currentEdit.truck_type);
         setOpenEdit(!openEdit);
     } 
+   
+   
+    const handleEditTruckType = async(e) => {
+        e.preventDefault();
+
+        console.log(editFile);
+        console.log(editTruckTypeName);
+        try {
+            const editForm = new FormData();
+            editForm.append('editTruckType', editTruckTypeName);
+            editForm.append('editFile', editFile);
+
+            const response = await axios.put(`${API_URL}/updateTruckType/${currentEditId}`, editForm);
+            console.log(response);
+        } catch (error) {
+            console.error(error.message);
+        }
+    } 
+
+    const handleDelete = async(id) => {
+        console.log(id);
+
+        try {
+            const response = await axios.delete(`${API_URL}/deleteTruckType/${id}`);
+            console.log(response);
+        }catch (error) {
+            console.error(error.message);
+        }
+    }
   return (
     <div className="flex justify-center py-[30px] px-[20px] gap-[100px]">
         <form onSubmit={(e) => handleAddTruckType(e)} className='flex flex-col'>
@@ -87,38 +137,37 @@ const TruckTypes = () => {
                     <th className='px-[20px] py-[10px] border border-[#ddd]'>Image</th>
                 </thead>
                 <tbody>
-                    
-                        {trucksTypes.map((type) => (
-                            <React.Fragment key={type.id}>
-                                <tr key={type.id}>
-                                    <td className='px-[20px] py-[10px] border border-[#ddd]'>{type.label}</td>
+                        {truckTypeList.map((type) => (
+                            <React.Fragment key={type._id}>
+                                <tr key={type._id}>
+                                    <td className='px-[20px] py-[10px] border border-[#ddd]'>{type.truck_type}</td>
                                     <td className='px-[20px] py-[10px] border border-[#ddd]'>
-                                        <img src="../../images/fesarta.jpg-1704007371558-281930063.jpg" alt="" 
+                                        <img src={URL.createObjectURL(new Blob([new Uint8Array(type.image.data)],{type: 'image/jpeg', }))} alt="" 
                                         className='w-[100px] h-[50px]'
                                         />
                                     </td>
                                     <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
                                     <td className='px-[20px] py-[10px] border border-[#ddd]'>
-                                        <span onClick={() => handleOpenEditForm(type.id)}>{openEdit && currentEditId === type.id ? icons.eyeSlash : icons.edit}</span>
+                                        <span onClick={() => handleOpenEditForm(type._id)}>{openEdit && currentEditId === type._id ? icons.eyeSlash : icons.edit}</span>
                                     </td>
-                                    <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.delete}</span></td>
+                                    <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleDelete(type._id)}>{icons.delete}</span></td>
                                 </tr>
-                                {openEdit && currentEditId === type.id && (
+                                {openEdit && currentEditId === type._id && (
                                 <tr>
-                                    <td colSpan='5' className='border border-[#ddd] m-[5px]'>
-                                        <form onSubmit={(e) => handleAddTruckType(e)} className='flex flex-col m-[5px]'>
+                                    <td colSpan='5' className='border border-[rgb(221,221,221)] m-[5px]'>
+                                        <form onSubmit={(e) => handleEditTruckType(e)} className='flex flex-col m-[5px]'>
                                             <label htmlFor="" 
                                             className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Type Name:</label>
                                             <input type="text" 
                                             placeholder='Truck Type'
-                                            value={truckTypeName}
-                                            onChange={(e) => setTruckTypeName(e.target.value)}
+                                            value={editTruckTypeName}
+                                            onChange={(e) =>  setEditTruckName(e.target.value)}
                                             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                                             />
                                             <label htmlFor="truckImage" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Image:</label>
                                             <input type="file" 
                                             accept="image/*" multiple
-                                            onChange={handleFileChange}
+                                            onChange={(e) => setEditFile(e.target.files[0])}
                                             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                                             />
                                             <div className="flex justify-center mt-[20px]">
