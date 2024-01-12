@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { trucksTypes } from './PostTruck';
 import icons from './services/icons';
@@ -6,18 +7,38 @@ const TruckTypes = () => {
     const[openEdit, setOpenEdit] = useState(false);
     const[currentEditId, setCurrentEditId] = useState(null);
 
-    const[truckImages, setTruckImages] = useState([]);
-    const[truckTypeName, setTruckTypeName] = useState('');
+    const [formData, setFormData] = useState({
+        truckTypeName:'',
+        file: null,
+    })
 
-    const handleFileChange = (event) => {
-        setTruckImages(Array.from(event.target.files));
+    const handleChange =(e) => {
+        const {name, value, files } = e.target;
 
-      };
-    
-    const handleAddTruckType = (e) => {
+        setFormData((prev) => ({
+            ...prev,
+            [name]: name === 'file' ? files[0] : value,
+        }));
+    }
+
+
+
+    const API_URL = `${process.env.REACT_App_API_URL}/api`;
+    console.log(API_URL);
+
+    const handleAddTruckType = async (e) => {
         e.preventDefault();
-        console.log(truckImages);
-        console.log(truckTypeName);
+        try {
+            const Data = new FormData();
+            Data.append('file', formData.file);
+            Data.append('truckTypeName', formData.truckTypeName);
+
+            const response = await axios.post(API_URL + '/addTruckType', Data);
+            console.log(response);
+        } catch (error) {
+            console.error(error.message);
+        }
+        
     }
 
     const handleOpenEditForm = (id) => {
@@ -31,14 +52,16 @@ const TruckTypes = () => {
             className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Type Name:</label>
             <input type="text" 
             placeholder='Truck Type'
-            value={truckTypeName}
-            onChange={(e) => setTruckTypeName(e.target.value)}
+            name='truckTypeName'
+            value={formData.truckTypeName}
+            onChange={handleChange}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <label htmlFor="truckImage" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Image:</label>
             <input type="file" 
-            accept="image/*" multiple
-            onChange={handleFileChange}
+            accept="image/*"
+            name='file'
+            onChange={handleChange}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <div className="flex justify-center mt-[20px]">
