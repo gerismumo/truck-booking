@@ -5,6 +5,7 @@ import PostTruck from './pages/PostTruck';
 import Stations from './pages/Stations';
 import Trucks from './pages/Trucks';
 import TruckTypes from './pages/TruckTypes';
+import TestForm from './pages/TestForm';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path='addTruck' element={<PostTruck />}/>
           <Route path='trucksList' element={<Trucks />}/>
           <Route path='truckTypes' element={<TruckTypes />}/>
+          <Route path='test' element={<TestForm />}/>
         </Route>
       </Routes>
     </Router>
