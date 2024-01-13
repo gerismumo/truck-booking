@@ -4,13 +4,14 @@ const uuid = require('uuid');
 
 const insertData = async(req, res) => {
     const { truckTypeName } = req.body;
+    const { bookTypeSize } = req.body;
     const truckImage = req.file;
     const uniqueId = uuid.v4();
     try {
         const connection = await database.createConnection();
         const data = await connection.query(
             queries.truckType.trucKTypeAddition,
-             [uniqueId, truckTypeName,truckImage.buffer]
+             [uniqueId, truckTypeName,truckImage.buffer, bookTypeSize]
              );
              res.json({success:true, message:'Successfully addition'});
         return data;    
@@ -58,11 +59,24 @@ const updateData = async(req, res) => {
     const id = req.params.id;
     const  editFile = req.file;
     const {editTruckType} = req.body;
+    const {bookType} = req.body;
+    
+
+    let query;
+    let  params;
+
+    if(editFile) {
+        query = queries.truckType.updateTruckTypes;
+        params = [editTruckType, editFile.buffer,bookType, id]
+    } else {
+        query = queries.truckType.updateTruckTypesImageNull;
+        params= [editTruckType,bookType,id]
+    }
     try {
         const connection = await database.createConnection();
 
         const data  = await  new Promise((resolve, reject) => {
-            connection.query(queries.truckType.updateTruckTypes, [editTruckType, editFile.buffer, id], (err, result) => {
+            connection.query(query, params, (err, result) => {
                 if(err) {
                     reject(err);
                 }else{

@@ -8,6 +8,7 @@ const config = {
     password: process.env.PASSWORD,
     user: process.env.USER,
     // port: process.env.DB_PORT
+    port: 3306,
 }
 
 const createConnection = async () => {

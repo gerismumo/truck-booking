@@ -26,6 +26,11 @@ export const useTruckTypeList = () => {
     return { truckTypeList, setTruckTypeList };
 }
 
+export const bookTypes = [
+    {id: 1, name: 'Full Truck'},
+    {id: 2, name: 'Square Meter'},
+    {id: 4, name: 'Number of Items'},
+]
 
 const TruckTypes = () => {
     const[openEdit, setOpenEdit] = useState(false);
@@ -34,6 +39,7 @@ const TruckTypes = () => {
 
     const [formData, setFormData] = useState({
         truckTypeName:'',
+        bookTypeSize: '',
         file: null,
     })
 
@@ -52,6 +58,7 @@ const TruckTypes = () => {
             const Data = new FormData();
             Data.append('file', formData.file);
             Data.append('truckTypeName', formData.truckTypeName);
+            Data.append('bookTypeSize', formData.bookTypeSize);
 
             const response = await axios.post(API_URL + '/addTruckType', Data);
             console.log(response);
@@ -63,28 +70,29 @@ const TruckTypes = () => {
     
     
 
-
+    const[bookType, setBookType] = useState('');
     const[editTruckTypeName, setEditTruckName] = useState('');
     const[editFile, setEditFile] = useState(null);
 
     const handleOpenEditForm = (id) => {
         setCurrentEditId(id);
         const currentEdit = truckTypeList.find(truck => truck._id === id);
+        console.log(currentEdit);
         setEditTruckName(currentEdit.truck_type);
+        setBookType(currentEdit.book_type);
         setOpenEdit(!openEdit);
     } 
    
    
     const handleEditTruckType = async(e) => {
         e.preventDefault();
-
-        console.log(editFile);
-        console.log(editTruckTypeName);
         try {
             const editForm = new FormData();
             editForm.append('editTruckType', editTruckTypeName);
-            editForm.append('editFile', editFile);
-
+            if(editFile) {
+                editForm.append('editFile', editFile);
+            } 
+            editForm.append('bookType', bookType);
             const response = await axios.put(`${API_URL}/updateTruckType/${currentEditId}`, editForm);
             console.log(response);
             useTruckTypeList()
@@ -123,6 +131,17 @@ const TruckTypes = () => {
             onChange={handleChange}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
+            <label htmlFor="bookTypeSize" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
+            <select name="bookTypeSize" id="bookTypes"
+            value={formData.bookTypeSize}
+            onChange={handleChange}
+            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+            >
+                <option value="">select an option</option>
+                {bookTypes.map((book) => (
+                    <option value={book.name}>{book.name}</option>
+                ))}
+            </select>
             <div className="flex justify-center mt-[20px]">
                 <button type='submit'
                 className='px-[15px] py-[10px] bg-lightBlue rounded-[5px]'
@@ -136,6 +155,7 @@ const TruckTypes = () => {
                 <thead>
                     <th className='px-[20px] py-[10px] border border-[#ddd]'>Type</th>
                     <th className='px-[20px] py-[10px] border border-[#ddd]'>Image</th>
+                    <th className='px-[20px] py-[10px] border border-[#ddd]'>Book Type</th>
                 </thead>
                 <tbody>
                         {truckTypeList.map((type) => (
@@ -147,6 +167,7 @@ const TruckTypes = () => {
                                         className='w-[100px] h-[50px]'
                                         />
                                     </td>
+                                    <td className='px-[20px] py-[10px] border border-[#ddd]'>{type.book_type}</td>
                                     <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
                                     <td className='px-[20px] py-[10px] border border-[#ddd]'>
                                         <span onClick={() => handleOpenEditForm(type._id)}>{openEdit && currentEditId === type._id ? icons.eyeSlash : icons.edit}</span>
@@ -171,11 +192,21 @@ const TruckTypes = () => {
                                             onChange={(e) => setEditFile(e.target.files[0])}
                                             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                                             />
+                                             <label htmlFor="bookType" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
+                                             <select name="bookType" id="bookType"
+                                             defaultValue={bookType}
+                                             onChange={(e) => setBookType(e.target.value)}
+                                             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                             >
+                                                {bookTypes.map((book) => (
+                                                    <option value={book.name}>{book.name}</option>
+                                                ))}
+                                             </select>
                                             <div className="flex justify-center mt-[20px]">
                                                 <button type='submit'
                                                 className='px-[15px] py-[10px] bg-lightBlue rounded-[5px]'
                                                 >
-                                                    Add
+                                                    Edit
                                                 </button>
                                             </div>
                                         </form>
