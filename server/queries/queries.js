@@ -43,10 +43,17 @@ const trucks = {
             end_route = ? WHERE id = ?`,
     
 }
+
+const booking = {
+    selectByTruckType :`SELECT * FROM trucks WHERE truck_type = ? AND book_type = ?
+        AND Status = 0 AND on_schedule = 0`,
+    selectRoutesInOrder : 'SELECT * FROM routes ORDER BY order_id ASC',
+}
 const queries = {
     truckType,
     townRoutes,
     trucks,
+    booking,
 }
 
 module.exports = queries;
