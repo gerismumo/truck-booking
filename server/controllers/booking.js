@@ -53,21 +53,20 @@ const bookingProcess = async(req, res) => {
                           };
 
                           const isBetween = liesBetween(truckStartRoute, truckEndRoute, fromRoute) && liesBetween(truckStartRoute, truckEndRoute, toRoute);
-                          
-                          if (isBetween) {
-                            const availableTrucks = result.find(truck => truck.id === id);
-                                return availableTrucks;
-                               
-                            } else {
-                                return null;
-                            }
-                    })
+                                console.log(id);
+                                const  availableTrucks = result.find(truck => truck.id === id && isBetween === true);
+                                const filteredResult = availableTrucks;
+                           
+                                // console.log(filteredResult.length);
+                                return filteredResult;  
+                    })   
+                                    
                     console.log(someTest);
                     resolve(someTest);
                 }
                 });
             });  
-            res.json({ success: true, trucksData: trucksResult  });
+            res.json({ success: true, trucksData: trucksResult   });
 
     }catch(error) {
         console.log(error);
