@@ -21,12 +21,41 @@ const bookingProcess = async(req, res) => {
                 if (err) {
                     reject(err);
                 } else {
-                    console.log(result);
+                    // console.log(result);
                     resolve(result);
                 }
                 });
             });
            
+
+            const updateMaxAmount = async (connection, truckId, newMaxAmount) => {
+                return new Promise((resolve, reject) => {
+                    const updateQuery = 'UPDATE trucks SET max_amount = ? WHERE id = ?';
+            
+                    connection.query(updateQuery, [newMaxAmount, truckId], (err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                });
+            };
+
+            const updateFull = async (connection, truckId) => {
+                return new Promise((resolve, reject) => {
+                    const updateQuery = 'UPDATE trucks SET status = true WHERE id = ?';
+            
+                    connection.query(updateQuery, [truckId], (err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                });
+            };
+
             const fromRoute = routesResult.find(route => route.route_name === from);
             const toRoute = routesResult.find(route => route.route_name === to);
 
@@ -55,13 +84,32 @@ const bookingProcess = async(req, res) => {
                           const isBetween = liesBetween(truckStartRoute, truckEndRoute, fromRoute) && liesBetween(truckStartRoute, truckEndRoute, toRoute);
                                 console.log(id);
                                 const  availableTrucks = result.find(truck => truck.id === id && isBetween === true);
-                                const filteredResult = availableTrucks;
-                           
-                                // console.log(filteredResult.length);
-                                return filteredResult;  
-                    })   
-                                    
+                                return availableTrucks;  
+                    });
                     console.log(someTest);
+
+                    const filterOnSq = someTest;
+                    if(bookType === 'Square Meter') {
+                        filterOnSq.map(truck => {
+                            const maxAmount = truck.max_amount;
+                            const id = truck.id;
+                            
+                            if(maxAmount >= 0  || maxAmount < 500) {
+                                updateFull(connection, id);
+                            }
+                            const checkRemainingAmount = (maxAmount - squareMeter);
+                            console.log(checkRemainingAmount);
+
+                    
+                            if(checkRemainingAmount >= 0 && checkRemainingAmount <= maxAmount) {
+                                console.log('true',id);
+                                updateMaxAmount(connection,id, checkRemainingAmount);
+                                const fullFilledData = filterOnSq.filter(item => item.id === id);
+                                console.log(fullFilledData);
+                            }
+                            
+                        });
+                    }
                     resolve(someTest);
                 }
                 });
