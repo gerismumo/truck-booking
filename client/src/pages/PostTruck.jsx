@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRoutesList } from './Stations';
 import { API_URL, useTruckTypeList } from './TruckTypes';
 
@@ -19,14 +19,57 @@ const PostTruck = () => {
 
     const[truckImages, setTruckImages] = useState(null);
 
-      
+    const [bookType, setBookType] = useState(null);
+    const selectData = truckTypeList.find(truck => truck.truck_type === formData.truckType);
+
+    useEffect(() => {
+        if(selectData) {
+            setBookType(selectData.book_type);
+        }
+    }, [selectData]);
+    
+    const[pricingData, setPricingData] = useState({
+        fullTruck: '',
+        perSquareMeter: '',
+        PerNumberItems:'',
+    })
+    
+    const[price, setPrice] = useState('');
+    const[maxSquareMeter, setMaxSquareMeter] = useState('');
+    const[maxVehicleNumber, setMaxVehicleNumber]  = useState('');
+    const[amount, setAmount] = useState('');
+
     const handleTruckAddition = async(e) => {
         e.preventDefault();
-        console.log(formData)
+
+        const maxAmount = {
+            maxSquareMeter,
+            maxVehicleNumber,
+        }
+
+        function getNonEmptyPropertyValue(obj) {
+            for (const key in obj) {
+              if (obj.hasOwnProperty(key) && obj[key] !== '') {
+                return obj[key];
+              }
+            }
+            return null; 
+          }
+
+        const result = getNonEmptyPropertyValue(maxAmount);
+            setAmount(result);
+          console.log(amount);
+        
+        const entryWithValues = Object.entries(pricingData).find(([key, value]) => value !== '');
+        setPrice(entryWithValues[1])
+        console.log(price);
 
         const Data = new FormData();
         Data.append('truckImages',truckImages);
         Data.append('truckType', formData.truckType);
+        Data.append('bookType', bookType);
+        Data.append('price', price);
+        Data.append('amount', amount);
         Data.append('truckModel', formData.truckModel);
         Data.append('numberPlate', formData.numberPlate);
         Data.append('driverName', formData.driverName);
@@ -34,7 +77,6 @@ const PostTruck = () => {
         Data.append('nationalId', formData.nationalId);
         Data.append('startRoute', formData.startRoute);
         Data.append('endRoute', formData.endRoute);
-
         try {
             const response = await axios.post(API_URL + '/addTruck', Data);
             console.log(response);
@@ -55,10 +97,60 @@ const PostTruck = () => {
             onChange={(e) => setFormData({ ...formData, truckType: e.target.value})}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             >
+                <option value=''>select an option</option>
                 {truckTypeList.map((truck) => (
                     <option key={truck._id} value={truck.truck_type}>{truck.truck_type}</option>
                 ))}
             </select>
+            <label htmlFor="numberPlate" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
+            <span className='text-[17px] mb-[5px] font-[400] mt-[10px]'>{bookType}</span>
+            {bookType === 'Full Truck' && (
+                <input type='number'
+                min={0}
+                value={pricingData.fullTruck}
+                onChange={(e) => setPricingData({...pricingData, fullTruck: e.target.value})}
+                placeholder='Enter Price Per Full Truck'
+                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                />
+            )}
+            {bookType === 'Square Meter' && (
+                <>
+                    <input type='number'
+                    min={0}
+                    value={pricingData.perSquareMeter}
+                    onChange={(e) => setPricingData({...pricingData, perSquareMeter: e.target.value})}
+                    placeholder='Enter Price Per Square Meter'
+                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                    />
+                    <label htmlFor="numberPlate" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>MaxiMum Square Meters:</label>
+                    <input type='number'
+                    min={0}
+                    value={maxSquareMeter}
+                    onChange={(e) => setMaxSquareMeter(e.target.value)}
+                    placeholder='Enter Maximum Square Meter'
+                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                    />
+                </>
+            )}
+            {bookType === 'Number of Items' && formData.truckType === 'Car Transporter Truck' && (
+                <>
+                    <input type='number'
+                    min={0}
+                    value={pricingData.PerNumberItems}
+                    onChange={(e) => setPricingData({...pricingData, perSquareMeter: e.target.value})}
+                    placeholder='Enter Price Per Vehicle'
+                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                    />
+                    <label htmlFor="numberPlate" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Max No. of Vehicles:</label>
+                    <input type='number'
+                    min={0}
+                    value={maxVehicleNumber}
+                    onChange={(e) => setMaxVehicleNumber(e.target.value)}
+                    placeholder='Enter Max Number of Vehicles Carried'
+                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                    />
+                </>
+            ) }
             <label htmlFor="model" 
             className='text-[17px] mb-[5px] font-[500] mt-[10px]'
             >

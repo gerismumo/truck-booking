@@ -17,6 +17,9 @@ const trucks = {
     add: `INSERT INTO trucks (
         id,
         truck_type,
+        book_type,
+        pricing,
+        max_amount,
         truck_model,
         number_plate,
         truck_image,
@@ -25,7 +28,7 @@ const trucks = {
         national_id,
         start_route,
         end_route
-    ) VALUES(?,?,?,?,?,?,?,?,?,?)`,
+    ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     get: 'SELECT * FROM trucks',
     delete: 'DELETE FROM trucks WHERE id = ?',
     update: `UPDATE trucks SET 

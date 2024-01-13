@@ -40,11 +40,14 @@ const Trucks = () => {
   }
 
   return (
-    <div className="flex justify-center py-[30px] px-[20px]">
+    <div className="flex justify-center py-[30px]">
       <div className="">
         <table className='border-collapse'>
           <thead>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Truck Type</th>
+            <th className='px-[20px] py-[10px] border border-[#ddd]'>Book Type</th>
+            <th className='px-[20px] py-[10px] border border-[#ddd]'>Pricing</th>
+            <th className='px-[20px] py-[10px] border border-[#ddd]'>Max Amount</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Model</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>No. Plate</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Truck Image</th>
@@ -60,6 +63,9 @@ const Trucks = () => {
               <React.Fragment>
                 <tr>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_type}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.pricing}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.max_amount}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_model}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.number_plate}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>

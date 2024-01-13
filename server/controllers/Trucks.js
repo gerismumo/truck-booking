@@ -5,6 +5,9 @@ const uuid = require('uuid');
 const insertData = async(req, res) => {
     const  {
     truckType,
+    bookType,
+    price,
+    amount,
     truckModel,
     numberPlate,
     driverName,
@@ -15,12 +18,16 @@ const insertData = async(req, res) => {
     const truckImages = req.file;
     const uniqueId = uuid.v4();
 
+    console.log(amount);
     try {
         const connection = await database.createConnection();
         const data = await connection.query(
             queries.trucks.add,
              [uniqueId, 
                 truckType,
+                bookType,
+                price,
+                amount,
                 truckModel,
                 numberPlate,
                 truckImages.buffer,

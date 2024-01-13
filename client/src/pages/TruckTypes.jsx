@@ -198,6 +198,7 @@ const TruckTypes = () => {
                                              onChange={(e) => setBookType(e.target.value)}
                                              className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                                              >
+                                                <option value="">select an option</option>
                                                 {bookTypes.map((book) => (
                                                     <option value={book.name}>{book.name}</option>
                                                 ))}
