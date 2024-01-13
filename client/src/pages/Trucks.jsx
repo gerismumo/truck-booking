@@ -64,7 +64,7 @@ const Trucks = () => {
                 <tr>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_type}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type}</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type === 'Square Meter' ? `Per Square: ${trucks.pricing} `:  trucks.book_type === 'Car Transporter Truck' ? `Per Square: ${trucks.pricing}` : ''}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type === 'Square Meter' ? `Per Square: ${trucks.pricing} `:  trucks.book_type === 'Number of Items' ? `Per Vehicle: ${trucks.pricing}` : ''}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.max_amount}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_model}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.number_plate}</td>

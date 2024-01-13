@@ -46,7 +46,21 @@ const bookingProcess = async(req, res) => {
                 return new Promise((resolve, reject) => {
                     const updateQuery = 'UPDATE trucks SET status = true WHERE id = ?';
             
-                    connection.query(updateQuery, [truckId], (err, result) => {
+                    connection.query(updateQuery, [truckId,true,], (err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                });
+            };
+
+            const updateEmpty = async (connection, truckId) => {
+                return new Promise((resolve, reject) => {
+                    const updateQuery = 'UPDATE trucks SET status = false WHERE id = ?';
+            
+                    connection.query(updateQuery, [truckId,true,], (err, result) => {
                         if (err) {
                             reject(err);
                         } else {
@@ -65,6 +79,10 @@ const bookingProcess = async(req, res) => {
                     console.log(err);
                     reject(err);
                 } else {
+                    console.log(result);
+                    if(result.length === 0) {
+                        console.log('No available routes');
+                    }
                     const someTest  = result.map(item => {
                         const StartRoute = item.start_route;
                         const EndRoute = item.end_route;
@@ -74,11 +92,13 @@ const bookingProcess = async(req, res) => {
                         const truckEndRoute = routesResult.find(route => route.route_name === EndRoute);
 
                         const liesBetween = (route1, route2, targetRoute) => {
-                            const order1 = Math.min(route1.order_id, route2.order_id);
-                            const order2 = Math.max(route1.order_id, route2.order_id);
-                            const targetOrder = targetRoute.order_id;
+                            if(route1 && route2 && targetRoute) {
+                                const order1 = Math.min(route1.order_id, route2.order_id);
+                                const order2 = Math.max(route1.order_id, route2.order_id);
+                                const targetOrder = targetRoute.order_id;
                           
                             return targetOrder >= order1 && targetOrder <= order2;
+                            }
                           };
 
                           const isBetween = liesBetween(truckStartRoute, truckEndRoute, fromRoute) && liesBetween(truckStartRoute, truckEndRoute, toRoute);
@@ -89,13 +109,17 @@ const bookingProcess = async(req, res) => {
                     console.log(someTest);
 
                     const filterOnSq = someTest;
+                    const filterVehicleNo = someTest;
+                    const filterFullTrucks = someTest;
                     if(bookType === 'Square Meter') {
                         filterOnSq.map(truck => {
                             const maxAmount = truck.max_amount;
                             const id = truck.id;
-                            
-                            if(maxAmount >= 0  || maxAmount < 500) {
+                            console.log(maxAmount);
+                            if(maxAmount >= 0 && maxAmount <= 500) {
                                 updateFull(connection, id);
+                            }else {
+                                updateEmpty(connection, id);
                             }
                             const checkRemainingAmount = (maxAmount - squareMeter);
                             console.log(checkRemainingAmount);
@@ -106,9 +130,40 @@ const bookingProcess = async(req, res) => {
                                 updateMaxAmount(connection,id, checkRemainingAmount);
                                 const fullFilledData = filterOnSq.filter(item => item.id === id);
                                 console.log(fullFilledData);
+                                // if(fullFilledData.length > 0) {
+                                //     console.log('you can book');
+                                // }else {
+                                //     console.log('All Trucks full');
+                                // }
                             }
                             
                         });
+                    }else if(bookType === 'Number of Items') {
+                        filterVehicleNo.map(item => {
+                            const maxNumberOfVehicles = item.max_amount;
+                            const id = item.id;
+
+                            if(maxNumberOfVehicles <= 0) {
+                                updateFull(connection, id);
+                            }else{
+                                updateEmpty(connection, id);
+                            }
+
+                            const checkRemainingSpace = (maxNumberOfVehicles - itemsNumber);
+                            console.log(checkRemainingSpace);
+                            if(checkRemainingSpace >=0 && checkRemainingSpace <= maxNumberOfVehicles) {
+                                console.log('true', id);
+                                updateMaxAmount(connection,id, checkRemainingSpace);
+                                const fullFilledInfo = filterVehicleNo.filter(items => items.id === id);
+                                console.log(fullFilledInfo)
+                            }
+                        })
+                    } else if (bookType === 'Full Truck') {
+                        filterFullTrucks.map(item => {
+
+                        })
+                    }else {
+
                     }
                     resolve(someTest);
                 }

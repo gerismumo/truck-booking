@@ -59,11 +59,16 @@ const PostTruck = () => {
         const result = getNonEmptyPropertyValue(maxAmount);
             setAmount(result);
           console.log(amount);
-        
+
         const entryWithValues = Object.entries(pricingData).find(([key, value]) => value !== '');
         setPrice(entryWithValues[1])
         console.log(price);
 
+
+        if(price === '' || price === '') {
+            alert('Please select a price');
+            return;
+        }
         const Data = new FormData();
         Data.append('truckImages',truckImages);
         Data.append('truckType', formData.truckType);
@@ -137,7 +142,7 @@ const PostTruck = () => {
                     <input type='number'
                     min={0}
                     value={pricingData.PerNumberItems}
-                    onChange={(e) => setPricingData({...pricingData, perSquareMeter: e.target.value})}
+                    onChange={(e) => setPricingData({...pricingData, PerNumberItems: e.target.value})}
                     placeholder='Enter Price Per Vehicle'
                     className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                     />
