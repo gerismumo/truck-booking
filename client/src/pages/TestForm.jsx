@@ -91,7 +91,7 @@ const TestForm = () => {
     console.log('carsTransporterTrucks',carsTransporterTrucks);
     console.log('squareMetersTrucks',squareMetersTrucks);
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center gap-[40px]">
         <form onSubmit={(e) => handleSubmitForm(e)} className='flex flex-col w-[600px]'>
             <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Types:</label>
             <select name="" id=""
@@ -151,17 +151,20 @@ const TestForm = () => {
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             />
             <div className="mt-[20px] flex justify-center">
-                <button className='bg-lightBlue px-[15px] py-[5px] rounded-[5px]'>Book</button>
+                <button className='bg-lightBlue px-[15px] py-[5px] rounded-[5px]'>Search</button>
             </div>
         </form>
         <div className="flex flex-col">
+            {errorMessage !== null && (
+                <p className='text-[red]'>{errorMessage}</p>
+            )}
             {fullTrucks.length > 0 && (
                 <div className="">
                     <div className="">
                         <p><span>Results:</span>{fullTrucks.length}</p>
                     </div>
                     {fullTrucks.map((item) => (
-                        <div key={item.id} className="">
+                        <div key={item.id} className="flex flex-col gap-[30px] border-[1px] border-[#ccc] p-[10px]">
                             <div className="">
                             <p><span>Book Type:</span>{item.book_type}</p>
                             </div>
@@ -174,6 +177,9 @@ const TestForm = () => {
                             <div className="">
                                 <p><span>Price To Pay:</span>Ksh.{item.pricing}</p>
                             </div>
+                            <div className="flex justify-center">
+                                <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' >Book</button>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -185,7 +191,7 @@ const TestForm = () => {
                     </div>
                     
                 { squareMetersTrucks.map((item) => (
-                    <div key={item.id} className="">
+                    <div key={item.id} className="flex flex-col gap-[30px] border-[1px] border-[#ccc] p-[10px]">
                         <div className="">
                         <p><span>Book Type:</span>{item.book_type}</p>
                         </div>
@@ -204,6 +210,9 @@ const TestForm = () => {
                         <div className="">
                             <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
                         </div>
+                        <div className="flex justify-center">
+                            <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' >Book</button>
+                        </div>
                     </div>
                 ))} 
                  </div>
@@ -215,7 +224,7 @@ const TestForm = () => {
                     </div>
                     
                 {carsTransporterTrucks.map((item) => (
-                    <div key={item.id} className="">
+                    <div key={item.id} className="flex flex-col gap-[30px] border-[1px] border-[#ccc] p-[10px]">
                         <div className="">
                         <p><span>Book Type:</span>{item.book_type}</p>
                         </div>
@@ -233,6 +242,9 @@ const TestForm = () => {
                         </div>
                         <div className="">
                             <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
+                        </div>
+                        <div className="flex justify-center">
+                            <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' >Book</button>
                         </div>
                     </div>
                 ))} 
