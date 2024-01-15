@@ -162,7 +162,7 @@ const bookingProcess = async(req, res) => {
 
                             const totalPriceToPay = (squareMeter * price);
                             truck.priceToPay = totalPriceToPay;
-
+                            truck.no_of_squareMeter = squareMeter;
                             console.log(maxAmount);
                             if(maxAmount >= 0 && maxAmount <= 500) {
                                 updateFull(connection, id);
@@ -214,6 +214,7 @@ const bookingProcess = async(req, res) => {
                             const pricing = item.pricing;
                             const totalPriceToPay = (itemsNumber * pricing);
                             item.priceToPay = totalPriceToPay;
+                            item.no_of_your_vehicles = itemsNumber;
 
                             const checkRemainingSpace = (maxNumberOfVehicles - itemsNumber);
                             console.log(checkRemainingSpace);

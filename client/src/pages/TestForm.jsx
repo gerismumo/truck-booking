@@ -3,41 +3,6 @@ import React, { useEffect, useState } from 'react';
 import { useRoutesList } from './Stations';
 import { API_URL, useTruckTypeList } from './TruckTypes';
 const TestForm = () => {
-    const routes = [
-        {id: 'ec5f7e45-0df4-4f9c-830a-d6d71202aba7', order_id: 5, route_name: 'Mombasa'},
-        {id: 'd7e72bd1-be5f-4120-92cc-a42dd661876d', order_id: 6, route_name: 'Mariakani'},
-        {id: 'bc90b643-3621-40a6-952d-c178bec3b70d', order_id: 7, route_name: 'Voi'},
-        {id: 'e8984491-dacf-4cca-bed6-24ac230297a4', order_id: 8, route_name: 'Mtito Andei'},
-        {id: '97c8ec86-87b0-4e99-a2e7-d2e7e241d6f4', order_id: 9, route_name: 'Kibwezi'},
-        {id: 'ad9f4547-ba41-4c73-8a38-9d98c39c2919', order_id: 10, route_name: 'Emali'},
-        {id: 'e5ba9538-bb47-4442-8e9f-036e8214082f', order_id: 11, route_name: 'Athi River'},
-        {id: '84d9036d-3c6b-4bd2-92e3-d5ea09701252', order_id: 12, route_name: 'Nairobi'},
-        {id: '3ff3edde-61c3-425a-8671-fdf176b9efe5', order_id: 13, route_name: 'Nakuru'},
-        {id: '8a9bc29f-f442-4623-9300-4783bcd89d85', order_id: 14, route_name: 'Kericho'},
-        {id: '060cabad-55fb-413f-8d9d-7e66c9b12a2d', order_id: 15, route_name: 'Kisumu'}
-      ];
-      
-     
-      const liesBetween = (route1, route2, targetRoute) => {
-        const order1 = Math.min(route1.order_id, route2.order_id);
-        const order2 = Math.max(route1.order_id, route2.order_id);
-        const targetOrder = targetRoute.order_id;
-      
-        return targetOrder >= order1 && targetOrder <= order2;
-      };
-      
-      
-      const routeFrom = routes.find(route => route.route_name === 'Mombasa');
-      const routeTo = routes.find(route => route.route_name === 'Kibwezi');
-      const routeVoi = routes.find(route => route.route_name === 'Nairobi');
-      const routeMtitoAndei = routes.find(route => route.route_name === 'Mtito Andei');
-      
-    
-      const isBetween = liesBetween(routeFrom, routeTo, routeVoi) && liesBetween(routeFrom, routeTo, routeMtitoAndei);
-      
-      console.log(`Does the route from Voi to Mtito Andei lie between Mombasa and Kibwezi? ${isBetween}`);
-
-      
     const { truckTypeList } = useTruckTypeList();
     const {routesList} = useRoutesList();
 
@@ -189,6 +154,91 @@ const TestForm = () => {
                 <button className='bg-lightBlue px-[15px] py-[5px] rounded-[5px]'>Book</button>
             </div>
         </form>
+        <div className="flex flex-col">
+            {fullTrucks.length > 0 && (
+                <div className="">
+                    <div className="">
+                        <p><span>Results:</span>{fullTrucks.length}</p>
+                    </div>
+                    {fullTrucks.map((item) => (
+                        <div key={item.id} className="">
+                            <div className="">
+                            <p><span>Book Type:</span>{item.book_type}</p>
+                            </div>
+                            <div className="">
+                                <p><span>From:</span>{item.start_route}</p>
+                            </div>
+                            <div className="">
+                                <p><span>To:</span>{item.end_route}</p>
+                            </div>
+                            <div className="">
+                                <p><span>Price To Pay:</span>Ksh.{item.pricing}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) }
+            {squareMetersTrucks.length > 0 && (
+                <div  className="" >
+                    <div className="">
+                        <p><span>Results</span>{squareMetersTrucks.length}</p>
+                    </div>
+                    
+                { squareMetersTrucks.map((item) => (
+                    <div key={item.id} className="">
+                        <div className="">
+                        <p><span>Book Type:</span>{item.book_type}</p>
+                        </div>
+                        <div className="">
+                            <p><span>No of squares:</span>{item.no_of_squareMeter}</p>
+                        </div>
+                        <div className="">
+                            <p><span>Remaining Space:</span>{item.full_space}</p>
+                        </div>
+                        <div className="">
+                            <p><span>From:</span>{item.start_route}</p>
+                        </div>
+                        <div className="">
+                            <p><span>To:</span>{item.end_route}</p>
+                        </div>
+                        <div className="">
+                            <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
+                        </div>
+                    </div>
+                ))} 
+                 </div>
+            )}
+             {carsTransporterTrucks.length > 0 && (
+                <div  className="" >
+                    <div className="">
+                        <p><span>Results</span>{carsTransporterTrucks.length}</p>
+                    </div>
+                    
+                {carsTransporterTrucks.map((item) => (
+                    <div key={item.id} className="">
+                        <div className="">
+                        <p><span>Book Type:</span>{item.book_type}</p>
+                        </div>
+                        <div className="">
+                            <p><span>No of Vehicles:</span>{item.no_of_your_vehicles}</p>
+                        </div>
+                        <div className="">
+                            <p><span>Remaining Space:</span>{item.full_space}</p>
+                        </div>
+                        <div className="">
+                            <p><span>From:</span>{item.start_route}</p>
+                        </div>
+                        <div className="">
+                            <p><span>To:</span>{item.end_route}</p>
+                        </div>
+                        <div className="">
+                            <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
+                        </div>
+                    </div>
+                ))} 
+                 </div>
+            )}
+        </div>
     </div>
   )
 }
