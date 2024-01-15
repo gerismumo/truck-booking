@@ -150,6 +150,11 @@ const bookingProcess = async(req, res) => {
                         filterOnSq.map(truck => {
                             const maxAmount = truck.max_amount;
                             const id = truck.id;
+                            const price = truck.pricing;
+
+                            const totalPriceToPay = (squareMeter * price);
+                            truck.priceToPay = totalPriceToPay;
+
                             console.log(maxAmount);
                             if(maxAmount >= 0 && maxAmount <= 500) {
                                 updateFull(connection, id);
@@ -160,8 +165,10 @@ const bookingProcess = async(req, res) => {
                             console.log(checkRemainingAmount);
                             if(checkRemainingAmount >= 0 && checkRemainingAmount <= maxAmount) {
                                 console.log('true',id);
+                               
                                 // updateMaxAmount(connection,id, checkRemainingAmount);
                                 const fullFilledData = filterOnSq.filter(item => item.id === id);
+                                
                                 console.log('fullFilledData',fullFilledData);
                                 // if(fullFilledData.length > 0) {
                                 //     console.log('you can book');
@@ -194,7 +201,10 @@ const bookingProcess = async(req, res) => {
                             }else{
                                 updateEmpty(connection, id);
                             }
-
+                            const pricing = item.pricing;
+                            const totalPriceToPay = (itemsNumber * pricing);
+                            item.priceToPay = totalPriceToPay;
+                            
                             const checkRemainingSpace = (maxNumberOfVehicles - itemsNumber);
                             console.log(checkRemainingSpace);
                             if(checkRemainingSpace >=0 && checkRemainingSpace <= maxNumberOfVehicles) {
