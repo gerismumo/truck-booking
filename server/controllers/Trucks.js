@@ -28,6 +28,7 @@ const insertData = async(req, res) => {
                 bookType,
                 price,
                 amount,
+                amount,
                 truckModel,
                 numberPlate,
                 truckImages.buffer,

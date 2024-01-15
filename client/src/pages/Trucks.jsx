@@ -47,7 +47,8 @@ const Trucks = () => {
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Truck Type</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Book Type</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Pricing</th>
-            <th className='px-[20px] py-[10px] border border-[#ddd]'>Max Amount</th>
+            <th className='px-[20px] py-[10px] border border-[#ddd]'>Full Space</th>
+            <th className='px-[20px] py-[10px] border border-[#ddd]'>Available Space</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Model</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>No. Plate</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Truck Image</th>
@@ -65,12 +66,13 @@ const Trucks = () => {
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_type}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type === 'Square Meter' ? `Per Square: ${trucks.pricing} `:  trucks.book_type === 'Number of Items' ? `Per Vehicle: ${trucks.pricing}` : ''}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.full_space ? trucks.full_space : 'unavailable'}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.max_amount}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_model}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.number_plate}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>
                     <img src={URL.createObjectURL(new Blob([new Uint8Array(trucks.truck_image.data)],{type: 'image/jpeg', }))} alt="" 
-                    className='w-[100px] h-[70px]'
+                    className='w-[130px] h-[50px]'
                     />
                   </td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.driver_name}</td>

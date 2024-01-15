@@ -28,7 +28,7 @@ const bookingProcess = async(req, res) => {
             });
            
 
-            const updateMaxAmount = async (connection, truckId, newMaxAmount) => {
+            const updateMaxAmount = (connection, truckId, newMaxAmount) => {
                 return new Promise((resolve, reject) => {
                     const updateQuery = 'UPDATE trucks SET max_amount = ? WHERE id = ?';
             
@@ -70,6 +70,20 @@ const bookingProcess = async(req, res) => {
                 });
             };
 
+            const checkForFullTrucks =  (connection, truckId) => {
+                return  new Promise((resolve, reject) => {
+                    const updateQuery = 'SELECT * FROM  trucks  WHERE status = false AND  id = ?';
+            
+                    connection.query(updateQuery, [truckId,true,], (err, result) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(result);
+                        }
+                    });
+                });
+            };
+
             const fromRoute = routesResult.find(route => route.route_name === from);
             const toRoute = routesResult.find(route => route.route_name === to);
 
@@ -79,34 +93,55 @@ const bookingProcess = async(req, res) => {
                     console.log(err);
                     reject(err);
                 } else {
-                    console.log(result);
-                    if(result.length === 0) {
-                        console.log('No available routes');
+                    console.log('first result',result);
+
+                    let returnData = {
+                        status: '',
+                        data: '',
+                        message: '',
                     }
-                    const someTest  = result.map(item => {
-                        const StartRoute = item.start_route;
-                        const EndRoute = item.end_route;
-                        const id = item.id;
 
-                        const truckStartRoute = routesResult.find(route => route.route_name === StartRoute);
-                        const truckEndRoute = routesResult.find(route => route.route_name === EndRoute);
+                    if(result.length === 0) {
+                        
+                        console.log('The selected type Truck is not available');
+                        returnData.status = false;
+                        returnData.message = 'The selected type Truck is not available'
+                    }else {
+                        const someTest  = result.map(item => {
+                            const StartRoute = item.start_route;
+                            const EndRoute = item.end_route;
+                            const id = item.id;
+    
+                            const truckStartRoute = routesResult.find(route => route.route_name === StartRoute);
+                            const truckEndRoute = routesResult.find(route => route.route_name === EndRoute);
+    
+                            const liesBetween = (route1, route2, targetRoute) => {
+                                if(route1 && route2 && targetRoute) {
+                                    const order1 = Math.min(route1.order_id, route2.order_id);
+                                    const order2 = Math.max(route1.order_id, route2.order_id);
+                                    const targetOrder = targetRoute.order_id;
+                              
+                                return targetOrder >= order1 && targetOrder <= order2;
+                                }
+                              };
+    
+                              const isBetween = liesBetween(truckStartRoute, truckEndRoute, fromRoute) && liesBetween(truckStartRoute, truckEndRoute, toRoute);
+                              if(isBetween) {
+                                console.log(isBetween);
+                                    console.log(id);
+                                    const  availableTrucks = result.find(truck => truck.id === id && isBetween === true);
+                                    console.log('availableTrucks', availableTrucks);
+                                    return availableTrucks;  
+                              }else {
+                                console.log('no available trucks in That route');
+                                return 'no available trucks in That route';
+                            
+                              }
+                              
+                        });
 
-                        const liesBetween = (route1, route2, targetRoute) => {
-                            if(route1 && route2 && targetRoute) {
-                                const order1 = Math.min(route1.order_id, route2.order_id);
-                                const order2 = Math.max(route1.order_id, route2.order_id);
-                                const targetOrder = targetRoute.order_id;
-                          
-                            return targetOrder >= order1 && targetOrder <= order2;
-                            }
-                          };
 
-                          const isBetween = liesBetween(truckStartRoute, truckEndRoute, fromRoute) && liesBetween(truckStartRoute, truckEndRoute, toRoute);
-                                console.log(id);
-                                const  availableTrucks = result.find(truck => truck.id === id && isBetween === true);
-                                return availableTrucks;  
-                    });
-                    console.log(someTest);
+                        console.log('someTest',someTest);
 
                     const filterOnSq = someTest;
                     const filterVehicleNo = someTest;
@@ -123,18 +158,29 @@ const bookingProcess = async(req, res) => {
                             }
                             const checkRemainingAmount = (maxAmount - squareMeter);
                             console.log(checkRemainingAmount);
-
-                    
                             if(checkRemainingAmount >= 0 && checkRemainingAmount <= maxAmount) {
                                 console.log('true',id);
-                                updateMaxAmount(connection,id, checkRemainingAmount);
+                                // updateMaxAmount(connection,id, checkRemainingAmount);
                                 const fullFilledData = filterOnSq.filter(item => item.id === id);
-                                console.log(fullFilledData);
+                                console.log('fullFilledData',fullFilledData);
                                 // if(fullFilledData.length > 0) {
                                 //     console.log('you can book');
                                 // }else {
                                 //     console.log('All Trucks full');
                                 // }
+                                // returnData = fullFilledData;
+                                // return returnData;
+                                returnData.status = true;
+                                returnData.message = 'successfully';
+                                returnData.data = fullFilledData;
+                            }else {
+                                console.log('false',id);
+                                console.log('Trucks available but no enough space for your goods');
+                                // returnData = 'Trucks available but no enough space for your goods';
+                                // return returnData;
+                                returnData.status = false;
+                                returnData.message = 'Trucks available but no enough space for your goods';
+                                returnData.data = '';
                             }
                             
                         });
@@ -153,23 +199,62 @@ const bookingProcess = async(req, res) => {
                             console.log(checkRemainingSpace);
                             if(checkRemainingSpace >=0 && checkRemainingSpace <= maxNumberOfVehicles) {
                                 console.log('true', id);
-                                updateMaxAmount(connection,id, checkRemainingSpace);
+                                // updateMaxAmount(connection,id, checkRemainingSpace);
                                 const fullFilledInfo = filterVehicleNo.filter(items => items.id === id);
                                 console.log(fullFilledInfo)
+                                // returnData = fullFilledInfo;
+                                returnData.status = true;
+                                returnData.message = 'successfully';
+                                returnData.data = fullFilledInfo;
+                                
+                            }else {
+                                console.log('Truck available but no available Space');
+
+                                // returnData = 'Truck available but no available Space'
+
+                                returnData.status = false;
+                                returnData.message = 'Truck available but no available Space';
+                                returnData.data = '';
                             }
                         })
-                    } else if (bookType === 'Full Truck') {
+                    } else if(bookType === 'Full Truck') {
                         filterFullTrucks.map(item => {
+                            const id = item.id;
+                            const status = item.status;
 
+                            if(status === 0) {
+                                const checkedData = filterFullTrucks.find(data => data.id === id);
+                                console.log('checkedData',checkedData);
+                                // returnData = checkedData;
+
+                                returnData.status = true;
+                                returnData.message = 'successfully';
+                                returnData.data = checkedData;
+                            }else {
+                                console.log('No available Trucks');
+
+                                // returnData = 'No available  Trucks'
+                                returnData.status = false;
+                                returnData.message = 'No available  Trucks';
+                                returnData.data = '';
+                            }
                         })
                     }else {
-
+                        console.log('no trucks available');
+                        // returnData = 'No available Trucks';
+                        returnData.status = false;
+                        returnData.message = 'No available  Trucks';
+                        returnData.data = '';
+                        
                     }
-                    resolve(someTest);
+                    }
+                    
+                    
+                    resolve(returnData);
                 }
                 });
             });  
-            res.json({ success: true, trucksData: trucksResult   });
+            res.json({ success: true, trucksData: trucksResult });
 
     }catch(error) {
         console.log(error);
