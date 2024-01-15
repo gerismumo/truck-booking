@@ -60,6 +60,13 @@ const TestForm = () => {
 
     console.log(bookType);
 
+
+    const[errorMessage, setErrorMessage] = useState(null);
+    const[successMessage, setSuccessMessage] = useState(null);
+    const[fullTrucks, setFullTrucks] = useState([]);
+    const[carsTransporterTrucks, setCarsTransporterTrucks] = useState([]);
+    const[squareMetersTrucks, setSquareMetersTrucks] = useState([]);
+
     const handleSubmitForm = async(e) => {
         e.preventDefault();
 
@@ -84,13 +91,40 @@ const TestForm = () => {
         
         try {
             const response = await axios.post(API_URL + '/booking', bookingData);
-            console.log(response);
+            // console.log(response.data);
+            if(response.data.success) {
+                const trucksData = response.data.trucksData;
+                const success = trucksData.status;
+
+                if(success) {
+                    setSuccessMessage(trucksData.message)
+                    console.log('data',trucksData.data);
+                    const data = trucksData.data;
+                    
+                    const filteredDataNumberOfCars= data.filter(data => data.book_type === 'Number of Items');
+                    setCarsTransporterTrucks(filteredDataNumberOfCars);
+                
+                    const filteredDataSquare = data.filter(data => data.book_type === 'Square Meter') ;
+                    setSquareMetersTrucks(filteredDataSquare);
+                
+                    const filteredDataFullTrucks = data.filter(data => data.book_type === 'Full Truck');
+                    setFullTrucks(filteredDataFullTrucks);
+                    
+                }else {
+                    console.log(trucksData.message);
+                    setErrorMessage(trucksData.message);
+                }
+            }
         }catch (error) {
             console.log(error.message)
         }
 
     }
-
+    console.log('errorMessage',errorMessage);
+    console.log('successMessage',successMessage);
+    console.log('fullTrucks',fullTrucks);
+    console.log('carsTransporterTrucks',carsTransporterTrucks);
+    console.log('squareMetersTrucks',squareMetersTrucks);
   return (
     <div className="flex justify-center">
         <form onSubmit={(e) => handleSubmitForm(e)} className='flex flex-col w-[600px]'>

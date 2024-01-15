@@ -126,6 +126,10 @@ const bookingProcess = async(req, res) => {
                               };
     
                               const isBetween = liesBetween(truckStartRoute, truckEndRoute, fromRoute) && liesBetween(truckStartRoute, truckEndRoute, toRoute);
+                            //   console.log('truckStartRoute',truckStartRoute);
+                            //    console.log('truckEndRoute',truckEndRoute);
+                            //    console.log('fromRoute',fromRoute);
+                            //    console.log('toRoute',toRoute);
                               if(isBetween) {
                                 console.log(isBetween);
                                     console.log(id);
@@ -133,6 +137,7 @@ const bookingProcess = async(req, res) => {
                                     console.log('availableTrucks', availableTrucks);
                                     return availableTrucks;  
                               }else {
+                                
                                 console.log('no available trucks in That route');
                                 return 'no available trucks in That route';
                             
@@ -146,7 +151,10 @@ const bookingProcess = async(req, res) => {
                     const filterOnSq = someTest;
                     const filterVehicleNo = someTest;
                     const filterFullTrucks = someTest;
+
+
                     if(bookType === 'Square Meter') {
+                        let combinedData = [];
                         filterOnSq.map(truck => {
                             const maxAmount = truck.max_amount;
                             const id = truck.id;
@@ -167,9 +175,10 @@ const bookingProcess = async(req, res) => {
                                 console.log('true',id);
                                
                                 // updateMaxAmount(connection,id, checkRemainingAmount);
-                                const fullFilledData = filterOnSq.filter(item => item.id === id);
+                                combinedData.push(filterOnSq.find(item => item.id === id));
+                            
                                 
-                                console.log('fullFilledData',fullFilledData);
+                                // console.log('fullFilledData',fullFilledData);
                                 // if(fullFilledData.length > 0) {
                                 //     console.log('you can book');
                                 // }else {
@@ -179,7 +188,7 @@ const bookingProcess = async(req, res) => {
                                 // return returnData;
                                 returnData.status = true;
                                 returnData.message = 'successfully';
-                                returnData.data = fullFilledData;
+                                returnData.data = combinedData;
                             }else {
                                 console.log('false',id);
                                 console.log('Trucks available but no enough space for your goods');
@@ -189,9 +198,10 @@ const bookingProcess = async(req, res) => {
                                 returnData.message = 'Trucks available but no enough space for your goods';
                                 returnData.data = '';
                             }
-                            
+                           
                         });
                     }else if(bookType === 'Number of Items') {
+                        const combinedData = [];
                         filterVehicleNo.map(item => {
                             const maxNumberOfVehicles = item.max_amount;
                             const id = item.id;
@@ -204,18 +214,18 @@ const bookingProcess = async(req, res) => {
                             const pricing = item.pricing;
                             const totalPriceToPay = (itemsNumber * pricing);
                             item.priceToPay = totalPriceToPay;
-                            
+
                             const checkRemainingSpace = (maxNumberOfVehicles - itemsNumber);
                             console.log(checkRemainingSpace);
                             if(checkRemainingSpace >=0 && checkRemainingSpace <= maxNumberOfVehicles) {
                                 console.log('true', id);
                                 // updateMaxAmount(connection,id, checkRemainingSpace);
-                                const fullFilledInfo = filterVehicleNo.filter(items => items.id === id);
-                                console.log(fullFilledInfo)
+                                combinedData.push(filterVehicleNo.find(items => items.id === id));
+                                // console.log(fullFilledInfo)
                                 // returnData = fullFilledInfo;
                                 returnData.status = true;
                                 returnData.message = 'successfully';
-                                returnData.data = fullFilledInfo;
+                                returnData.data = combinedData;
                                 
                             }else {
                                 console.log('Truck available but no available Space');
@@ -228,18 +238,20 @@ const bookingProcess = async(req, res) => {
                             }
                         })
                     } else if(bookType === 'Full Truck') {
+                        const combinedData =[]
                         filterFullTrucks.map(item => {
                             const id = item.id;
                             const status = item.status;
 
                             if(status === 0) {
-                                const checkedData = filterFullTrucks.find(data => data.id === id);
-                                console.log('checkedData',checkedData);
+                                combinedData.push(filterFullTrucks.find(data => data.id === id));
+                            
                                 // returnData = checkedData;
 
                                 returnData.status = true;
                                 returnData.message = 'successfully';
-                                returnData.data = checkedData;
+                                returnData.data = combinedData;
+
                             }else {
                                 console.log('No available Trucks');
 
