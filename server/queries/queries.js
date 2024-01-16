@@ -50,6 +50,8 @@ const booking = {
         AND Status = 0 AND on_schedule = 0`,
     selectRoutesInOrder : 'SELECT * FROM routes ORDER BY order_id ASC',
 }
+
+
 const queries = {
     truckType,
     townRoutes,

@@ -158,8 +158,46 @@ const bookingProcess = async(req, res) => {
     }
 }
 
+const getBookingsList = async(req, res) => {
+    try {
+        const connection = await database.createConnection();
+        const result =  await new  Promise((resolve, reject)  => {
+            const query = 'SELECT * FROM booking_table';
+
+            connection.query(query, (err, result) => {
+                if(err) {
+                    reject(err);
+                }else {
+                    resolve(result);
+                }
+            });
+        });
+        res.json({success: true, data: result});
+        return result; 
+
+    }catch(error) {
+        console.log(error);
+        res.json({success: false, message: error.message});
+    }
+}
+
+const deleteBookings = async(req, res) => {
+    const {id }= req.params;
+    try{
+        const connection = await database.createConnection();
+        const query = 'DELETE FROM booking_table WHERE id = ?'
+        const data = await connection.query(query, id);
+        res.json({success: true, message: 'Deleted successfully'});
+        return data;
+    }catch(error) {
+        res.json({success: false, message: error.message});
+    }
+}
+
 const payBooking = {
     bookingProcess,
+    getBookingsList,
+    deleteBookings,
 }
 
 module.exports = payBooking;
