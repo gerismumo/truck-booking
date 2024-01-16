@@ -104,6 +104,10 @@ const TestForm = () => {
 
     const[phoneNumber, setPhoneNumber] = useState('')
     const[email, setEmail] = useState('');
+    const[fullName, setFullName] = useState('');
+    const[customerId, setCustomerId] = useState('');
+    const[customerCountry, setCustomerCountry] = useState('');
+    const[goodsDescription, setGoodsDescription] = useState('');
 
     const handlePayAndBook = async(e,id) => {
         setCloseBookBtn(true);
@@ -112,6 +116,15 @@ const TestForm = () => {
         const currentBookData = returnData.find(item => item.id === id);
         currentBookData.phoneNumber = phoneNumber;
         currentBookData.email = email;
+        currentBookData.fullName = fullName;
+        currentBookData.customerId = customerId;
+        currentBookData.customerCountry = customerCountry;
+        currentBookData.goodsDescription = goodsDescription;
+
+        console.log('goodsDescription',goodsDescription);
+        console.log(fullName);
+        console.log(customerId);
+        console.log(customerCountry)
         console.log('currentBookData',currentBookData);
         console.log('phoneNumber',phoneNumber);
         console.log('email',email);
@@ -250,6 +263,34 @@ const TestForm = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                                 />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Name:</label>
+                                <input type="text"
+                                placeholder='Enter full name'
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Id:</label>
+                                <input type="number"
+                                placeholder='Enter your national id'
+                                value={customerId}
+                                onChange={(e) => setCustomerId(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Country:</label>
+                                <input type="text"
+                                placeholder='Enter your country'
+                                value={customerCountry}
+                                onChange={(e) => setCustomerCountry(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Goods Description:</label>
+                                <textarea name="" id="" cols="30" rows="10"
+                                value={goodsDescription}
+                                onChange={(e) => setGoodsDescription(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                >
+                                </textarea>
                                 <div className="flex justify-center mt-[20px]">
                                     <button type='submit'
                                     className='bg-lightBlue px-[15px] py-[10px] rounded-[10px]'
@@ -330,6 +371,34 @@ const TestForm = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                                 />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Name:</label>
+                                <input type="text"
+                                placeholder='Enter full name'
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Id:</label>
+                                <input type="number"
+                                placeholder='Enter your national id'
+                                value={customerId}
+                                onChange={(e) => setCustomerId(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Country:</label>
+                                <input type="text"
+                                placeholder='Enter your country'
+                                value={customerCountry}
+                                onChange={(e) => setCustomerCountry(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Goods Description:</label>
+                                <textarea name="" id="" cols="30" rows="10"
+                                value={goodsDescription}
+                                onChange={(e) => setGoodsDescription(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                >
+                                </textarea>
                                 <div className="flex justify-center mt-[20px]">
                                     <button type='submit'
                                     className='bg-lightBlue px-[15px] py-[10px] rounded-[10px]'
@@ -409,6 +478,34 @@ const TestForm = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                                 />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Name:</label>
+                                <input type="text"
+                                placeholder='Enter full name'
+                                value={fullName}
+                                onChange={(e) => setFullName(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Id:</label>
+                                <input type="number"
+                                placeholder='Enter your national id'
+                                value={customerId}
+                                onChange={(e) => setCustomerId(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Country:</label>
+                                <input type="text"
+                                placeholder='Enter your country'
+                                value={customerCountry}
+                                onChange={(e) => setCustomerCountry(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Goods Description:</label>
+                                <textarea name="" id="" cols="30" rows="10"
+                                value={goodsDescription}
+                                onChange={(e) => setGoodsDescription(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                >
+                                </textarea>
                                 <div className="flex justify-center mt-[20px]">
                                     <button type='submit'
                                     className='bg-lightBlue px-[15px] py-[10px] rounded-[10px]'
