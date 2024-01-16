@@ -27,6 +27,8 @@ const bookingProcess = async(req, res) => {
     const to = currentBookData.to;
     const departureDate = currentBookData.departureDate;
     const checkRemainingSpace = currentBookData.checkRemainingSpace;
+    const checkRemainingAmount = currentBookData.checkRemainingAmount;
+    const no_of_squareMeter = currentBookData.no_of_squareMeter;
     const customerPhoneNumber = currentBookData.phoneNumber;
     const customerEmail = currentBookData.email;
     const customerFullName = currentBookData.fullName;
@@ -74,22 +76,22 @@ const bookingProcess = async(req, res) => {
 
         const addBook = async (connection,id, truck_id, booked_truck,book_type,
             customer_name,customer_tel,customer_email,customer_national_id, customer_country,
-            goods_description,amount_of_goods,from, to, departure_date, booking_code ) => {
+            goods_description,amount_of_goods,from, to, departure_date, price, booking_code ) => {
             return new Promise((resolve, reject) => {
-                const addQuery = `INSERT INTO booking_table 
+                const addQuery = `INSERT INTO booking_table
                 (id, truck_id, booked_truck, book_type,customer_name,
-                    customer_tel, customer_email, customer_national_id,customer_country, 
-                    goods_description, amount_of_goods, route_from, route_to, departure_date, booking_code)
-                     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+                    customer_tel, customer_email, customer_national_id,customer_country,
+                    goods_description, amount_of_goods, route_from, route_to, departure_date,price, booking_code)
+                     VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
         
                 connection.query(addQuery, [id, truck_id, booked_truck,book_type,
                     customer_name,customer_tel,customer_email,customer_national_id, customer_country,
-                    goods_description,amount_of_goods,from, to, departure_date, booking_code], (err, result) => {
+                    goods_description,amount_of_goods,from, to, departure_date, price, booking_code], (err, result) => {
                     if (err) {
-                        console.log('error',err);
+                        
                         reject(err);
                     } else {
-                        console.log('result',result);
+                        // console.log('result',result);
                         resolve(result);
                     }
                 });
@@ -108,7 +110,7 @@ const bookingProcess = async(req, res) => {
         }
 
         if(book_type === 'Number of Items') {
-            //update reamining amount
+            //update remaining amount
             await updateRemainAmount(connection, id, checkRemainingSpace);
             //update status according  to remaining about
             if(checkRemainingSpace === max_amount) {
@@ -120,13 +122,35 @@ const bookingProcess = async(req, res) => {
             await addBook(connection,uniqueId, id,
                  number_plate, book_type, customerFullName,
                  customerPhoneNumber, customerEmail,customerNationalId,customerCountry,
-                 customerGoodsDescription, no_of_your_vehicles,from,to, departureDate, uniqueCode );
+                 customerGoodsDescription, no_of_your_vehicles,from,to, departureDate,priceToPay, uniqueCode );
             
             //send email to the customer
 
-        } else if (book_type === '') {
+        } else if (book_type === 'Full Truck') {
+            updateFull(connection, id);
+            const uniqueCode = generateCode();
 
-        } else if (book_type === '') {
+            await addBook(connection,uniqueId, id,
+                number_plate, book_type, customerFullName,
+                customerPhoneNumber, customerEmail,customerNationalId,customerCountry,
+                customerGoodsDescription, book_type,from,to, departureDate,pricing, uniqueCode );
+
+                //send email to the customer
+
+        } else if (book_type === 'Square Meter') {
+            //update remaining amount
+            await updateRemainAmount(connection, id, checkRemainingAmount);
+
+            if(checkRemainingAmount === max_amount) {
+                updateFull(connection, id);
+            }
+
+            const uniqueCode = generateCode();
+
+            await addBook(connection,uniqueId, id,
+                number_plate, book_type, customerFullName,
+                customerPhoneNumber, customerEmail,customerNationalId,customerCountry,
+                customerGoodsDescription, no_of_squareMeter,from,to, departureDate,priceToPay, uniqueCode );
 
         }
     }catch (error) {
