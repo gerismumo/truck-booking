@@ -32,6 +32,8 @@ const TestForm = () => {
     const[carsTransporterTrucks, setCarsTransporterTrucks] = useState([]);
     const[squareMetersTrucks, setSquareMetersTrucks] = useState([]);
 
+    const[returnData, setReturnData] = useState([]);
+
     const handleSubmitForm = async(e) => {
         e.preventDefault();
 
@@ -65,7 +67,7 @@ const TestForm = () => {
                     setSuccessMessage(trucksData.message)
                     console.log('data',trucksData.data);
                     const data = trucksData.data;
-                    
+                    setReturnData(data);
                     const filteredDataNumberOfCars= data.filter(data => data.book_type === 'Number of Items');
                     setCarsTransporterTrucks(filteredDataNumberOfCars);
                 
@@ -90,6 +92,37 @@ const TestForm = () => {
     console.log('fullTrucks',fullTrucks);
     console.log('carsTransporterTrucks',carsTransporterTrucks);
     console.log('squareMetersTrucks',squareMetersTrucks);
+    const[openPay,setOpenPay] = useState(false);
+    const[closeBookBtn, setCloseBookBtn] = useState(true);
+    const[currentId, setCurrentId] = useState(null);
+    const handleBook = (id) => {
+        setCurrentId(id);
+        console.log(id);
+        setOpenPay(true);
+        setCloseBookBtn(false);
+    }
+
+    const[phoneNumber, setPhoneNumber] = useState('')
+    const[email, setEmail] = useState('');
+
+    const handlePayAndBook = async(e,id) => {
+        setCloseBookBtn(true);
+        e.preventDefault();
+        console.log(id);
+        const currentBookData = returnData.find(item => item.id === id);
+        currentBookData.phoneNumber = phoneNumber;
+        currentBookData.email = email;
+        console.log('currentBookData',currentBookData);
+        console.log('phoneNumber',phoneNumber);
+        console.log('email',email);
+        
+        try{
+            const response = await axios.post(API_URL + '/payBooking', currentBookData);
+            console.log('response',response);
+        }catch(error) {
+            console.log(error.message);
+        }
+    }
   return (
     <div className="flex justify-center gap-[40px]">
         <form onSubmit={(e) => handleSubmitForm(e)} className='flex flex-col w-[600px]'>
@@ -168,18 +201,65 @@ const TestForm = () => {
                             <div className="">
                             <p><span>Book Type:</span>{item.book_type}</p>
                             </div>
-                            <div className="">
-                                <p><span>From:</span>{item.start_route}</p>
+                            <p>Choosen Route:</p>
+                            <div className="flex justify-center gap-[30px] items-center">
+                                <div className="">
+                                    <p><span>From:</span>{item.from}</p>
+                                </div>
+                                <div className="">
+                                    <p><span>To:</span>{item.to}</p>
+                                </div>
+                            </div>
+                            <p>Truck Route:</p>
+                            <div className="flex justify-center gap-[30px] items-center">
+                                <div className="">
+                                    <p><span>From:</span>{item.start_route}</p>
+                                </div>
+                                <div className="">
+                                    <p><span>To:</span>{item.end_route}</p>
+                                </div>
                             </div>
                             <div className="">
-                                <p><span>To:</span>{item.end_route}</p>
+                                <p><span>Departure Date:</span>{item.departureDate}</p>
                             </div>
                             <div className="">
                                 <p><span>Price To Pay:</span>Ksh.{item.pricing}</p>
                             </div>
+                            {closeBookBtn &&(
                             <div className="flex justify-center">
-                                <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' >Book</button>
+                                <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' 
+                                onClick={() =>handleBook(item.id)}
+                                >Book
+                                </button>
                             </div>
+                        )}
+                        
+                        {openPay && currentId === item.id && (
+                            <form className='flex flex-col' onSubmit={(e) => handlePayAndBook(e, item.id)}>
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Phone Number:</label>
+                                <input type="tel"
+                                placeholder='Enter Phone number' 
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Email:</label>
+                                <input type="email"
+                                placeholder='Enter your Email address'
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <div className="flex justify-center mt-[20px]">
+                                    <button type='submit'
+                                    className='bg-lightBlue px-[15px] py-[10px] rounded-[10px]'
+                                    >
+                                        Pay
+                                    </button>
+                                </div>
+                            </form>
+                        )}
+
                         </div>
                     ))}
                 </div>
@@ -199,20 +279,66 @@ const TestForm = () => {
                             <p><span>No of squares:</span>{item.no_of_squareMeter}</p>
                         </div>
                         <div className="">
-                            <p><span>Remaining Space:</span>{item.full_space}</p>
+                            <p><span>Remaining Space:</span>{item.checkRemainingAmount}</p>
+                        </div>
+                        <p>Choosen Route:</p>
+                        <div className="flex justify-center gap-[30px] items-center">
+                            <div className="">
+                                <p><span>From:</span>{item.from}</p>
+                            </div>
+                            <div className="">
+                                <p><span>To:</span>{item.to}</p>
+                            </div>
+                        </div>
+                        <p>Truck Route:</p>
+                        <div className="flex justify-center gap-[30px] items-center">
+                            <div className="">
+                                <p><span>From:</span>{item.start_route}</p>
+                            </div>
+                            <div className="">
+                                <p><span>To:</span>{item.end_route}</p>
+                            </div>
                         </div>
                         <div className="">
-                            <p><span>From:</span>{item.start_route}</p>
-                        </div>
-                        <div className="">
-                            <p><span>To:</span>{item.end_route}</p>
+                            <p><span>Departure Date:</span>{item.departureDate}</p>
                         </div>
                         <div className="">
                             <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
                         </div>
-                        <div className="flex justify-center">
-                            <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' >Book</button>
-                        </div>
+                        {closeBookBtn &&(
+                            <div className="flex justify-center">
+                                <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' 
+                                onClick={() =>handleBook(item.id)}
+                                >Book
+                                </button>
+                            </div>
+                        )}
+                        
+                        {openPay && currentId === item.id && (
+                            <form className='flex flex-col' onSubmit={(e) => handlePayAndBook(e, item.id)}>
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Phone Number:</label>
+                                <input type="tel"
+                                placeholder='Enter Phone number' 
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Email:</label>
+                                <input type="email"
+                                placeholder='Enter your Email address'
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <div className="flex justify-center mt-[20px]">
+                                    <button type='submit'
+                                    className='bg-lightBlue px-[15px] py-[10px] rounded-[10px]'
+                                    >
+                                        Pay
+                                    </button>
+                                </div>
+                            </form>
+                        )}
                     </div>
                 ))} 
                  </div>
@@ -232,20 +358,66 @@ const TestForm = () => {
                             <p><span>No of Vehicles:</span>{item.no_of_your_vehicles}</p>
                         </div>
                         <div className="">
-                            <p><span>Remaining Space:</span>{item.full_space}</p>
+                            <p><span>Remaining Space:</span>{item.checkRemainingSpace}</p>
+                        </div>
+                        <p>Choosen Route:</p>
+                        <div className="flex justify-center gap-[30px] items-center">
+                            <div className="">
+                                <p><span>From:</span>{item.from}</p>
+                            </div>
+                            <div className="">
+                                <p><span>To:</span>{item.to}</p>
+                            </div>
+                        </div>
+                        <p>Truck Route:</p>
+                        <div className="flex justify-center gap-[30px] items-center">
+                            <div className="">
+                                <p><span>From:</span>{item.start_route}</p>
+                            </div>
+                            <div className="">
+                                <p><span>To:</span>{item.end_route}</p>
+                            </div>
                         </div>
                         <div className="">
-                            <p><span>From:</span>{item.start_route}</p>
-                        </div>
-                        <div className="">
-                            <p><span>To:</span>{item.end_route}</p>
+                            <p><span>Departure Date:</span>{item.departureDate}</p>
                         </div>
                         <div className="">
                             <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
                         </div>
-                        <div className="flex justify-center">
-                            <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' >Book</button>
-                        </div>
+                        {closeBookBtn &&(
+                            <div className="flex justify-center">
+                                <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' 
+                                onClick={() =>handleBook(item.id)}
+                                >Book
+                                </button>
+                            </div>
+                        )}
+                        
+                        {openPay && currentId === item.id && (
+                            <form className='flex flex-col' onSubmit={(e) => handlePayAndBook(e, item.id)}>
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Phone Number:</label>
+                                <input type="tel"
+                                placeholder='Enter Phone number' 
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Email:</label>
+                                <input type="email"
+                                placeholder='Enter your Email address'
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
+                                <div className="flex justify-center mt-[20px]">
+                                    <button type='submit'
+                                    className='bg-lightBlue px-[15px] py-[10px] rounded-[10px]'
+                                    >
+                                        Pay
+                                    </button>
+                                </div>
+                            </form>
+                        )}
                     </div>
                 ))} 
                  </div>
