@@ -153,15 +153,116 @@ const updateData = async(req, res) => {
     }
 }
 
-const updateStartDelivery= (req, res) => {
+const trucksData = async(req, res) => {
+    try {
+        const connection = await database.createConnection();
+        const result =  await new  Promise((resolve, reject)  => {
+            connection.query(queries.trucks.get, (err, result) => {
+                if(err) {
+                    reject(err);
+                }else {
+                    resolve(result);
+                }
+            });
+        });
+        database.closeConnection(connection);
+        return result; 
+    }catch(error) {
+        console.log(error);
+       
+    }
+}
+
+const getBookingsList = async(req, res) => {
+    try {
+        const connection = await database.createConnection();
+        const result =  await new  Promise((resolve, reject)  => {
+            const query = 'SELECT * FROM booking_table';
+
+            connection.query(query, (err, result) => {
+                if(err) {
+                    reject(err);
+                }else {
+                    resolve(result);
+                }
+            });
+        });
+        database.closeConnection(connection);
+        return result; 
+
+    }catch(error) {
+        console.log(error);
+    }
+}
+
+const updateStartDelivery= async(req, res) => {
     const id = req.params.id;
     const startDate = req.body;
     console.log(id);
     const startDeliveryDate = startDate.startDeliveryDate;
     console.log(startDeliveryDate);
+
+
+    
+    const data = await trucksData(req, res);
+    const currentObject = data.find(data => data.id === id);
+    // console.log(currentObject);
+    if(currentObject.status === 1) {
+        console.log('you can update')
+        try{
+            const connection = await database.createConnection();
+            const query ='UPDATE trucks SET on_schedule = true, start_delivery_date = ? WHERE id = ?';
+            const result = await new Promise((resolve, reject) =>{
+                connection.query(query, [startDeliveryDate, id], (err, result) => {
+                    if(err) {
+                        reject(err);
+                    }else {
+                        resolve(result);
+                    }
+                });
+            });
+            const bookingList = await getBookingsList(req, res);
+        // console.log(bookingList);
+                const matching = bookingList.filter(item => item.truck_id === id);
+                console.log(matching);
+                if(matching.length > 0) {
+                    matching.forEach(item => {
+                        console.log(item.customer_name);
+                    
+                        let config = {
+                            host: process.env.EMAIL_HOST,
+                            port: process.env.EMAIL_PORT,
+                            secure: process.env.EMAIL_SECURE,
+                            auth: {
+                            user: process.env.EMAIL_USERNAME,
+                            pass: process.env.EMAIL_PASSWORD,
+                            }
+                        }
+                        let transporter = nodemailer.createTransport(config);
+            
+                        const data = {
+                            from: process.env.EMAIL_USERNAME,
+                            to: item.customer_email,
+                            subject: 'Delivery',
+                            html: `
+                            <p>Dear<span>${item.customer_name},</span> </p> 
+                            <p>Transportation of your goods has started on ${startDeliveryDate},track the progress using your booking code: ${item.booking_code}</p>
+                        `,
+                        }
+                        transporter.sendMail(data)
+
+                    })
+                }
+                res.jon({success: true, message:'successfully Updated'})
+            return result;
+        }catch(error) {
+            console.log(error.message)
+            res.json({success: false, message: error.message})
+        } 
+    }
 } 
 
-const updateEndDelivery = (req, res) => {
+const updateEndDelivery = async(req, res) => {
     const id = req.params.id
     const deliveryData = req.body;
 
@@ -174,6 +275,63 @@ const updateEndDelivery = (req, res) => {
 
     console.log(id);
     console.log(deliveryEndDate);
+
+    const data = await trucksData(req, res);
+    const currentObject = data.find(data => data.id === id);
+    // console.log(currentObject);
+    if(currentObject.status === 1) {
+        console.log('you can update')
+        try{
+            const connection = await database.createConnection();
+            const query ='UPDATE trucks SET end_delivery_date = ? WHERE id = ?';
+            const result = await new Promise((resolve, reject) =>{
+                connection.query(query, [deliveryEndDate, id], (err, result) => {
+                    if(err) {
+                        reject(err);
+                    }else {
+                        resolve(result);
+                    }
+                });
+            });
+            const bookingList = await getBookingsList(req, res);
+        // console.log(bookingList);
+                const matching = bookingList.filter(item => item.truck_id === id);
+                console.log(matching);
+                if(matching.length > 0) {
+                    matching.forEach(item => {
+                        console.log(item.customer_name);
+                    
+                        let config = {
+                            host: process.env.EMAIL_HOST,
+                            port: process.env.EMAIL_PORT,
+                            secure: process.env.EMAIL_SECURE,
+                            auth: {
+                            user: process.env.EMAIL_USERNAME,
+                            pass: process.env.EMAIL_PASSWORD,
+                            }
+                        }
+                        let transporter = nodemailer.createTransport(config);
+            
+                        const data = {
+                            from: process.env.EMAIL_USERNAME,
+                            to: item.customer_email,
+                            subject: 'Delivery',
+                            html: `
+                            <p>Dear<span>${item.customer_name},</span> </p> 
+                            <p>Your goods are at the destination place ${deliveryEndDate}</p>
+                        `,
+                        }
+                        transporter.sendMail(data)
+
+                    })
+                }
+                res.jon({success: true, message:'successfully Updated'})
+            return result;
+        }catch(error) {
+            console.log(error.message)
+            res.json({success: false, message: error.message})
+        } 
+    }
 }
 
 const Trucks = {

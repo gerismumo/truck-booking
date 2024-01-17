@@ -215,8 +215,17 @@ const handleStartDeliverySubmit = async(e) => {
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.status === 1 ? 'Full' : 'No Full'}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>On Delivery</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>unavailable</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() => handleStartDelivery(trucks.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>Start Delivery</button></td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() =>handleOpenUpdateDelivery(trucks.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>{openUpdateDelivery && trucks.id === deliveredId ? 'Close' : 'Delivered'}</button></td>
+                  {trucks.status === 1 ?  (
+                    
+                    <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() => handleStartDelivery(trucks.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>Start Delivery</button></td>
+                  ) : (
+                    <td className='px-[20px] py-[10px] border border-[#ddd]'>Not full yet</td>
+                  )}
+                  {trucks.status === 1 ? (
+                    <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() =>handleOpenUpdateDelivery(trucks.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>{openUpdateDelivery && trucks.id === deliveredId ? 'Close' : 'Delivered'}</button></td>
+                  ): (
+                    <td className='px-[20px] py-[10px] border border-[#ddd]'>Not full yet</td>
+                  )}
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleOpenEdit(trucks.id)}>{openEdit && trucks.id === editId ? icons.eyeSlash : icons.edit}</span></td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleDeleteTruck(trucks.id)}>{icons.delete}</span></td>
                 </tr>
