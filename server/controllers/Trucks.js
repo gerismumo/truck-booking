@@ -153,10 +153,35 @@ const updateData = async(req, res) => {
     }
 }
 
+const updateStartDelivery= (req, res) => {
+    const id = req.params.id;
+    const startDate = req.body;
+    console.log(id);
+    const startDeliveryDate = startDate.startDeliveryDate;
+    console.log(startDeliveryDate);
+} 
+
+const updateEndDelivery = (req, res) => {
+    const id = req.params.id
+    const deliveryData = req.body;
+
+    let noData = '';
+    const deliveryStatus = deliveryData.deliveryStatus;
+    let deliveryEndDate = deliveryData.deliveryDate;
+    if(deliveryStatus ==='notDelivered') {
+        deliveryEndDate = noData;
+    }
+
+    console.log(id);
+    console.log(deliveryEndDate);
+}
+
 const Trucks = {
     insertData,
     selectData,
     deleteData,
     updateData,
+    updateEndDelivery,
+    updateStartDelivery,
 }
 module.exports = Trucks;

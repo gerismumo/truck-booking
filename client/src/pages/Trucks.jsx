@@ -151,10 +151,14 @@ const Trucks = () => {
 const handleStartDeliverySubmit = async(e) => {
   e.preventDefault();
   try {
-    const response = await axios.put(`${API_URL}/updateStartDelivery/${startDeliveryId}`, startDeliveryDate)
+    const startDate = {
+      startDeliveryDate
+    }
+  
+    const response = await axios.put(`${API_URL}/updateStartDelivery/${startDeliveryId}`, startDate)
     console.log(response);
   }catch(error) {
-    console.log(error.message)
+    console.log(error.message);
   }
 }
 

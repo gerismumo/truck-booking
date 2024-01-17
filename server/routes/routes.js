@@ -7,6 +7,7 @@ const townRoutes = require('../controllers/townRoutes');
 const Trucks = require('../controllers/Trucks');
 const booking = require('../controllers/search');
 const payBooking = require('../controllers/booking');
+const { trucks } = require('../queries/queries');
 
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
@@ -47,7 +48,8 @@ router.delete('/deleteBookings/:id', payBooking.deleteBookings);
 
 router.put('/updateDelivery/:id', payBooking.updateDelivery);
 
-
+router.put('/updateStartDelivery/:id', Trucks.updateStartDelivery);
+router.put('/updateTrucksEndDelivery/:id', Trucks.updateEndDelivery);
 
 
 

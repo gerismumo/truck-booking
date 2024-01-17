@@ -162,7 +162,6 @@ const Bookings = () => {
                 )}
               </React.Fragment>
             ))}
-            
           </tbody>
         </table>
     </div>
