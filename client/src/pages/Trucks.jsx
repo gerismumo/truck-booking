@@ -59,11 +59,31 @@ const Trucks = () => {
    
   }
 
-  const handleSubmitEditData = (e) => {
+  const handleSubmitEditData = async(e) => {
     e.preventDefault();
 
     console.log('currentForm',currentForm);
     console.log(editFile)
+    try {
+      const formData = new FormData();
+      formData.append('editFile', editFile);
+      formData.append('book_type', currentForm.book_type);
+      formData.append('driver_license', currentForm.driver_license);
+      formData.append('driver_name', currentForm.driver_name);
+      formData.append('end_route', currentForm.end_route);
+      formData.append('full_space', currentForm.full_space);
+      formData.append('available_space', currentForm.max_amount);
+      formData.append('number_plate', currentForm.number_plate);
+      formData.append('pricing', currentForm.pricing);
+      formData.append('start_route', currentForm.start_route);
+      formData.append('truck_model', currentForm.truck_model);
+      formData.append('truck_type', currentForm.truck_type);
+
+      const response = await axios.put(`${API_URL}/editTrucks/${editId}`, formData);
+      console.log(response);
+    }catch(error) {
+      console.log(error.message);
+    }
   }
   return (
     <div className="flex justify-center py-[30px]">

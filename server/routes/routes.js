@@ -30,6 +30,7 @@ router.put('/updateRoute/:id', townRoutes.updateData);
 router.post('/addTruck', upload.single('truckImages'),Trucks.insertData);
 router.get('/getTrucks', Trucks.selectData);
 router.delete('/deleteTrucks/:id', Trucks.deleteData);
+router.put('/editTrucks/:id',upload.single('editFile'), Trucks.updateData)
 
 
 //search api

@@ -82,32 +82,59 @@ const deleteData = async(req, res) => {
 
 const updateData = async(req, res) => {
     const id = req.params.id;
-    const  truckImages = req.file;
+    const  editFile = req.file;
     const  {
-        truckType,
-        truckModel,
-        numberPlate,
-        driverName,
-        driverLicense,
-        nationalId,
-        startRoute,
-        endRoute} = req.body;
+      book_type,
+      driver_license,
+      driver_name,
+      end_route,
+      full_space,
+      available_space,
+      number_plate,
+      pricing,
+      start_route,
+      truck_model,
+    truck_type
+    } = req.body;
+    
+    
+    let query;
+    let params;
+
+    if(editFile) {
+        query= queries.trucks.updateWithFile;
+        params = [truck_type,
+            book_type,
+            pricing,
+            full_space,
+            available_space,
+            truck_model,
+            number_plate ,
+            editFile.buffer,
+            driver_name,
+            driver_license,
+            start_route,
+            end_route,id]
+    }else {
+        query = queries.trucks.updateWithOutFile;
+        params = [truck_type,
+            book_type,
+            pricing,
+            full_space,
+            available_space,
+            truck_model,
+            number_plate,
+            driver_name,
+            driver_license,
+            start_route,
+            end_route,id]
+    }
+
     try {
         const connection = await database.createConnection();
 
         const data  = await  new Promise((resolve, reject) => {
-            connection.query(queries.trucks.update, [
-                truckType,
-                truckModel,
-                numberPlate,
-                truckImages.buffer,
-                driverName,
-                driverLicense,
-                nationalId,
-                startRoute,
-                endRoute,
-                id
-            ], (err, result) => {
+            connection.query(query, params, (err, result) => {
                 if(err) {
                     reject(err);
                 }else{

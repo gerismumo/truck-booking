@@ -32,17 +32,31 @@ const trucks = {
     ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
     get: 'SELECT * FROM trucks',
     delete: 'DELETE FROM trucks WHERE id = ?',
-    update: `UPDATE trucks SET 
-            truck_type = ?,
-            truck_model = ?,
-            number_plate = ?,
-            truck_image = ?,
-            driver_name = ?,
-            driver_license = ?,
-            national_id = ?,
-            start_route = ?,
-            end_route = ? WHERE id = ?`,
-    
+    updateWithFile: `UPDATE trucks SET 
+        truck_type = ?,
+        book_type =?,
+        pricing = ?,
+        full_space = ?,
+        max_amount = ?,
+        truck_model = ?,
+        number_plate = ? ,
+        truck_image = ?,
+        driver_name = ?,
+        driver_license = ?,
+        start_route = ?,
+        end_route = ? WHERE id = ?`,
+    updateWithOutFile: `UPDATE trucks SET 
+        truck_type = ?,
+        book_type =?,
+        pricing = ?,
+        full_space = ?,
+        max_amount = ?,
+        truck_model = ?,
+        number_plate = ?,
+        driver_name = ?,
+        driver_license = ?,
+        start_route = ?,
+        end_route = ? WHERE id = ?`,
 }
 
 const booking = {
