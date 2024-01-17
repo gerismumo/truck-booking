@@ -105,7 +105,7 @@ const searchProcess = async(req, res) => {
                         
                         console.log('The selected type Truck is not available');
                         returnData.status = false;
-                        returnData.message = 'The selected type Truck is not available'
+                        returnData.message = 'no trucks available or no space available'
                     }else {
                         const someTest  = result.map(item => {
                             const StartRoute = item.start_route;

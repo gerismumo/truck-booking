@@ -176,6 +176,7 @@ const TestForm = () => {
             onChange={(e) => setFrom(e.target.value)}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             >
+                <option value="">select a route</option>
                 {routesList.filter((route) => route.route_name !== to).map((route) => (
                     <option key={route.id} value={route.route_name}>{route.route_name}</option>
                 ))}
@@ -186,6 +187,7 @@ const TestForm = () => {
             onChange={(e) => setTo(e.target.value)}
             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
             >
+                <option value="">select a route</option>
             {routesList.reverse().filter((route) => route.route_name !== from).map((route) => (
                     <option key={route.id} value={route.route_name}>{route.route_name}</option>
                 ))}

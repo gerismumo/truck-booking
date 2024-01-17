@@ -1,6 +1,9 @@
 const database = require('../Database/Db');
 const queries  = require('../queries/queries');
 const uuid = require('uuid');
+const nodemailer = require('nodemailer');
+const dotenv = require('dotenv');
+dotenv.config({path: '../Database/.env'});
 
 const bookingProcess = async(req, res) => {
     const currentBookData = req.body;
@@ -125,6 +128,51 @@ const bookingProcess = async(req, res) => {
                  customerGoodsDescription, no_of_your_vehicles,from,to, departureDate,priceToPay, uniqueCode );
             
             //send email to the customer
+            let config = {
+                host: process.env.EMAIL_HOST,
+                port: process.env.EMAIL_PORT,
+                secure: process.env.EMAIL_SECURE,
+                auth: {
+                user: process.env.EMAIL_USERNAME,
+                pass: process.env.EMAIL_PASSWORD,
+                }
+            }
+            let transporter = nodemailer.createTransport(config);
+
+            const data = {
+                from: process.env.EMAIL_USERNAME,
+                to: customerEmail,
+                subject: 'Booking',
+                html: `
+                <p>Dear<span>${customerFullName},</span> </p> 
+                <p>Your booking code is ${uniqueCode},  trace your goods transportation using it</p>
+              `,
+            }
+            transporter.sendMail(data)
+            .then(() => {
+                const response = ({success: true, message:'Submitted Successfully'});
+
+                    const companyMessage = `<p>Customer:${customerFullName} </p>
+                    <p>Booked a truck using this code ${uniqueCode} you can trace the booking in our website</p>`
+
+                                            
+                    const companyData = {
+                        from: process.env.EMAIL_USERNAME,
+                        to: process.env.COMPANY_EMAIL,
+                        subject: 'Company Board',
+                        html: companyMessage,
+                    }
+                    transporter.sendMail(companyData)
+                    .then(() => {
+                        res.json(response);
+                      })
+                      .catch(error => {
+                        res.json({success: false, message: 'Error submitting information'});
+                      });
+              })
+              .catch(error => {
+                res.json({success: false, message: 'Error submitting information'});
+              });
 
         } else if (book_type === 'Full Truck') {
             updateFull(connection, id);
@@ -137,6 +185,51 @@ const bookingProcess = async(req, res) => {
 
                 //send email to the customer
 
+                let config = {
+                    host: process.env.EMAIL_HOST,
+                    port: process.env.EMAIL_PORT,
+                    secure: process.env.EMAIL_SECURE,
+                    auth: {
+                    user: process.env.EMAIL_USERNAME,
+                    pass: process.env.EMAIL_PASSWORD,
+                    }
+                }
+                let transporter = nodemailer.createTransport(config);
+    
+                const data = {
+                    from: process.env.EMAIL_USERNAME,
+                    to: customerEmail,
+                    subject: 'Booking',
+                    html: `
+                    <p>Dear<span>${customerFullName},</span> </p> 
+                    <p>Your booking code is ${uniqueCode},  trace your goods transportation using it</p>
+                  `,
+                }
+                transporter.sendMail(data)
+                .then(() => {
+                    const response = ({success: true, message:'Submitted Successfully'});
+    
+                        const companyMessage = `<p>Customer:${customerFullName} </p>
+                        <p>Booked a truck using this code ${uniqueCode} you can trace the booking in our website</p>`
+    
+                                                
+                        const companyData = {
+                            from: process.env.EMAIL_USERNAME,
+                            to: process.env.COMPANY_EMAIL,
+                            subject: 'Company Board',
+                            html: companyMessage,
+                        }
+                        transporter.sendMail(companyData)
+                        .then(() => {
+                            res.json(response);
+                          })
+                          .catch(error => {
+                            res.json({success: false, message: 'Error submitting information'});
+                          });
+                  })
+                  .catch(error => {
+                    res.json({success: false, message: 'Error submitting information'});
+                  });
         } else if (book_type === 'Square Meter') {
             //update remaining amount
             await updateRemainAmount(connection, id, checkRemainingAmount);
@@ -151,7 +244,53 @@ const bookingProcess = async(req, res) => {
                 number_plate, book_type, customerFullName,
                 customerPhoneNumber, customerEmail,customerNationalId,customerCountry,
                 customerGoodsDescription, no_of_squareMeter,from,to, departureDate,priceToPay, uniqueCode );
+                //email
 
+                let config = {
+                    host: process.env.EMAIL_HOST,
+                    port: process.env.EMAIL_PORT,
+                    secure: process.env.EMAIL_SECURE,
+                    auth: {
+                    user: process.env.EMAIL_USERNAME,
+                    pass: process.env.EMAIL_PASSWORD,
+                    }
+                }
+                let transporter = nodemailer.createTransport(config);
+    
+                const data = {
+                    from: process.env.EMAIL_USERNAME,
+                    to: customerEmail,
+                    subject: 'Booking',
+                    html: `
+                    <p>Dear<span>${customerFullName},</span> </p> 
+                    <p>Your booking code is ${uniqueCode},  trace your goods transportation using it</p>
+                  `,
+                }
+                transporter.sendMail(data)
+                .then(() => {
+                    const response = ({success: true, message:'Submitted Successfully'});
+    
+                        const companyMessage = `<p>Customer:${customerFullName} </p>
+                        <p>Booked a truck using this code ${uniqueCode} you can trace the booking in our website</p>`
+    
+                                                
+                        const companyData = {
+                            from: process.env.EMAIL_USERNAME,
+                            to: process.env.COMPANY_EMAIL,
+                            subject: 'Company Board',
+                            html: companyMessage,
+                        }
+                        transporter.sendMail(companyData)
+                        .then(() => {
+                            res.json(response);
+                          })
+                          .catch(error => {
+                            res.json({success: false, message: 'Error submitting information'});
+                          });
+                  })
+                  .catch(error => {
+                    res.json({success: false, message: 'Error submitting information'});
+                  });
         }
     }catch (error) {
         console.log(error);
