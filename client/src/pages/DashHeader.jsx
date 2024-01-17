@@ -14,19 +14,21 @@ const DashHeader = () => {
                 <Link to='bookings' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
                     Bookings
                 </Link>
-                <Link to='truckTypes' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
-                    Truck Type
-                </Link>
-                <Link to='stations' 
-                className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
-                    Add Route
+                <Link to='trucksList' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
+                    Trucks
                 </Link>
                 <Link to='addTruck' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
                     Add Truck
                 </Link>
-                <Link to='trucksList' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
-                    Trucks
+                <Link to='truckTypes' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
+                    Truck Type
                 </Link>
+                {/* <Link to='stations' 
+                className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
+                    Add Route
+                </Link> */}
+                
+                
             </div>
             <div className="flex flex-col items-center">
                 <h2 className='text-[18px] font-[500]'>Gerald Mumo</h2>

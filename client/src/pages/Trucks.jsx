@@ -5,28 +5,29 @@ import { API_URL, bookTypes, useTruckTypeList } from './TruckTypes';
 import icons from './services/icons';
 export const useTrucksData = () => {
   const[trucksList, setTrucksList] = useState([]);
-  
-  useEffect(() => {
-    const trucksData = async() => {
-      try {
-        const response = await axios.get(API_URL +'/getTrucks');
 
-        const success = response.data.success;
-        if(success) {
-          setTrucksList(response.data.data);
-        }
-        console.log(response);
-      }catch(error) {
-        console.error(error.message);
+  const trucksData = async() => {
+    try {
+      const response = await axios.get(API_URL +'/getTrucks');
+
+      const success = response.data.success;
+      if(success) {
+        setTrucksList(response.data.data);
       }
+      console.log(response);
+    }catch(error) {
+      console.error(error.message);
     }
+  }
+
+  useEffect(() => {
     trucksData();
   }, []);
 
-  return {trucksList, setTrucksList ,};
+  return {trucksList, setTrucksList , trucksData};
 }
 const Trucks = () => {
-  const {trucksList} = useTrucksData();
+  const {trucksList,trucksData} = useTrucksData();
   const {truckTypeList} = useTruckTypeList();
   const {routesList} = useRoutesList();
   console.log(truckTypeList)
@@ -36,9 +37,8 @@ const Trucks = () => {
     try {
       const response = await axios.delete(`${API_URL}/deleteTrucks/${id}`);
       if(response.data.success) {
-        // setTrucksList(trucksList);
+        trucksData();
       }
-      console.log(response);
     }catch (error) {
       console.error(error.message);
     }
@@ -80,6 +80,10 @@ const Trucks = () => {
       formData.append('truck_type', currentForm.truck_type);
 
       const response = await axios.put(`${API_URL}/editTrucks/${editId}`, formData);
+      if(response.data.success){
+        trucksData();
+        setOpenEdit(false);
+      }
       console.log(response);
     }catch(error) {
       console.log(error.message);
@@ -138,13 +142,12 @@ const Trucks = () => {
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>Active</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>On Delivery</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>Unavailable</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleOpenEdit(trucks.id)}>{icons.edit}</span></td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleOpenEdit(trucks.id)}>{openEdit && trucks.id === editId ? icons.eyeSlash : icons.edit}</span></td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleDeleteTruck(trucks.id)}>{icons.delete}</span></td>
                 </tr>
                 {openEdit && editId === trucks.id && (
                   <tr>
-                    <td colSpan='16' className='px-[20px] py-[10px] border border-[#ddd]'>
+                    <td colSpan='18' className='px-[20px] py-[10px] border border-[#ddd]'>
                       <div className="w-[100%]">
                         <form onSubmit={(e) => handleSubmitEditData(e)}  className='w-[100%] flex flex-col'>
                           <div className="flex justify-between">
@@ -231,7 +234,7 @@ const Trucks = () => {
                               onChange={(e) => setCurrentForm({...currentForm, start_route: e.target.value})}
                               className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                               >
-                                {routesList.map((route) => (
+                                {routesList.filter((route) => route.route_name !== currentForm.end_route).map((route) => (
                                   <option key={route.id} value={route.route_name}>{route.route_name}</option>
                                 ))}
                               </select>

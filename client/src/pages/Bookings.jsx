@@ -5,33 +5,32 @@ import icons from './services/icons';
 export const useBookings = () => {
     const[bookingsList, setBookingsList] = useState([]);
 
-    useEffect(() => {
-        const getData = async() => {
-            try{
-                const response = await axios.get(API_URL + '/getBookings');
-                const success = response.data.success;
-                if(success) {
-                    setBookingsList(response.data.data);
-                }
-                console.log(response);
-            }catch(error) {
-                console.log(error);
+    const getData = async() => {
+        try{
+            const response = await axios.get(API_URL + '/getBookings');
+            const success = response.data.success;
+            if(success) {
+                setBookingsList(response.data.data);
             }
+            console.log(response);
+        }catch(error) {
+            console.log(error);
         }
+    }
+
+    useEffect(() => {
         getData();
     },[])
-    return {bookingsList, setBookingsList}
+    return {bookingsList, setBookingsList,getData}
 }
 const Bookings = () => {
-    const {bookingsList} = useBookings();
+    const {bookingsList,getData} = useBookings();
     
     const handleDelete = async(id) => {
         try{
             const response = await axios.delete(`${API_URL}/deleteBookings/${id}`);
             if(response.data.success) {
-                useEffect(() => {
-                    useBookings();
-                },[]);
+                getData();
             }
         }catch(error) {
             console.log(error.message);
@@ -72,8 +71,8 @@ const Bookings = () => {
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.route_to}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.departure_date}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.booking_code}</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.edit}</span></td>
+                  {/* <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.edit}</span></td> */}
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={()=>handleDelete(data.id)}>{icons.delete}</span></td>
                 </tr>
               </React.Fragment>

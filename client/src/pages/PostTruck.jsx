@@ -229,7 +229,7 @@ const PostTruck = () => {
                     onChange={(e) => setFormData({...formData, endRoute: e.target.value})}
                     className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                     >
-                        {routesList.toReversed().map((town) => (
+                        {routesList.toReversed().filter((route) => route.route_name !== formData.startRoute).map((town) => (
                             <option key={town.id} value={town.route_name}>{town.route_name}</option>
                         ))}
                     </select>
