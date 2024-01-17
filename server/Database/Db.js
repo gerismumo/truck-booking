@@ -31,5 +31,14 @@ const createConnection = async () => {
     }
 }
 
+const closeConnection = (connection) => {
+    connection.end((err) => {
+      if (err) {
+        console.error('Error closing connection:', err);
+      } else {
+        console.log('Connection closed');
+      }
+    });
+  };
 
-module.exports = {createConnection};
+module.exports = {createConnection, closeConnection};

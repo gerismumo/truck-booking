@@ -172,6 +172,7 @@ const getBookingsList = async(req, res) => {
                 }
             });
         });
+        database.closeConnection(connection);
         res.json({success: true, data: result});
         return result; 
 
@@ -187,6 +188,7 @@ const deleteBookings = async(req, res) => {
         const connection = await database.createConnection();
         const query = 'DELETE FROM booking_table WHERE id = ?'
         const data = await connection.query(query, id);
+        database.closeConnection(connection);
         res.json({success: true, message: 'Deleted successfully'});
         return data;
     }catch(error) {

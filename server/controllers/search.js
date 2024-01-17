@@ -288,6 +288,7 @@ const searchProcess = async(req, res) => {
                 }
                 });
             });  
+            database.closeConnection(connection);
             res.json({ success: true, trucksData: trucksResult });
 
     }catch(error) {

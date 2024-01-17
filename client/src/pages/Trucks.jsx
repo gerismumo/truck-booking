@@ -121,7 +121,7 @@ const Trucks = () => {
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_model}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.number_plate}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>
-                    <img src={URL.createObjectURL(new Blob([new Uint8Array(trucks.truck_image.data)],{type: 'image/jpeg', }))} alt="" 
+                  <img src={URL.createObjectURL(new Blob([new Uint8Array(trucks.truck_image.data)],{type: 'image/jpeg', }))} alt="" 
                     className='w-[130px] h-[50px]'
                     />
                   </td>
@@ -201,26 +201,31 @@ const Trucks = () => {
                               />
                             </div>
                             <div className="flex flex-col">
-                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>No Plate:</label>
-                              <input type="text" 
-                              value={currentForm.number_plate}
-                              onChange={(e) => setCurrentForm({...currentForm, number_plate: e.target.value})}
-                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                              />
+                              <div className="">
+                                <img src={URL.createObjectURL(new Blob([new Uint8Array(currentForm.truck_image.data)],{type: 'image/jpeg', }))} alt="" 
+                                className='w-[200px] h-[180px]'
+                                />
+                              </div>
                               <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Image:</label>
                               <input type="file" 
                               accept="image/*" multiple
                               onChange={(e) => setEditFile(e.target.files[0])}
                               className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                               />
-                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Driver Name:</label>
-                              <input type="text"
-                              value={currentForm.driver_name}
-                              onChange={(e) => setCurrentForm({...currentForm, driver_name: e.target.value})}
-                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                              />
                             </div>
                             <div className="flex flex-col">
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>No Plate:</label>
+                              <input type="text" 
+                              value={currentForm.number_plate}
+                              onChange={(e) => setCurrentForm({...currentForm, number_plate: e.target.value})}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              />
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Driver Name:</label>
+                                <input type="text"
+                                value={currentForm.driver_name}
+                                onChange={(e) => setCurrentForm({...currentForm, driver_name: e.target.value})}
+                                className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                />
                               
                               <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Driver License:</label>
                               <input type="number"
@@ -228,26 +233,29 @@ const Trucks = () => {
                               onChange={(e) => setCurrentForm({...currentForm, driver_license: e.target.value})}
                               className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                                />
-                               <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>From:</label>
-                              <select name="" id=""
-                              defaultValue={currentForm.start_route}
-                              onChange={(e) => setCurrentForm({...currentForm, start_route: e.target.value})}
-                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                              >
-                                {routesList.filter((route) => route.route_name !== currentForm.end_route).map((route) => (
-                                  <option key={route.id} value={route.route_name}>{route.route_name}</option>
-                                ))}
-                              </select>
-                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>To:</label>
-                              <select name="" id=""
-                              defaultValue={currentForm.end_route}
-                              onChange={(e) => setCurrentForm({...currentForm, end_route: e.target.value})}
-                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                              >
-                                {routesList.filter((route) => route.route_name !== currentForm.start_route).map((route) => (
-                                  <option key={route.id} value={route.route_name}>{route.route_name}</option>
-                                ))}
-                              </select>
+                              
+                            </div>
+                            <div className="flex flex-col">
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>From:</label>
+                                <select name="" id=""
+                                defaultValue={currentForm.start_route}
+                                onChange={(e) => setCurrentForm({...currentForm, start_route: e.target.value})}
+                                className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                >
+                                  {routesList.filter((route) => route.route_name !== currentForm.end_route).map((route) => (
+                                    <option key={route.id} value={route.route_name}>{route.route_name}</option>
+                                  ))}
+                                </select>
+                                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>To:</label>
+                                <select name="" id=""
+                                defaultValue={currentForm.end_route}
+                                onChange={(e) => setCurrentForm({...currentForm, end_route: e.target.value})}
+                                className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                >
+                                  {routesList.filter((route) => route.route_name !== currentForm.start_route).map((route) => (
+                                    <option key={route.id} value={route.route_name}>{route.route_name}</option>
+                                  ))}
+                                </select>
                             </div>
                           </div>
                           <div className="flex w-[100%] mt-[20px]">

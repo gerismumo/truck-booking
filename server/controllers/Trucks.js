@@ -38,6 +38,7 @@ const insertData = async(req, res) => {
                 startRoute,
                 endRoute]
              );
+             database.closeConnection(connection);
              res.json({success:true, message:'Successfully addition'});
         return data;    
     }catch(error) {
@@ -58,6 +59,7 @@ const selectData = async(req, res) => {
                 }
             });
         });
+        database.closeConnection(connection);
         res.json({success: true, data: result});
         return result; 
     }catch(error) {
@@ -73,6 +75,7 @@ const deleteData = async(req, res) => {
     try{
         const connection = await database.createConnection();
         const data = await connection.query(queries.trucks.delete, id);
+        database.closeConnection(connection);
         res.json({success: true, message: 'Deleted successfully'});
         return data;
     }catch(error) {
@@ -142,6 +145,7 @@ const updateData = async(req, res) => {
                 }
             });
         });
+        database.closeConnection(connection);
         res.json({success: true, message:'Successfully updated'});
         return data;
     }catch (error){
