@@ -1,11 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { API_URL } from './TruckTypes';
+import { useRoutesList } from './Stations';
+import { API_URL, bookTypes, useTruckTypeList } from './TruckTypes';
 import icons from './services/icons';
-
 export const useTrucksData = () => {
   const[trucksList, setTrucksList] = useState([]);
-
+  
   useEffect(() => {
     const trucksData = async() => {
       try {
@@ -23,22 +23,48 @@ export const useTrucksData = () => {
     trucksData();
   }, []);
 
-  return {trucksList, setTrucksList};
+  return {trucksList, setTrucksList ,};
 }
 const Trucks = () => {
   const {trucksList} = useTrucksData();
-  
+  const {truckTypeList} = useTruckTypeList();
+  const {routesList} = useRoutesList();
+  console.log(truckTypeList)
 
   const handleDeleteTruck = async(id) => {
     console.log(id);
     try {
       const response = await axios.delete(`${API_URL}/deleteTrucks/${id}`);
+      if(response.data.success) {
+        // setTrucksList(trucksList);
+      }
       console.log(response);
     }catch (error) {
       console.error(error.message);
     }
   }
 
+  const[openEdit, setOpenEdit] = useState(false);
+  const[editId, setEditId] = useState(null);
+  const[currentForm, setCurrentForm] = useState(null);
+  const[editFile, setEditFile] = useState(null);
+
+  const handleOpenEdit =(id) => {
+    setEditId(id);
+    const currentEdit = trucksList.find(data => data.id === id);
+    setCurrentForm(currentEdit);
+    if(id) {
+      setOpenEdit(!openEdit);
+    }
+   
+  }
+
+  const handleSubmitEditData = (e) => {
+    e.preventDefault();
+
+    console.log('currentForm',currentForm);
+    console.log(editFile)
+  }
   return (
     <div className="flex justify-center py-[30px]">
       <div className="">
@@ -61,7 +87,7 @@ const Trucks = () => {
           </thead>
           <tbody>
             {trucksList.map((trucks) => (
-              <React.Fragment>
+              <React.Fragment key={trucks.id}>
                 <tr>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_type}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type}</td>
@@ -93,9 +119,125 @@ const Trucks = () => {
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>On Delivery</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>Unavailable</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.edit}</span></td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleOpenEdit(trucks.id)}>{icons.edit}</span></td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleDeleteTruck(trucks.id)}>{icons.delete}</span></td>
                 </tr>
+                {openEdit && editId === trucks.id && (
+                  <tr>
+                    <td colSpan='16' className='px-[20px] py-[10px] border border-[#ddd]'>
+                      <div className="w-[100%]">
+                        <form onSubmit={(e) => handleSubmitEditData(e)}  className='w-[100%] flex flex-col'>
+                          <div className="flex justify-between">
+                            <div className="flex flex-col">
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Type:</label>
+                              <select name="" id=""
+                              defaultValue={currentForm.truck_type}
+                              onChange={(e) => setCurrentForm({...currentForm, truck_type: e.target.value})}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              >
+                                <option value="">Select a type</option>
+                                {truckTypeList.map((data) => (
+                                  <option key={data._id} value={data.truck_type}>{data.truck_type}</option>
+                                ))}
+                              </select>
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
+                              <select name="" id=""
+                              defaultValue={currentForm.book_type}
+                              onChange={(e) => setCurrentForm({...currentForm, book_type: e.target.value})}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              >
+                                  {bookTypes.map((data) => (
+                                    <option key={data.id}  value={data.name}>{data.name}</option>
+                                  ))}
+                              </select>
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Pricing:</label>
+                              <input type="number"
+                                value={currentForm.pricing}
+                                onChange={(e) => setCurrentForm({...currentForm,pricing: e.target.value})}
+                                className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              />
+                              
+                            </div>
+                            <div className="flex flex-col">
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Space</label>
+                              <input type="number" 
+                              value={currentForm.full_space}
+                              onChange={(e) => setCurrentForm({...currentForm, full_space: e.target.value})}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              />
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Available Space:</label>
+                              <input type="text"
+                              value={currentForm.max_amount}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              />
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Model:</label>
+                              <input type="text" 
+                                value={currentForm.truck_model}
+                                onChange={(e) => setCurrentForm({...currentForm, truck_model: e.target.value })}
+                                className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>No Plate:</label>
+                              <input type="text" 
+                              value={currentForm.number_plate}
+                              onChange={(e) => setCurrentForm({...currentForm, number_plate: e.target.value})}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              />
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Image:</label>
+                              <input type="file" 
+                              accept="image/*" multiple
+                              onChange={(e) => setEditFile(e.target.files[0])}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              />
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Driver Name:</label>
+                              <input type="text"
+                              value={currentForm.driver_name}
+                              onChange={(e) => setCurrentForm({...currentForm, driver_name: e.target.value})}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              />
+                            </div>
+                            <div className="flex flex-col">
+                              
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Driver License:</label>
+                              <input type="number"
+                              value={currentForm.driver_license}
+                              onChange={(e) => setCurrentForm({...currentForm, driver_license: e.target.value})}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                               />
+                               <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>From:</label>
+                              <select name="" id=""
+                              defaultValue={currentForm.start_route}
+                              onChange={(e) => setCurrentForm({...currentForm, start_route: e.target.value})}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              >
+                                {routesList.map((route) => (
+                                  <option key={route.id} value={route.route_name}>{route.route_name}</option>
+                                ))}
+                              </select>
+                              <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>To:</label>
+                              <select name="" id=""
+                              defaultValue={currentForm.end_route}
+                              onChange={(e) => setCurrentForm({...currentForm, end_route: e.target.value})}
+                              className=' w-[200px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                              >
+                                {routesList.filter((route) => route.route_name !== currentForm.start_route).map((route) => (
+                                  <option key={route.id} value={route.route_name}>{route.route_name}</option>
+                                ))}
+                              </select>
+                            </div>
+                          </div>
+                          <div className="flex w-[100%] mt-[20px]">
+                            <button
+                            type='submit'
+                            className='bg-lightBlue w-[100%] tracking-[15px] rounded-[4px] py-[8px] text-[20px] font-[900] text-white'
+                             >Edit</button>
+                          </div>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                )}
               </React.Fragment>
             ))}
             
