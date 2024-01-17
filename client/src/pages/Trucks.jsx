@@ -89,6 +89,75 @@ const Trucks = () => {
       console.log(error.message);
     }
   }
+
+  //delivery
+
+  const[openUpdateDelivery, setOpenUpdateDelivery] = useState(false);
+  const[deliveredId, setDeliveredId] = useState(null);
+  const handleOpenUpdateDelivery = (id) => {
+    setDeliveredId(id);
+    if(id) {
+      setOpenUpdateDelivery(!openUpdateDelivery);
+    }
+  }
+
+  const[deliveryStatus, setDeliveryStatus] = useState('')
+  const[deliveryDate, setDeliveryDate] = useState('')
+
+  const handleChangeDelivery = (e) => {
+    setDeliveryStatus(e.target.value)
+  }
+
+  const handleUpdateDelivery = async(e) => {
+    e.preventDefault();
+
+    if(deliveryStatus === 'delivered') {
+      if(deliveryDate === '') {
+        alert('Please enter delivered Date');
+        return;
+      }
+    }
+
+    console.log('deliveryStatus',deliveryStatus);
+    console.log('deliveryDate',deliveryDate);
+    const deliveryData = {
+      deliveryStatus,
+      deliveryDate
+    }
+
+    try {
+      const response = await axios.put(`${API_URL}/updateTrucksEndDelivery/${deliveredId}`, deliveryData);
+      if(response.data.success) {
+        trucksData();
+        setOpenUpdateDelivery(false);
+      }
+    }catch(error) {
+      console.log(error.message);
+    }
+  }
+
+  const[startDeliveryId, setStartDeliveryId] = useState(null);
+  const[openStartDelivery, setOpenStartDelivery] = useState(false);
+  const[startDeliveryDate, setStartDeliveryDate] = useState('');
+
+   const handleStartDelivery = (id) => {
+    setStartDeliveryId(id);
+    console.log(id);
+    if(id) {
+      setOpenStartDelivery(!openStartDelivery);
+    }
+  }
+
+const handleStartDeliverySubmit = async(e) => {
+  e.preventDefault();
+  try {
+    const response = await axios.put(`${API_URL}/updateStartDelivery/${startDeliveryId}`, startDeliveryDate)
+    console.log(response);
+  }catch(error) {
+    console.log(error.message)
+  }
+}
+
   return (
     <div className="flex justify-center py-[30px]">
       <div className="">
@@ -139,9 +208,11 @@ const Trucks = () => {
                       <span>{trucks.end_route}</span>
                     </div>
                   </td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'>Active</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.status === 1 ? 'Full' : 'No Full'}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>On Delivery</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'>Unavailable</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>unavailable</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() => handleStartDelivery(trucks.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>Start Delivery</button></td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() =>handleOpenUpdateDelivery(trucks.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>{openUpdateDelivery && trucks.id === deliveredId ? 'Close' : 'Delivered'}</button></td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleOpenEdit(trucks.id)}>{openEdit && trucks.id === editId ? icons.eyeSlash : icons.edit}</span></td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleDeleteTruck(trucks.id)}>{icons.delete}</span></td>
                 </tr>
@@ -266,6 +337,66 @@ const Trucks = () => {
                           </div>
                         </form>
                       </div>
+                    </td>
+                  </tr>
+                )}
+                {openUpdateDelivery && trucks.id === deliveredId && (
+                  <tr>
+                    <td colSpan='17' className='px-[20px] py-[10px] border border-[#ddd]'>
+                      <form onSubmit={(e) => handleUpdateDelivery(e)} className='flex justify-center'>
+                        <div className=" flex flex-col">
+                          <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Status:</label>
+                          <div className="">
+                            <input type="radio" name="checkDelivery"  id="" 
+                            value='delivered'
+                            checked={deliveryStatus === 'delivered'}
+                            onChange={handleChangeDelivery}
+                            />
+                            <label htmlFor="">Delivered</label>
+                          </div>
+                          <div className="justify-center gap-[10px] items-center">
+                            <input type="radio" name="checkDelivery" id="" 
+                            value='notDelivered'
+                            checked={deliveryStatus === 'notDelivered'}
+                            onChange={handleChangeDelivery}
+                            />
+                            <label htmlFor="">Not Delivered</label>
+                          </div>
+                          {deliveryStatus === 'delivered' && (
+                            <>
+                            <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Delivered Date:</label>
+                            <input type="date" name="" id="" 
+                            value={deliveryDate}
+                            onChange={(e) => setDeliveryDate(e.target.value)}
+                             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                            />
+                            </>
+                          )}
+                          <div className="mt-[20px] flex justify-center" >
+                            <button className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>Update</button>
+                          </div>
+                        </div>
+                        
+                      </form>
+                    </td>
+                  </tr>
+                )}
+                {openStartDelivery && startDeliveryId === trucks.id && (
+                  <tr>
+                    <td colSpan='18'>
+                      <form onSubmit={(e) => handleStartDeliverySubmit(e)} className='flex justify-center gap-[40px]'>
+                        <div className="flex flex-col">
+                          <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Start Label:</label>
+                          <input type="date" name="" id=""
+                          value={startDeliveryDate}
+                          onChange={(e) => setStartDeliveryDate(e.target.value)}
+                          className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                          />
+                          <div className="flex justify-center mt-[30px]">
+                            <button type='submit' className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]' >Update</button>
+                          </div>
+                        </div>
+                      </form>
                     </td>
                   </tr>
                 )}
