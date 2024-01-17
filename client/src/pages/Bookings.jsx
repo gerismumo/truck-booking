@@ -36,6 +36,49 @@ const Bookings = () => {
             console.log(error.message);
         }
     }
+    const[openUpdateDelivery, setOpenUpdateDelivery] = useState(false);
+    const[deliveredId, setDeliveredId] = useState(null);
+    const handleOpenUpdateDelivery = (id) => {
+      setDeliveredId(id);
+      if(id) {
+        setOpenUpdateDelivery(!openUpdateDelivery);
+      }
+    }
+
+    const[deliveryStatus, setDeliveryStatus] = useState('')
+    const[deliveryDate, setDeliveryDate] = useState('')
+
+    const handleChangeDelivery = (e) => {
+      setDeliveryStatus(e.target.value)
+    }
+
+    const handleUpdateDelivery = async(e) => {
+      e.preventDefault();
+
+      if(deliveryStatus === 'delivered') {
+        if(deliveryDate === '') {
+          alert('Please enter delivered Date');
+          return;
+        }
+      }
+
+      console.log('deliveryStatus',deliveryStatus);
+      console.log('deliveryDate',deliveryDate);
+      const deliveryData = {
+        deliveryStatus,
+        deliveryDate
+      }
+
+      try {
+        const response = await axios.put(`${API_URL}/updateDelivery/${deliveredId}`, deliveryData);
+        if(response.data.success) {
+          getData();
+          setOpenUpdateDelivery(false);
+        }
+      }catch(error) {
+        console.log(error.message);
+      }
+    }
   return (
     <div className="flex flex-col justify-center p-[30px]">
         <table className='border-collapse'>
@@ -71,10 +114,52 @@ const Bookings = () => {
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.route_to}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.departure_date}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.booking_code}</td>
-                  {/* <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.edit}</span></td> */}
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.delivery_status}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.delivery_date}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() =>handleOpenUpdateDelivery(data.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>{openUpdateDelivery && data.id === deliveredId ? 'Close' : 'Delivery'}</button></td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={()=>handleDelete(data.id)}>{icons.delete}</span></td>
                 </tr>
+                {openUpdateDelivery && data.id === deliveredId && (
+                  <tr>
+                    <td colSpan='17' className='px-[20px] py-[10px] border border-[#ddd]'>
+                      <form onSubmit={(e) => handleUpdateDelivery(e)} className='flex justify-center'>
+                        <div className=" flex flex-col">
+                          <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Status:</label>
+                          <div className="">
+                            <input type="radio" name="checkDelivery"  id="" 
+                            value='delivered'
+                            checked={deliveryStatus === 'delivered'}
+                            onChange={handleChangeDelivery}
+                            />
+                            <label htmlFor="">Delivered</label>
+                          </div>
+                          <div className="justify-center gap-[10px] items-center">
+                            <input type="radio" name="checkDelivery" id="" 
+                            value='notDelivered'
+                            checked={deliveryStatus === 'notDelivered'}
+                            onChange={handleChangeDelivery}
+                            />
+                            <label htmlFor="">Not Delivered</label>
+                          </div>
+                          {deliveryStatus === 'delivered' && (
+                            <>
+                            <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Delivered Date:</label>
+                            <input type="date" name="" id="" 
+                            value={deliveryDate}
+                            onChange={(e) => setDeliveryDate(e.target.value)}
+                             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                            />
+                            </>
+                          )}
+                          <div className="mt-[20px] flex justify-center" >
+                            <button className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>Update</button>
+                          </div>
+                        </div>
+                        
+                      </form>
+                    </td>
+                  </tr>
+                )}
               </React.Fragment>
             ))}
             

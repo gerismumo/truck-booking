@@ -43,6 +43,10 @@ router.post('/payBooking' ,payBooking.bookingProcess);
 router.get('/getBookings',payBooking.getBookingsList);
 router.delete('/deleteBookings/:id', payBooking.deleteBookings);
 
+//update delivery
+
+router.put('/updateDelivery/:id', payBooking.updateDelivery);
+
 
 
 

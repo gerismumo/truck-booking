@@ -335,10 +335,104 @@ const deleteBookings = async(req, res) => {
     }
 }
 
+const getBookingListData = async(req, res) => {
+    try {
+        const connection = await database.createConnection();
+        const result =  await new  Promise((resolve, reject)  => {
+            const query = 'SELECT * FROM booking_table';
+
+            connection.query(query, (err, result) => {
+                if(err) {
+                    reject(err);
+                }else {
+                    resolve(result);
+                }
+            });
+        });
+        database.closeConnection(connection);
+        return result; 
+
+    }catch(error) {
+        console.log(error);
+        res.json({success: false, message: error.message});
+    }
+}
+const updateDelivery = async(req, res) => {
+    const id = req.params.id;
+    const deliveryData = req.body;
+
+
+    let noData = '';
+    const deliveryStatus = deliveryData.deliveryStatus;
+    let deliveryDate = deliveryData.deliveryDate;
+    if(deliveryStatus ==='notDelivered') {
+        deliveryDate = noData;
+    }
+
+    
+    try {
+        const connection = await database.createConnection();
+        
+      
+        const query = 'UPDATE booking_table SET delivery_status = ? , delivery_date =? WHERE id = ?';
+        const result = await new Promise((resolve, reject) => {
+            connection.query(query, [deliveryStatus, deliveryDate, id],(err, result) => {
+                if(err) {
+                    reject(err);
+                }else {
+                    resolve(result);
+                }
+            });
+        });
+        if (deliveryStatus === 'delivered') {
+            const data = await getBookingListData(req, res);
+            const currentObject = data.find(data => data.id === id);
+            if(currentObject) {
+                const customerName = currentObject.customer_name;
+                const customerEmail = currentObject.customer_email;
+                const bookingCode = currentObject.booking_code;
+                const destination = currentObject.route_to;
+
+                //send delivery email
+
+                let config = {
+                    host: process.env.EMAIL_HOST,
+                    port: process.env.EMAIL_PORT,
+                    secure: process.env.EMAIL_SECURE,
+                    auth: {
+                    user: process.env.EMAIL_USERNAME,
+                    pass: process.env.EMAIL_PASSWORD,
+                    }
+                }
+                let transporter = nodemailer.createTransport(config);
+    
+                const data = {
+                    from: process.env.EMAIL_USERNAME,
+                    to: customerEmail,
+                    subject: 'Delivery',
+                    html: `
+                    <p>Dear<span>${customerName},</span> </p> 
+                    <p>Your goods have being delivered at the destination station: ${destination}, you can confirm with your booking code: ${bookingCode}</p>
+                  `,
+                }
+                transporter.sendMail(data)
+            }
+            
+        }
+        
+
+        res.json({success: true, message: 'Successfully Updated'})
+        return result;
+    }catch(error) {
+        console.log(error.message);
+        res.json({success:false, message:error.message});
+    }
+}
 const payBooking = {
     bookingProcess,
     getBookingsList,
     deleteBookings,
+    updateDelivery,
 }
 
 module.exports = payBooking;
