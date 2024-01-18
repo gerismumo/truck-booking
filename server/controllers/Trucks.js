@@ -195,6 +195,21 @@ const getBookingsList = async(req, res) => {
     }
 }
 
+const updateBookingStartDe = async (connection, deliveryDate, truckId) => {
+    return new Promise((resolve, reject) => {
+        const updateQuery = 'UPDATE booking_table SET start_delivery_date = ? WHERE truck_id = ?';
+
+        connection.query(updateQuery, [deliveryDate, truckId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+         
+                resolve(result);
+            }
+        });
+    });
+};
+
 const updateStartDelivery= async(req, res) => {
     const id = req.params.id;
     const startDate = req.body;
@@ -208,12 +223,11 @@ const updateStartDelivery= async(req, res) => {
     const currentObject = data.find(data => data.id === id);
     // console.log(currentObject);
     if(currentObject.status === 1) {
-        console.log('you can update')
         try{
             const connection = await database.createConnection();
-            const query ='UPDATE trucks SET on_schedule = true, start_delivery_date = ? WHERE id = ?';
+            const query ='UPDATE trucks SET on_schedule = true WHERE id = ?';
             const result = await new Promise((resolve, reject) =>{
-                connection.query(query, [startDeliveryDate, id], (err, result) => {
+                connection.query(query, [ id], (err, result) => {
                     if(err) {
                         reject(err);
                     }else {
@@ -224,11 +238,14 @@ const updateStartDelivery= async(req, res) => {
             const bookingList = await getBookingsList(req, res);
         // console.log(bookingList);
                 const matching = bookingList.filter(item => item.truck_id === id);
-                console.log(matching);
-                if(matching.length > 0) {
-                    matching.forEach(item => {
+                const filterMatching = matching.filter(item => item.done_booking === 0);
+                console.log('filterMatching',filterMatching);
+               
+                if(filterMatching.length > 0) {
+                    filterMatching.forEach(item => {
                         console.log(item.customer_name);
-                    
+                        //update start dates
+                    updateBookingStartDe(connection,startDeliveryDate, item.truck_id )
                         let config = {
                             host: process.env.EMAIL_HOST,
                             port: process.env.EMAIL_PORT,
@@ -262,6 +279,20 @@ const updateStartDelivery= async(req, res) => {
     }
 } 
 
+const updateBookingEndDe = async (connection, deliveryDate, truckId) => {
+    return new Promise((resolve, reject) => {
+        const updateQuery = `UPDATE booking_table SET delivery_status = 'delivered', delivery_date = ?, done_booking = true WHERE truck_id = ?`;
+
+        connection.query(updateQuery, [deliveryDate, truckId], (err, result) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(result);
+            }
+        });
+    });
+};
+
 const updateEndDelivery = async(req, res) => {
     const id = req.params.id
     const deliveryData = req.body;
@@ -273,19 +304,18 @@ const updateEndDelivery = async(req, res) => {
         deliveryEndDate = noData;
     }
 
-    console.log(id);
-    console.log(deliveryEndDate);
+    
 
     const data = await trucksData(req, res);
     const currentObject = data.find(data => data.id === id);
-    // console.log(currentObject);
+    // console.log('current',currentObject);
     if(currentObject.status === 1) {
         console.log('you can update')
         try{
             const connection = await database.createConnection();
-            const query ='UPDATE trucks SET end_delivery_date = ? WHERE id = ?';
+            const query ='UPDATE trucks SET max_amount = ?, status = false, on_schedule = false WHERE id = ?';
             const result = await new Promise((resolve, reject) =>{
-                connection.query(query, [deliveryEndDate, id], (err, result) => {
+                connection.query(query, [currentObject.full_space, id], (err, result) => {
                     if(err) {
                         reject(err);
                     }else {
@@ -296,11 +326,11 @@ const updateEndDelivery = async(req, res) => {
             const bookingList = await getBookingsList(req, res);
         // console.log(bookingList);
                 const matching = bookingList.filter(item => item.truck_id === id);
-                console.log(matching);
-                if(matching.length > 0) {
-                    matching.forEach(item => {
+                const filterMatching = matching.filter(item => item.done_booking === 0);
+                if(filterMatching.length > 0) {
+                    filterMatching.forEach(item => {
                         console.log(item.customer_name);
-                    
+                        updateBookingEndDe(connection,deliveryEndDate, item.truck_id );
                         let config = {
                             host: process.env.EMAIL_HOST,
                             port: process.env.EMAIL_PORT,

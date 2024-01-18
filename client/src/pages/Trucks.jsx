@@ -44,12 +44,18 @@ const Trucks = () => {
     }
   }
 
+  const[openStartDelivery, setOpenStartDelivery] = useState(false);
+  const[openUpdateDelivery, setOpenUpdateDelivery] = useState(false);
+
   const[openEdit, setOpenEdit] = useState(false);
   const[editId, setEditId] = useState(null);
   const[currentForm, setCurrentForm] = useState(null);
   const[editFile, setEditFile] = useState(null);
 
   const handleOpenEdit =(id) => {
+    setOpenStartDelivery(false);
+    setOpenUpdateDelivery(false);
+    
     setEditId(id);
     const currentEdit = trucksList.find(data => data.id === id);
     setCurrentForm(currentEdit);
@@ -92,9 +98,11 @@ const Trucks = () => {
 
   //delivery
 
-  const[openUpdateDelivery, setOpenUpdateDelivery] = useState(false);
+  
   const[deliveredId, setDeliveredId] = useState(null);
   const handleOpenUpdateDelivery = (id) => {
+    setOpenStartDelivery(false);
+    setOpenEdit(false);
     setDeliveredId(id);
     if(id) {
       setOpenUpdateDelivery(!openUpdateDelivery);
@@ -137,12 +145,13 @@ const Trucks = () => {
   }
 
   const[startDeliveryId, setStartDeliveryId] = useState(null);
-  const[openStartDelivery, setOpenStartDelivery] = useState(false);
+ 
   const[startDeliveryDate, setStartDeliveryDate] = useState('');
 
    const handleStartDelivery = (id) => {
+    setOpenEdit(false);
+    setOpenUpdateDelivery(false);
     setStartDeliveryId(id);
-    console.log(id);
     if(id) {
       setOpenStartDelivery(!openStartDelivery);
     }
@@ -367,14 +376,14 @@ const handleStartDeliverySubmit = async(e) => {
                             />
                             <label htmlFor="">Delivered</label>
                           </div>
-                          <div className="justify-center gap-[10px] items-center">
+                          {/* <div className="justify-center gap-[10px] items-center">
                             <input type="radio" name="checkDelivery" id="" 
                             value='notDelivered'
                             checked={deliveryStatus === 'notDelivered'}
                             onChange={handleChangeDelivery}
                             />
                             <label htmlFor="">Not Delivered</label>
-                          </div>
+                          </div> */}
                           {deliveryStatus === 'delivered' && (
                             <>
                             <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Delivered Date:</label>
