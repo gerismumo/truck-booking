@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import DashHeader from './DashHeader';
 import icons from './services/icons';
 
 export const API_URL = `${process.env.REACT_App_API_URL}/api`;
@@ -113,7 +114,9 @@ const TruckTypes = () => {
         }
     }
   return (
-    <div className="flex justify-center py-[30px] px-[20px] gap-[100px]">
+    <>
+    <DashHeader />
+     <div className=" absolute mt-[70px] flex justify-center py-[30px] px-[20px] gap-[100px]">
         <form onSubmit={(e) => handleAddTruckType(e)} className='flex flex-col'>
             <label htmlFor="" 
             className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Type Name:</label>
@@ -220,6 +223,8 @@ const TruckTypes = () => {
             </table>
         </div>
     </div>
+    </>
+   
   )
 }
 

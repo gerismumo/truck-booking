@@ -136,7 +136,7 @@ const moneyMadeByEachTruck = async(req, res) => {
                 }
             });
         });
-        database.closeConnection(connection)
+        database.closeConnection(connection);
         res.json({success: true, result})
         return result;
        

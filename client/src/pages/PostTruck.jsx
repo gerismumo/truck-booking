@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import DashHeader from './DashHeader';
 import { useRoutesList } from './Stations';
 import { API_URL, useTruckTypeList } from './TruckTypes';
 
@@ -91,7 +92,9 @@ const PostTruck = () => {
         }
     }
   return (
-    <div className="flex  justify-center px-[60px] overflow-auto">    
+    <>
+    <DashHeader />
+    <div className=" absolute mt-[70px] flex   justify-center px-[60px] overflow-auto">    
         <form onSubmit={(e) =>handleTruckAddition(e)} className='flex flex-col w-[500px] mt-[30px] mb-[70px] overflow-auto'>
             <label htmlFor="truckType"
             className='text-[17px] mb-[5px] font-[500]'>
@@ -242,6 +245,8 @@ const PostTruck = () => {
             </div>
         </form>
     </div>
+    </>
+    
   )
 }
 

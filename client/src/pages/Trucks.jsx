@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import DashHeader from './DashHeader';
 import { useRoutesList } from './Stations';
 import { API_URL, bookTypes, useTruckTypeList } from './TruckTypes';
 import icons from './services/icons';
@@ -175,7 +176,9 @@ const handleStartDeliverySubmit = async(e) => {
 }
 
   return (
-    <div className="flex justify-center py-[30px]">
+    <>
+    <DashHeader />
+    <div className="absolute mt-[70px] flex justify-center py-[30px]">
       <div className="">
         <table className='border-collapse'>
           <thead>
@@ -432,6 +435,8 @@ const handleStartDeliverySubmit = async(e) => {
         </table>
       </div>
     </div>
+    </>
+    
   )
 }
 
