@@ -52,21 +52,15 @@ const[trucksMoney, setTrucksMoney] = useState('');
   useEffect(() => {
     getApis();
   },[]);
-  console.log(noOfRoutes);
-  console.log(noOfTrucks);
-  console.log(someOfMoneyEarned);
-  console.log(doneDeliveries);
-  console.log(pendingDeliveries);
-  console.log(trucksMoney);
+  
 
- 
+  
   return (
     <>
     <DashHeader />
     <div className="absolute mt-[100px] w-[100%] px-[20px]">
-      <div className=" flex flex-col justify-center items-center">
-        <div className="flex flex-row justify-center items-center">
-          <div className="flex flex-row flex-wrap gap-[50px]">
+      <div className=" flex flex-col justify-center items-center gap-[40px]">
+          <div className="flex justify-center flex-wrap gap-[50px]">
             <div className="bg-lightBlue w-[300px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
               <div className="flex flex-col gap-[30px] items-center">
                 <div className="">
@@ -118,9 +112,7 @@ const[trucksMoney, setTrucksMoney] = useState('');
               </div>
             </div>
           </div>
-        </div>
-        
-        <div className="flex justify-center">
+        <div className="flex justify-center mb-[40px]">
           <table>
             <caption className='mb-[10px] font-[500] text-[grey] text-[18px]'>
               Money made by Each Truck
