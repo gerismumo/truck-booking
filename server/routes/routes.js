@@ -8,6 +8,7 @@ const Trucks = require('../controllers/Trucks');
 const booking = require('../controllers/search');
 const payBooking = require('../controllers/booking');
 const { trucks } = require('../queries/queries');
+const dashboardController = require('../controllers/controller') 
 
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
@@ -51,7 +52,12 @@ router.put('/updateDelivery/:id', payBooking.updateDelivery);
 router.put('/updateStartDelivery/:id', Trucks.updateStartDelivery);
 router.put('/updateTrucksEndDelivery/:id', Trucks.updateEndDelivery);
 
-
-
+//dashboard queries;
+router.get('/sumOfMoneyEarned', dashboardController.sumOfMoney);
+router.get('/noOfTrucks', dashboardController.noOfTrucks);
+router.get('/noOfRoutes', dashboardController.noOfRoutes);
+router.get('/noOfDoneDeliveries', dashboardController.noOfDoneDeliveries);
+router.get('/noOfPendingDeliveries', dashboardController.noOfPendingDeliveries);
+router.get('/moneyMadeByEachTruck', dashboardController.moneyMadeByEachTruck);
 
 module.exports = router;
