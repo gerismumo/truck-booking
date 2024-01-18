@@ -96,6 +96,10 @@ const Bookings = () => {
             <th className='px-[20px] py-[10px] border border-[#ddd]'>To</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Departure Date</th>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Booking Code</th>
+            <th className='px-[20px] py-[10px] border border-[#ddd]'>Delivery Status</th>
+            <th className='px-[20px] py-[10px] border border-[#ddd]'>Start Delivery Date</th>
+            <th className='px-[20px] py-[10px] border border-[#ddd]'>End Delivery Date</th>
+            <th className='px-[20px] py-[10px] border border-[#ddd]'>Complete Status</th>
           </thead>
           <tbody>
             {bookingsList.map((data) => (
@@ -115,8 +119,9 @@ const Bookings = () => {
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.departure_date}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.booking_code}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.delivery_status}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.start_delivery_date}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.delivery_date}</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() =>handleOpenUpdateDelivery(data.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>{openUpdateDelivery && data.id === deliveredId ? 'Close' : 'Delivery'}</button></td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{data.done_booking === 1 ? 'Done Delivery':'UnDone Delivery'}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={()=>handleDelete(data.id)}>{icons.delete}</span></td>
                 </tr>
                 {openUpdateDelivery && data.id === deliveredId && (

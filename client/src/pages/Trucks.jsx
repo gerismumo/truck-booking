@@ -55,7 +55,7 @@ const Trucks = () => {
   const handleOpenEdit =(id) => {
     setOpenStartDelivery(false);
     setOpenUpdateDelivery(false);
-    
+
     setEditId(id);
     const currentEdit = trucksList.find(data => data.id === id);
     setCurrentForm(currentEdit);
@@ -165,7 +165,10 @@ const handleStartDeliverySubmit = async(e) => {
     }
   
     const response = await axios.put(`${API_URL}/updateStartDelivery/${startDeliveryId}`, startDate)
-    console.log(response);
+    if(response.data.success) {
+        trucksData();
+        setOpenStartDelivery(false);
+      }
   }catch(error) {
     console.log(error.message);
   }
@@ -197,7 +200,7 @@ const handleStartDeliverySubmit = async(e) => {
                 <tr>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_type}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type}</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type === 'Square Meter' ? `Per Square: ${trucks.pricing} `:  trucks.book_type === 'Number of Items' ? `Per Vehicle: ${trucks.pricing}` : ''}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type === 'Square Meter' ? `Per Square: ${trucks.pricing} `:  trucks.book_type === 'Number of Items' ? `Per No. Items: ${trucks.pricing}` : ''}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.full_space ? trucks.full_space : 'unavailable'}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.max_amount}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_model}</td>
@@ -222,11 +225,11 @@ const handleStartDeliverySubmit = async(e) => {
                     </div>
                   </td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.status === 1 ? 'Full' : 'No Full'}</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'>On Delivery</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.on_schedule  === 1 ? 'On Delivery': 'Not assigned'}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>unavailable</td>
                   {trucks.status === 1 ?  (
                     
-                    <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() => handleStartDelivery(trucks.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>Start Delivery</button></td>
+                    <td className='px-[20px] py-[10px] border border-[#ddd]'><button onClick={() => handleStartDelivery(trucks.id)} className='bg-lightBlue px-[15px] py-[8px] rounded-[4px]'>{openStartDelivery && trucks.id === startDeliveryId ? 'Close': 'Start Delivery'}</button></td>
                   ) : (
                     <td className='px-[20px] py-[10px] border border-[#ddd]'>Not full yet</td>
                   )}

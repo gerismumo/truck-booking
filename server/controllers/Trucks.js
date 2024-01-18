@@ -1,6 +1,7 @@
 const database = require('../Database/Db');
 const queries  = require('../queries/queries');
 const uuid = require('uuid');
+const nodemailer = require('nodemailer');
 
 const insertData = async(req, res) => {
     const  {

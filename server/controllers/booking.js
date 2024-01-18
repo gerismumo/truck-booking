@@ -70,7 +70,6 @@ const bookingProcess = async(req, res) => {
                     if (err) {
                         reject(err);
                     } else {
-                        
                         resolve(result);
                     }
                 });
@@ -116,7 +115,7 @@ const bookingProcess = async(req, res) => {
             //update remaining amount
             await updateRemainAmount(connection, id, checkRemainingSpace);
             //update status according  to remaining about
-            if(checkRemainingSpace === max_amount) {
+            if(checkRemainingSpace <= 2) {
                 updateFull(connection, id);
             }
             //add booking detail, id, phone no., email, routes , payment and generate a unqiue code sen dthrough email
@@ -234,7 +233,7 @@ const bookingProcess = async(req, res) => {
             //update remaining amount
             await updateRemainAmount(connection, id, checkRemainingAmount);
 
-            if(checkRemainingAmount === max_amount) {
+            if(checkRemainingAmount <= 500) {
                 updateFull(connection, id);
             }
 
