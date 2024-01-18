@@ -94,7 +94,7 @@ const PostTruck = () => {
   return (
     <>
     <DashHeader />
-    <div className=" absolute mt-[70px] flex   justify-center px-[60px] overflow-auto">    
+    <div className=" absolute mt-[100px] flex   justify-center px-[60px] overflow-auto">    
         <form onSubmit={(e) =>handleTruckAddition(e)} className='flex flex-col w-[500px] mt-[30px] mb-[70px] overflow-auto'>
             <label htmlFor="truckType"
             className='text-[17px] mb-[5px] font-[500]'>

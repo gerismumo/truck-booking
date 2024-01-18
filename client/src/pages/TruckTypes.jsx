@@ -116,7 +116,7 @@ const TruckTypes = () => {
   return (
     <>
     <DashHeader />
-     <div className=" absolute mt-[70px] flex justify-center py-[30px] px-[20px] gap-[100px]">
+     <div className=" absolute mt-[100px] flex justify-center p-[20px] gap-[100px]">
         <form onSubmit={(e) => handleAddTruckType(e)} className='flex flex-col'>
             <label htmlFor="" 
             className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Type Name:</label>

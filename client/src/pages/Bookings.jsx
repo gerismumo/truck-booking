@@ -1,8 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import DashHeader from './DashHeader';
 import { API_URL } from './TruckTypes';
 import icons from './services/icons';
-import DashHeader from './DashHeader';
 export const useBookings = () => {
     const[bookingsList, setBookingsList] = useState([]);
 
@@ -83,7 +83,7 @@ const Bookings = () => {
   return (
     <>
     <DashHeader />
-    <div className="absolute mt-[70px] flex flex-col justify-center p-[30px]">
+    <div className="absolute mt-[100px] flex flex-col justify-center p-[20px] ">
         <table className='border-collapse'>
           <thead>
             <th className='px-[20px] py-[10px] border border-[#ddd]'>Book Type</th>

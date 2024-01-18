@@ -178,7 +178,7 @@ const handleStartDeliverySubmit = async(e) => {
   return (
     <>
     <DashHeader />
-    <div className="absolute mt-[70px] flex justify-center py-[30px]">
+    <div className="absolute mt-[100px] flex justify-center p-[20px]">
       <div className="">
         <table className='border-collapse'>
           <thead>
