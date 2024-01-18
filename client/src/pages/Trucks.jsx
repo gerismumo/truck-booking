@@ -203,9 +203,9 @@ const handleStartDeliverySubmit = async(e) => {
                 <tr>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_type}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type}</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type === 'Square Meter' ? `Per Square: ${trucks.pricing} `:  trucks.book_type === 'Number of Items' ? `Per No. Items: ${trucks.pricing}` : ''}</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.full_space ? trucks.full_space : 'unavailable'}</td>
-                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.max_amount}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.book_type === 'Square Meter' ? `Per Square: ${trucks.pricing} `:  trucks.book_type === 'Number of Items' ? `Per No. Items: ${trucks.pricing}` : trucks.book_type === 'Full Truck' && `Full Price: ${trucks.pricing}`}</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.full_space !== 'null' ? trucks.full_space : 'Full Truck' }</td>
+                  <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.full_space !== 'null' ? trucks.max_amount : 'Full Truck'}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.truck_model}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>{trucks.number_plate}</td>
                   <td className='px-[20px] py-[10px] border border-[#ddd]'>
