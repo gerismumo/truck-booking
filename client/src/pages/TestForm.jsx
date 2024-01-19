@@ -1,9 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashHeader from './DashHeader';
 import { useRoutesList } from './Stations';
 import { API_URL, useTruckTypeList } from './TruckTypes';
+
 const TestForm = () => {
+    const navigate = useNavigate();
+
     const { truckTypeList } = useTruckTypeList();
     const {routesList} = useRoutesList();
 
@@ -113,7 +117,9 @@ const TestForm = () => {
         
         try{
             const response = await axios.post(API_URL + '/payBooking', currentBookData);
-            console.log('response',response);
+            if(response.data.success) {
+                navigate('/successPay');
+            }
         }catch(error) {
             console.log(error.message);
         }
@@ -145,10 +151,10 @@ const TestForm = () => {
                 className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                 />
             )}
-            {bookType === 'Number of Items' && truckType === 'Car Transporter Truck' && (
+            {bookType === 'Number of Items' && (
                 <input type="number" 
                     min={0}
-                    placeholder='Enter Number of Vehicles to Transport'
+                    placeholder='Enter Number of Items'
                     value={itemsNumber}
                     onChange={(e) => setItemsNumber(e.target.value)}
                     className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
