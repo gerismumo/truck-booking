@@ -10,10 +10,12 @@ const DashHeader = () => {
     }
   return (
     <div className="bg-white fixed z-[1] w-[100%]">
-        <nav className="flex flex-col  w-[100%] py-[20px]  px-[20px] shadow-md gap-[20px]">
+        <nav className="flex flex-col  w-[100%] py-[10px]  px-[20px] shadow-md gap-[20px]">
             <div className="flex flex-row justify-between items-center">
                 <div className="flex items-center">
-                    <h2 className='text-[20px] font-[700]'>Truck Dashboard</h2>
+                    <img src="../../images/images.png" alt="" 
+                    className='w-[70px] h-[70px] md:w-[80px] md:h-[80px]'
+                    />
                 </div>
                 <div className="hidden lg1:flex justify-center gap-[50px] items-center">
                     <Link to='/' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>Home</Link>
@@ -36,8 +38,8 @@ const DashHeader = () => {
                 </div>
                 <div className="flex justify-center gap-[30px] items-center">
                     <div className="flex flex-col items-center">
-                        <h2 className='text-[18px] font-[500]'>Gerald Mumo</h2>
-                        <p className='text-[15px] font-[400]'>Admin</p> 
+                        <h2 className=' text-[16px] Md:text-[18px] font-[700]'>Gerald Mumo</h2>
+                        <p className=' text-[14px] md:text-[15px] font-[400]'>Admin</p> 
                     </div>
                     <div className="flex lg1:hidden">
                         <span onClick={handleToggleNav}

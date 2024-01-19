@@ -67,84 +67,90 @@ const[trucksMoney, setTrucksMoney] = useState('');
   return (
     <>
     <DashHeader />
-    <div className="absolute mt-[100px] w-[100%] px-[20px]">
-      <div className=" flex flex-col justify-center items-center gap-[40px]">
-          <div className="flex justify-center flex-wrap gap-[50px]">
-            <div className="bg-lightBlue w-[300px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
-              <div className="flex flex-col gap-[30px] items-center">
-                <div className="">
-                  <p className='font-[700] text-[20px]'>Total Money Earned</p>
+    <div className="flex flex-col">
+      <div className="mt-[110px] px-[10px] md:px-[20px]">
+        <div className=" flex flex-col  gap-[40px]">
+            <div className="flex justify-center flex-wrap gap-[50px]">
+              <div className="bg-lightBlue w-[300px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
+                <div className="flex flex-col gap-[30px] items-center">
+                  <div className="">
+                    <p className='font-[700] text-[20px]'>Total Money Earned</p>
+                  </div>
+                  <div className="">
+                    <p className='text-[18px] font-[500]'>{formatNumber(someOfMoneyEarned)}</p>
+                  </div>
                 </div>
-                <div className="">
-                  <p className='text-[18px] font-[500]'>{formatNumber(someOfMoneyEarned)}</p>
+              </div>
+              <div className="bg-[whitesmoke] w-[250px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
+                <div className="flex flex-col gap-[30px] items-center">
+                  <div className="">
+                    <p className='font-[700] text-[20px]'>Number of Trucks</p>
+                  </div>
+                  <div className="">
+                    <p className='text-[18px] font-[500]'>{formatNumber(noOfTrucks)}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[whitesmoke] w-[250px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
+                <div className="flex flex-col gap-[30px] items-center">
+                  <div className="">
+                    <p className='font-[700] text-[20px]'>Number of Routes</p>
+                  </div>
+                  <div className="">
+                    <p className='text-[18px] font-[500]'>{formatNumber(noOfRoutes)}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[whitesmoke] w-[250px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
+                <div className="flex flex-col gap-[30px] items-center">
+                  <div className="">
+                    <p className='font-[700] text-[20px]'>Done Deliveries</p>
+                  </div>
+                  <div className="">
+                    <p className='text-[18px] font-[500]'>{formatNumber(doneDeliveries)}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="bg-[whitesmoke] w-[250px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
+                <div className="flex flex-col gap-[30px] items-center">
+                  <div className="">
+                    <p className='font-[700] text-[20px]'>Pending Deliveries</p>
+                  </div>
+                  <div className="">
+                    <p className='text-[18px] font-[500]'>{formatNumber(pendingDeliveries)}</p>
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="bg-[whitesmoke] w-[250px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
-              <div className="flex flex-col gap-[30px] items-center">
-                <div className="">
-                  <p className='font-[700] text-[20px]'>Number of Trucks</p>
-                </div>
-                <div className="">
-                  <p className='text-[18px] font-[500]'>{formatNumber(noOfTrucks)}</p>
-                </div>
+            <div className="flex justify-center">
+              <div className="overflow-auto">
+                <table className='border-collapse '>
+                  <caption className='mb-[10px] font-[500] text-[grey] text-[18px]'>
+                    Money made by Each Truck
+                  </caption>
+                  <thead>
+                    <th className='px-[50px] py-[10px] border border-[#ddd]'>Truck Plate</th>
+                    <th className='px-[50px] py-[10px] border border-[#ddd]'>Truck Type</th>
+                    <th className='px-[50px] py-[10px] border border-[#ddd]'>Truck Model</th>
+                    <th className='px-[50px] py-[10px] border border-[#ddd]'>Total Money</th>
+                  </thead>
+                  <tbody>
+                    {trucksMoney.length > 0 && trucksMoney.map((truck) => (
+                      <tr key={truck.truck_id}>
+                        <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.number_plate}</td>
+                        <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.truck_type}</td>
+                        <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.truck_model}</td>
+                        <td className='px-[50px] py-[10px] border border-[#ddd]'>{formatNumber(truck.total_money)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
-            <div className="bg-[whitesmoke] w-[250px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
-              <div className="flex flex-col gap-[30px] items-center">
-                <div className="">
-                  <p className='font-[700] text-[20px]'>Number of Routes</p>
-                </div>
-                <div className="">
-                  <p className='text-[18px] font-[500]'>{formatNumber(noOfRoutes)}</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-[whitesmoke] w-[250px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
-              <div className="flex flex-col gap-[30px] items-center">
-                <div className="">
-                  <p className='font-[700] text-[20px]'>Done Deliveries</p>
-                </div>
-                <div className="">
-                  <p className='text-[18px] font-[500]'>{formatNumber(doneDeliveries)}</p>
-                </div>
-              </div>
-            </div>
-            <div className="bg-[whitesmoke] w-[250px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
-              <div className="flex flex-col gap-[30px] items-center">
-                <div className="">
-                  <p className='font-[700] text-[20px]'>Pending Deliveries</p>
-                </div>
-                <div className="">
-                  <p className='text-[18px] font-[500]'>{formatNumber(pendingDeliveries)}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        <div className="flex justify-center mb-[40px]">
-          <table>
-            <caption className='mb-[10px] font-[500] text-[grey] text-[18px]'>
-              Money made by Each Truck
-            </caption>
-            <thead>
-              <th className='px-[50px] py-[10px] border border-[#ddd]'>Truck Plate</th>
-              <th className='px-[50px] py-[10px] border border-[#ddd]'>Truck Type</th>
-              <th className='px-[50px] py-[10px] border border-[#ddd]'>Truck Model</th>
-              <th className='px-[50px] py-[10px] border border-[#ddd]'>Total Money</th>
-            </thead>
-            <tbody>
-              {trucksMoney.length > 0 && trucksMoney.map((truck) => (
-                <tr key={truck.truck_id}>
-                  <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.number_plate}</td>
-                  <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.truck_type}</td>
-                  <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.truck_model}</td>
-                  <td className='px-[50px] py-[10px] border border-[#ddd]'>{formatNumber(truck.total_money)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+            
         </div>
       </div>
+      
     </div>
     
     </>

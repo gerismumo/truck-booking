@@ -118,113 +118,125 @@ const TruckTypes = () => {
   return (
     <>
     <DashHeader />
-     <div className=" absolute mt-[100px] flex justify-center  p-[20px] gap-[100px] w-[100%]">
-        <form onSubmit={(e) => handleAddTruckType(e)} className='flex flex-col'>
-            <label htmlFor="" 
-            className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Type Name:</label>
-            <input type="text" 
-            placeholder='Truck Type'
-            name='truckTypeName'
-            value={formData.truckTypeName}
-            onChange={handleChange}
-            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-            />
-            <label htmlFor="truckImage" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Image:</label>
-            <input type="file" 
-            accept="image/*"
-            name='file'
-            onChange={handleChange}
-            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-            />
-            <label htmlFor="bookTypeSize" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
-            <select name="bookTypeSize" id="bookTypes"
-            value={formData.bookTypeSize}
-            onChange={handleChange}
-            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-            >
-                <option value="">select an option</option>
-                {bookTypes.map((book) => (
-                    <option value={book.name}>{book.name}</option>
-                ))}
-            </select>
-            <div className="flex justify-center mt-[20px]">
-                <button type='submit'
-                className='px-[15px] py-[10px] bg-lightBlue rounded-[5px]'
-                >
-                    Add
-                </button>
+    <div className="flex flex-col">
+        <div className="mt-[100px] p-[10px] md:p-[20px]">
+            <div className="flex flex-col gap-[40px] justify-center lg:flex-row ">
+                <div className="flex justify-center">
+                    <form onSubmit={(e) => handleAddTruckType(e)} className='flex flex-col  lg:w-[auto]'>
+                        <label htmlFor="" 
+                        className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Type Name:</label>
+                        <input type="text" 
+                        placeholder='Truck Type'
+                        name='truckTypeName'
+                        value={formData.truckTypeName}
+                        onChange={handleChange}
+                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                        />
+                        <label htmlFor="truckImage" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Image:</label>
+                        <input type="file" 
+                        accept="image/*"
+                        name='file'
+                        onChange={handleChange}
+                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                        />
+                        <label htmlFor="bookTypeSize" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
+                        <select name="bookTypeSize" id="bookTypes"
+                        value={formData.bookTypeSize}
+                        onChange={handleChange}
+                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                        >
+                            <option value="">select an option</option>
+                            {bookTypes.map((book) => (
+                                <option value={book.name}>{book.name}</option>
+                            ))}
+                        </select>
+                        <div className="flex justify-center mt-[20px]">
+                            <button type='submit'
+                            className='px-[15px] py-[10px] bg-lightBlue rounded-[5px]'
+                            >
+                                Add
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                
+                <div className="flex justify-center">
+                    <div className="overflow-auto">
+                        <table className='border-collapse'>
+                            <thead>
+                                <th className='px-[20px] py-[10px] border border-[#ddd]'>Type</th>
+                                <th className='px-[20px] py-[10px] border border-[#ddd]'>Image</th>
+                                <th className='px-[20px] py-[10px] border border-[#ddd]'>Book Type</th>
+                            </thead>
+                            <tbody>
+                                    {truckTypeList.map((type) => (
+                                        <React.Fragment key={type._id}>
+                                            <tr key={type._id}>
+                                                <td className='px-[20px] py-[10px] border border-[#ddd]'>{type.truck_type}</td>
+                                                <td className='px-[20px] py-[10px] border border-[#ddd]'>
+                                                    <img src={URL.createObjectURL(new Blob([new Uint8Array(type.image.data)],{type: 'image/jpeg', }))} alt="" 
+                                                    className='w-[100px] h-[50px]'
+                                                    />
+                                                </td>
+                                                <td className='px-[20px] py-[10px] border border-[#ddd]'>{type.book_type}</td>
+                                                <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
+                                                <td className='px-[20px] py-[10px] border border-[#ddd]'>
+                                                    <span onClick={() => handleOpenEditForm(type._id)}>{openEdit && currentEditId === type._id ? icons.eyeSlash : icons.edit}</span>
+                                                </td>
+                                                <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleDelete(type._id)}>{icons.delete}</span></td>
+                                            </tr>
+                                            {openEdit && currentEditId === type._id && (
+                                            <tr>
+                                                <td colSpan='5' className='border border-[rgb(221,221,221)] m-[5px]'>
+                                                    <form onSubmit={(e) => handleEditTruckType(e)} className='flex flex-col m-[5px]'>
+                                                        <label htmlFor="" 
+                                                        className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Type Name:</label>
+                                                        <input type="text" 
+                                                        placeholder='Truck Type'
+                                                        value={editTruckTypeName}
+                                                        onChange={(e) =>  setEditTruckName(e.target.value)}
+                                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                                        />
+                                                        <label htmlFor="truckImage" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Image:</label>
+                                                        <input type="file" 
+                                                        accept="image/*" multiple
+                                                        onChange={(e) => setEditFile(e.target.files[0])}
+                                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                                        />
+                                                        <label htmlFor="bookType" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
+                                                        <select name="bookType" id="bookType"
+                                                        defaultValue={bookType}
+                                                        onChange={(e) => setBookType(e.target.value)}
+                                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                                        >
+                                                            <option value="">select an option</option>
+                                                            {bookTypes.map((book) => (
+                                                                <option value={book.name}>{book.name}</option>
+                                                            ))}
+                                                        </select>
+                                                        <div className="flex justify-center mt-[20px]">
+                                                            <button type='submit'
+                                                            className='px-[15px] py-[10px] bg-lightBlue rounded-[5px]'
+                                                            >
+                                                                Edit
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </td>
+                                            </tr> 
+                                            )}
+                                        </React.Fragment>
+                                    ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-        </form>
-        <div className="">
-            <table className='border-collapse'>
-                <thead>
-                    <th className='px-[20px] py-[10px] border border-[#ddd]'>Type</th>
-                    <th className='px-[20px] py-[10px] border border-[#ddd]'>Image</th>
-                    <th className='px-[20px] py-[10px] border border-[#ddd]'>Book Type</th>
-                </thead>
-                <tbody>
-                        {truckTypeList.map((type) => (
-                            <React.Fragment key={type._id}>
-                                <tr key={type._id}>
-                                    <td className='px-[20px] py-[10px] border border-[#ddd]'>{type.truck_type}</td>
-                                    <td className='px-[20px] py-[10px] border border-[#ddd]'>
-                                        <img src={URL.createObjectURL(new Blob([new Uint8Array(type.image.data)],{type: 'image/jpeg', }))} alt="" 
-                                        className='w-[100px] h-[50px]'
-                                        />
-                                    </td>
-                                    <td className='px-[20px] py-[10px] border border-[#ddd]'>{type.book_type}</td>
-                                    <td className='px-[20px] py-[10px] border border-[#ddd]'><span>{icons.eye}</span></td>
-                                    <td className='px-[20px] py-[10px] border border-[#ddd]'>
-                                        <span onClick={() => handleOpenEditForm(type._id)}>{openEdit && currentEditId === type._id ? icons.eyeSlash : icons.edit}</span>
-                                    </td>
-                                    <td className='px-[20px] py-[10px] border border-[#ddd]'><span onClick={() => handleDelete(type._id)}>{icons.delete}</span></td>
-                                </tr>
-                                {openEdit && currentEditId === type._id && (
-                                <tr>
-                                    <td colSpan='5' className='border border-[rgb(221,221,221)] m-[5px]'>
-                                        <form onSubmit={(e) => handleEditTruckType(e)} className='flex flex-col m-[5px]'>
-                                            <label htmlFor="" 
-                                            className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Type Name:</label>
-                                            <input type="text" 
-                                            placeholder='Truck Type'
-                                            value={editTruckTypeName}
-                                            onChange={(e) =>  setEditTruckName(e.target.value)}
-                                            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                            />
-                                            <label htmlFor="truckImage" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Image:</label>
-                                            <input type="file" 
-                                            accept="image/*" multiple
-                                            onChange={(e) => setEditFile(e.target.files[0])}
-                                            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                            />
-                                             <label htmlFor="bookType" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
-                                             <select name="bookType" id="bookType"
-                                             defaultValue={bookType}
-                                             onChange={(e) => setBookType(e.target.value)}
-                                             className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                             >
-                                                <option value="">select an option</option>
-                                                {bookTypes.map((book) => (
-                                                    <option value={book.name}>{book.name}</option>
-                                                ))}
-                                             </select>
-                                            <div className="flex justify-center mt-[20px]">
-                                                <button type='submit'
-                                                className='px-[15px] py-[10px] bg-lightBlue rounded-[5px]'
-                                                >
-                                                    Edit
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </td>
-                                </tr> 
-                                )}
-                            </React.Fragment>
-                        ))}
-                </tbody>
-            </table>
+           
+            
         </div>
     </div>
+    
     </>
    
   )
