@@ -122,7 +122,7 @@ const[trucksMoney, setTrucksMoney] = useState('');
                 </div>
               </div>
             </div>
-            <div className="flex justify-center">
+            <div className="flex justify-center mb-[50px]">
               <div className="overflow-auto">
                 <table className='border-collapse '>
                   <caption className='mb-[10px] font-[500] text-[grey] text-[18px]'>
