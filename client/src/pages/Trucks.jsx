@@ -15,7 +15,6 @@ export const useTrucksData = () => {
       if(success) {
         setTrucksList(response.data.data);
       }
-      console.log(response);
     }catch(error) {
       console.error(error.message);
     }
@@ -31,10 +30,10 @@ const Trucks = () => {
   const {trucksList,trucksData} = useTrucksData();
   const {truckTypeList} = useTruckTypeList();
   const {routesList} = useRoutesList();
-  console.log(truckTypeList)
+ 
 
   const handleDeleteTruck = async(id) => {
-    console.log(id);
+  
     try {
       const response = await axios.delete(`${API_URL}/deleteTrucks/${id}`);
       if(response.data.success) {
@@ -91,7 +90,6 @@ const Trucks = () => {
         trucksData();
         setOpenEdit(false);
       }
-      console.log(response);
     }catch(error) {
       console.log(error.message);
     }
@@ -127,8 +125,6 @@ const Trucks = () => {
       }
     }
 
-    console.log('deliveryStatus',deliveryStatus);
-    console.log('deliveryDate',deliveryDate);
     const deliveryData = {
       deliveryStatus,
       deliveryDate
@@ -136,6 +132,7 @@ const Trucks = () => {
 
     try {
       const response = await axios.put(`${API_URL}/updateTrucksEndDelivery/${deliveredId}`, deliveryData);
+     
       if(response.data.success) {
         trucksData();
         setOpenUpdateDelivery(false);
@@ -166,6 +163,7 @@ const handleStartDeliverySubmit = async(e) => {
     }
   
     const response = await axios.put(`${API_URL}/updateStartDelivery/${startDeliveryId}`, startDate)
+   
     if(response.data.success) {
         trucksData();
         setOpenStartDelivery(false);

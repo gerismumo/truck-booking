@@ -271,7 +271,8 @@ const updateStartDelivery= async(req, res) => {
 
                     })
                 }
-                res.jon({success: true, message:'successfully Updated'})
+                console.log('successfully Updated');
+                res.json({success: true, message:'successfully Updated'})
             return result;
         }catch(error) {
             console.log(error.message)
@@ -356,7 +357,7 @@ const updateEndDelivery = async(req, res) => {
 
                     })
                 }
-                res.jon({success: true, message:'successfully Updated'})
+                res.json({success: true, message:'successfully Updated'})
             return result;
         }catch(error) {
             console.log(error.message)
