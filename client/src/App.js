@@ -2,11 +2,12 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Bookings from './pages/Bookings';
 import Dashboard from './pages/Dashboard';
 import PostTruck from './pages/PostTruck';
+import Progress from './pages/Progress';
 import Stations from './pages/Stations';
+import Success from './pages/Success';
 import TestForm from './pages/TestForm';
 import TruckTypes from './pages/TruckTypes';
 import Trucks from './pages/Trucks';
-import Success from './pages/Success';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path='/test' element={<TestForm />}/>
           <Route path='/bookings' element={<Bookings />}/>
           <Route path='/successPay' element={<Success />}/>
+          <Route path='/progress' element={<Progress />}/>
       </Routes>
     </Router>
   );

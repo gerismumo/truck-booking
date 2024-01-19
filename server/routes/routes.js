@@ -9,6 +9,7 @@ const booking = require('../controllers/search');
 const payBooking = require('../controllers/booking');
 const { trucks } = require('../queries/queries');
 const dashboardController = require('../controllers/controller') 
+const progress = require('../controllers/progress');
 
 const storage = multer.memoryStorage();
 const upload = multer({storage: storage});
@@ -60,4 +61,6 @@ router.get('/noOfDoneDeliveries', dashboardController.noOfDoneDeliveries);
 router.get('/noOfPendingDeliveries', dashboardController.noOfPendingDeliveries);
 router.get('/moneyMadeByEachTruck', dashboardController.moneyMadeByEachTruck);
 
+//check progress
+router.get('/checkProgress', progress.checkProgress);
 module.exports = router;
