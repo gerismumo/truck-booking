@@ -18,11 +18,7 @@ const DashHeader = () => {
                     />
                 </div>
                 <div className="hidden lg1:flex justify-center gap-[50px] items-center">
-                    <Link to='/' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>Home</Link>
-                    <Link to='/test' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>Search</Link>
-                    <Link to='/progress' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
-                        Check Progress
-                    </Link>
+                    <Link to='/dashboard' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>Home</Link>
                     <Link to='/bookings' className=' text-[18px] text-dark hover:text-lightBlue font-[500]'>
                         Bookings
                     </Link>
@@ -54,14 +50,6 @@ const DashHeader = () => {
                 <div className="lg1:hidden flex flex-col">
                     <Link to='/' className='flex justify-between text-[18px] text-dark hover:text-lightBlue font-[500] py-[10px] border-b-[2px] border-[#ddd]'>
                         <p>Home</p>
-                        <span>{icons.angleDown}</span>
-                    </Link>
-                    <Link to='/test' className='flex justify-between text-[18px] text-dark hover:text-lightBlue font-[500] py-[10px] border-b-[2px] border-[#ddd]'>
-                        <p>Search</p>
-                        <span>{icons.angleDown}</span>
-                    </Link>
-                    <Link to='/progress' className='flex justify-between text-[18px] text-dark hover:text-lightBlue font-[500] py-[10px] border-b-[2px] border-[#ddd]'>
-                        <p>Check Progress</p>
                         <span>{icons.angleDown}</span>
                     </Link>
                     <Link to='/bookings' className='flex justify-between text-[18px] text-dark hover:text-lightBlue font-[500] py-[10px] border-b-[2px] border-[#ddd]'>
