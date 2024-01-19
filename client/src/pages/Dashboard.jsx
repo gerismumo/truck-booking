@@ -81,7 +81,7 @@ const[trucksMoney, setTrucksMoney] = useState('');
                   </div>
                 </div>
               </div>
-              <div className="bg-[whitesmoke] w-[250px] h-[180px] rounded-[8px] flex flex-col justify-center items-center">
+              <div className="bg-[whitesmoke] w-[250px]  h-[180px] rounded-[8px] flex flex-col justify-center items-center">
                 <div className="flex flex-col gap-[30px] items-center">
                   <div className="">
                     <p className='font-[700] text-[20px]'>Number of Trucks</p>

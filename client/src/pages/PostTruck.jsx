@@ -103,7 +103,7 @@ const {trucksData} = useTrucksData();
     <div className="flex flex-col">  
         <div className="mt-[110px] p-[10px] md:p-[20px]">
             <div className="flex justify-center">
-                <form onSubmit={(e) =>handleTruckAddition(e)} className='flex flex-col w-[auto]  mb-[70px] overflow-auto justify-center'>
+                <form onSubmit={(e) =>handleTruckAddition(e)} className='flex flex-col w-[auto] lg:w-[600px]  mb-[70px] overflow-auto justify-center'>
                     <label htmlFor="truckType"
                     className='text-[17px] mb-[5px] font-[500]'>
                         Truck Type:
