@@ -24,7 +24,7 @@ const TestForm = () => {
     },[getTruckTypeObject, setBookType])
     
 
-    console.log(bookType);
+ 
 
 
     const[errorMessage, setErrorMessage] = useState(null);
@@ -38,15 +38,7 @@ const TestForm = () => {
     const handleSubmitForm = async(e) => {
         e.preventDefault();
 
-        console.log(
-            truckType,
-            from,
-            to,
-            squareMeter,
-            itemsNumber,
-            departureDate,
-            bookType
-        )
+        
         const bookingData = {
             truckType,
             from,
@@ -66,7 +58,7 @@ const TestForm = () => {
 
                 if(success) {
                     setSuccessMessage(trucksData.message)
-                    console.log('data',trucksData.data);
+                   
                     const data = trucksData.data;
                     setReturnData(data);
                     const filteredDataNumberOfCars= data.filter(data => data.book_type === 'Number of Items');
@@ -88,11 +80,7 @@ const TestForm = () => {
         }
 
     }
-    console.log('errorMessage',errorMessage);
-    console.log('successMessage',successMessage);
-    console.log('fullTrucks',fullTrucks);
-    console.log('carsTransporterTrucks',carsTransporterTrucks);
-    console.log('squareMetersTrucks',squareMetersTrucks);
+    
     const[openPay,setOpenPay] = useState(false);
     const[closeBookBtn, setCloseBookBtn] = useState(true);
     const[currentId, setCurrentId] = useState(null);
@@ -122,13 +110,6 @@ const TestForm = () => {
         currentBookData.customerCountry = customerCountry;
         currentBookData.goodsDescription = goodsDescription;
 
-        console.log('goodsDescription',goodsDescription);
-        console.log(fullName);
-        console.log(customerId);
-        console.log(customerCountry)
-        console.log('currentBookData',currentBookData);
-        console.log('phoneNumber',phoneNumber);
-        console.log('email',email);
         
         try{
             const response = await axios.post(API_URL + '/payBooking', currentBookData);
