@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import DashHeader from './DashHeader';
+import Header from './Header';
 import { useRoutesList } from './Stations';
 import { API_URL, useTruckTypeList } from './TruckTypes';
 
@@ -10,7 +10,6 @@ const TestForm = () => {
 
     const { truckTypeList } = useTruckTypeList();
     const {routesList} = useRoutesList();
-
     const[truckType, setTruckType] = useState('');
     const[from, setFrom] = useState('');
     const[to, setTo] = useState('');
@@ -126,395 +125,428 @@ const TestForm = () => {
     }
   return (
     <>
-    <DashHeader />
+  <Header />
     <div className="flex flex-col">
-        <div className="mt-[110px] p-[10px] md:p-[20px]">
-            <div className="flex flex-col justify-center mb-[50px] lg:flex-row gap-[40px]">
-                <form onSubmit={(e) => handleSubmitForm(e)} className='flex flex-col w-[auto] lg:w-[600px]'>
-                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Types:</label>
-                <select name="" id=""
-                value={truckType}
-                onChange={(e) => setTruckType(e.target.value)}
-                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                >
-                    <option  value=''>Select a option</option>
-                    {truckTypeList.map((truck) => (
-                        <option key={truck._id} value={truck.truck_type}>{truck.truck_type}</option>
-                    ))}
-                </select>
-                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
-                <span>{bookType}</span>
-                {bookType === 'Square Meter' && (
-                    <input type="number" 
-                    min={0}
-                    placeholder='Enter goods Square Meter'
-                    value={squareMeter}
-                    onChange={(e) => setSquareMeter(e.target.value)}
-                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                    />
-                )}
-                {bookType === 'Number of Items' && (
-                    <input type="number" 
-                        min={0}
-                        placeholder='Enter Number of Items'
-                        value={itemsNumber}
-                        onChange={(e) => setItemsNumber(e.target.value)}
-                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                    />
-                )}
-                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>From:</label>
-                <select name="" id=""
-                value={from}
-                onChange={(e) => setFrom(e.target.value)}
-                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                >
-                    <option value="">select a route</option>
-                    {routesList.filter((route) => route.route_name !== to).map((route) => (
-                        <option key={route.id} value={route.route_name}>{route.route_name}</option>
-                    ))}
-                </select>
-                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>To:</label>
-                <select name="" id=""
-                value={to}
-                onChange={(e) => setTo(e.target.value)}
-                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                >
-                    <option value="">select a route</option>
-                {routesList.reverse().filter((route) => route.route_name !== from).map((route) => (
-                        <option key={route.id} value={route.route_name}>{route.route_name}</option>
-                    ))}
-                </select>
-                <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Departure Date:</label>
-                <input type="date" name="" id="" 
-                value={departureDate}
-                onChange={(e) => setDepartureDate(e.target.value)}
-                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                />
-                <div className="mt-[20px] flex justify-center">
-                    <button className='bg-lightBlue px-[15px] py-[5px] rounded-[5px]'>Search</button>
-                </div>
-            </form>
-            <div className="flex flex-col">
-                {errorMessage !== null && (
-                    <p className='text-[red]'>{errorMessage}</p>
-                )}
-                {fullTrucks.length > 0 && (
-                    <div className="">
-                        <div className="mb-[10px]">
-                            <p className='text-[20px] font-[700] text-[orangered]'><span className='text-[black] text-[18px] font-[500] mr-[10px]'>Results:</span>{fullTrucks.length}</p>
+        <div className="mt-[80px] lg:mt-[70px] p-[10px] md:p-[20px]">
+            <div className="flex justify-center mb-[50px] lg:flex-row gap-[40px] bg-[whitesmoke] py-[20px]">
+                <form onSubmit={(e) => handleSubmitForm(e)} className='flex flex-col lg:flex-row justify-between lg:gap-[200px] w-[auto] '>
+                    <div className=" flex flex-col">
+                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Types:</label>
+                        <select name="" id=""
+                        value={truckType}
+                        onChange={(e) => setTruckType(e.target.value)}
+                        className='w-[300px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                        >
+                            <option  value=''>Select a option</option>
+                            {truckTypeList.map((truck) => (
+                                <option key={truck._id} value={truck.truck_type}>{truck.truck_type}</option>
+                            ))}
+                        </select>
+                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Book Type:</label>
+                        <span>{bookType}</span>
+                        {bookType === 'Square Meter' && (
+                            <input type="number" 
+                            min={0}
+                            placeholder='Enter goods Square Meter'
+                            value={squareMeter}
+                            onChange={(e) => setSquareMeter(e.target.value)}
+                            className='w-[300px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                            />
+                        )}
+                        {bookType === 'Number of Items' && (
+                            <input type="number" 
+                                min={0}
+                                placeholder='Enter Number of Items'
+                                value={itemsNumber}
+                                onChange={(e) => setItemsNumber(e.target.value)}
+                                className='w-[300px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                            />
+                        )}
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>From:</label>
+                        <select name="" id=""
+                        value={from}
+                        onChange={(e) => setFrom(e.target.value)}
+                        className='w-[300px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                        >
+                            <option value="">select a route</option>
+                            {routesList.filter((route) => route.route_name !== to).map((route) => (
+                                <option key={route.id} value={route.route_name}>{route.route_name}</option>
+                            ))}
+                        </select>
+                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>To:</label>
+                        <select name="" id=""
+                        value={to}
+                        onChange={(e) => setTo(e.target.value)}
+                        className='w-[300px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                        >
+                            <option value="">select a route</option>
+                        {routesList.reverse().filter((route) => route.route_name !== from).map((route) => (
+                                <option key={route.id} value={route.route_name}>{route.route_name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="flex flex-col">
+                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Departure Date:</label>
+                        <input type="date" name="" id="" 
+                        value={departureDate}
+                        onChange={(e) => setDepartureDate(e.target.value)}
+                        className='w-[300px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                        />
+                        <div className="mt-[20px] flex justify-center">
+                            <button className='bg-lightBlue px-[15px] py-[5px] rounded-[5px]'>Search</button>
                         </div>
-                        {fullTrucks.map((item) => (
+                    </div>
+                </form>
+            </div>
+            <div className="flex justify-center">
+                <div className="flex flex-col">
+                    {errorMessage !== null && (
+                        <p className='text-[red]'>{errorMessage}</p>
+                    )}
+                    {fullTrucks.length > 0 && (
+                        <div className="flex flex-col">
+                            <div className="mb-[10px]">
+                                <p className='text-[20px] font-[700] text-[orangered]'><span className='text-[black] text-[18px] font-[500] mr-[10px]'>Results:</span>{fullTrucks.length}</p>
+                            </div>
+                            {fullTrucks.map((item) => (
+                                <div key={item.id} className="flex flex-col lg:flex-row justify-center gap-[30px] lg:gap-[80px] border-[1px] border-[#ccc] p-[10px]">
+                                    <div className="flex flex-col gap-[20px] items-start">
+                                        <div className="">
+                                        <p><span>Book Type:</span>{item.book_type}</p>
+                                        </div>
+                                        <p>Choosen Route:</p>
+                                        <div className="flex justify-center gap-[30px] items-center">
+                                            <div className="">
+                                                <p><span>From:</span>{item.from}</p>
+                                            </div>
+                                            <div className="">
+                                                <p><span>To:</span>{item.to}</p>
+                                            </div>
+                                        </div>
+                                        <p>Truck Route:</p>
+                                        <div className="flex justify-center gap-[30px] items-center">
+                                            <div className="">
+                                                <p><span>From:</span>{item.start_route}</p>
+                                            </div>
+                                            <div className="">
+                                                <p><span>To:</span>{item.end_route}</p>
+                                            </div>
+                                        </div>
+                                        <div className="">
+                                            <p><span>Departure Date:</span>{item.departureDate}</p>
+                                        </div>
+                                        <div className="">
+                                            <p><span>Price To Pay:</span>Ksh.{item.pricing}</p>
+                                        </div>
+                                        {closeBookBtn &&(
+                                            <div className="flex justify-center">
+                                                <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' 
+                                                onClick={() =>handleBook(item.id)}
+                                                >Book
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                    {openPay && currentId === item.id && (
+                                        <form className='flex flex-col' onSubmit={(e) => handlePayAndBook(e, item.id)}>
+                                            <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Phone Number:</label>
+                                            <input type="tel"
+                                            placeholder='Enter Phone number' 
+                                            value={phoneNumber}
+                                            onChange={(e) => setPhoneNumber(e.target.value)}
+                                            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                            />
+                                            <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Email:</label>
+                                            <input type="email"
+                                            placeholder='Enter your Email address'
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                            />
+                                            <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Name:</label>
+                                            <input type="text"
+                                            placeholder='Enter full name'
+                                            value={fullName}
+                                            onChange={(e) => setFullName(e.target.value)}
+                                            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                            />
+                                            <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Id:</label>
+                                            <input type="number"
+                                            placeholder='Enter your national id'
+                                            value={customerId}
+                                            onChange={(e) => setCustomerId(e.target.value)}
+                                            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                            />
+                                            <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Country:</label>
+                                            <input type="text"
+                                            placeholder='Enter your country'
+                                            value={customerCountry}
+                                            onChange={(e) => setCustomerCountry(e.target.value)}
+                                            className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                            />
+                                            <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Goods Description:</label>
+                                            <textarea name="" id="" cols="30" rows="10"
+                                            value={goodsDescription}
+                                            onChange={(e) => setGoodsDescription(e.target.value)}
+                                            className='h-[60px] border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                            >
+                                            </textarea>
+                                            <div className="flex justify-center mt-[20px]">
+                                                <button type='submit'
+                                                className='bg-lightBlue px-[30px] py-[10px] rounded-[10px] text-[18px] font-[500]'
+                                                >
+                                                    Pay
+                                                </button>
+                                            </div>
+                                        </form>
+                                    )}
+                                </div>
+                               
+                            ))}
+                        </div>
+                    ) }
+                    {squareMetersTrucks.length > 0 && (
+                        <div  className="" >
+                            <div className="">
+                                <p><span>Results</span>{squareMetersTrucks.length}</p>
+                            </div>
+                            
+                        { squareMetersTrucks.map((item) => (
                             <div key={item.id} className="flex flex-col gap-[30px] border-[1px] border-[#ccc] p-[10px]">
-                                <div className="">
-                                <p><span>Book Type:</span>{item.book_type}</p>
-                                </div>
-                                <p>Choosen Route:</p>
-                                <div className="flex justify-center gap-[30px] items-center">
+                                <div className="flex flex-col gap-[20px] items-start">
                                     <div className="">
-                                        <p><span>From:</span>{item.from}</p>
+                                    <p><span>Book Type:</span>{item.book_type}</p>
                                     </div>
                                     <div className="">
-                                        <p><span>To:</span>{item.to}</p>
-                                    </div>
-                                </div>
-                                <p>Truck Route:</p>
-                                <div className="flex justify-center gap-[30px] items-center">
-                                    <div className="">
-                                        <p><span>From:</span>{item.start_route}</p>
+                                        <p><span>No of squares:</span>{item.no_of_squareMeter}</p>
                                     </div>
                                     <div className="">
-                                        <p><span>To:</span>{item.end_route}</p>
+                                        <p><span>Remaining Space:</span>{item.checkRemainingAmount}</p>
                                     </div>
+                                    <p>Choosen Route:</p>
+                                    <div className="flex justify-center gap-[30px] items-center">
+                                        <div className="">
+                                            <p><span>From:</span>{item.from}</p>
+                                        </div>
+                                        <div className="">
+                                            <p><span>To:</span>{item.to}</p>
+                                        </div>
+                                    </div>
+                                    <p>Truck Route:</p>
+                                    <div className="flex justify-center gap-[30px] items-center">
+                                        <div className="">
+                                            <p><span>From:</span>{item.start_route}</p>
+                                        </div>
+                                        <div className="">
+                                            <p><span>To:</span>{item.end_route}</p>
+                                        </div>
+                                    </div>
+                                    <div className="">
+                                        <p><span>Departure Date:</span>{item.departureDate}</p>
+                                    </div>
+                                    <div className="">
+                                        <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
+                                    </div>
+                                    {closeBookBtn &&(
+                                        <div className="flex justify-center">
+                                            <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' 
+                                            onClick={() =>handleBook(item.id)}
+                                            >Book
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="">
-                                    <p><span>Departure Date:</span>{item.departureDate}</p>
-                                </div>
-                                <div className="">
-                                    <p><span>Price To Pay:</span>Ksh.{item.pricing}</p>
-                                </div>
-                                {closeBookBtn &&(
-                                <div className="flex justify-center">
-                                    <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' 
-                                    onClick={() =>handleBook(item.id)}
-                                    >Book
-                                    </button>
-                                </div>
-                            )}
-                            
-                            {openPay && currentId === item.id && (
-                                <form className='flex flex-col' onSubmit={(e) => handlePayAndBook(e, item.id)}>
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Phone Number:</label>
-                                    <input type="tel"
-                                    placeholder='Enter Phone number' 
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Email:</label>
-                                    <input type="email"
-                                    placeholder='Enter your Email address'
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Name:</label>
-                                    <input type="text"
-                                    placeholder='Enter full name'
-                                    value={fullName}
-                                    onChange={(e) => setFullName(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Id:</label>
-                                    <input type="number"
-                                    placeholder='Enter your national id'
-                                    value={customerId}
-                                    onChange={(e) => setCustomerId(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Country:</label>
-                                    <input type="text"
-                                    placeholder='Enter your country'
-                                    value={customerCountry}
-                                    onChange={(e) => setCustomerCountry(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Goods Description:</label>
-                                    <textarea name="" id="" cols="30" rows="10"
-                                    value={goodsDescription}
-                                    onChange={(e) => setGoodsDescription(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    >
-                                    </textarea>
-                                    <div className="flex justify-center mt-[20px]">
-                                        <button type='submit'
-                                        className='bg-lightBlue px-[15px] py-[10px] rounded-[10px]'
+                                {openPay && currentId === item.id && (
+                                    <form className='flex flex-col' onSubmit={(e) => handlePayAndBook(e, item.id)}>
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Phone Number:</label>
+                                        <input type="tel"
+                                        placeholder='Enter Phone number' 
+                                        value={phoneNumber}
+                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Email:</label>
+                                        <input type="email"
+                                        placeholder='Enter your Email address'
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Name:</label>
+                                        <input type="text"
+                                        placeholder='Enter full name'
+                                        value={fullName}
+                                        onChange={(e) => setFullName(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Id:</label>
+                                        <input type="number"
+                                        placeholder='Enter your national id'
+                                        value={customerId}
+                                        onChange={(e) => setCustomerId(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Country:</label>
+                                        <input type="text"
+                                        placeholder='Enter your country'
+                                        value={customerCountry}
+                                        onChange={(e) => setCustomerCountry(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Goods Description:</label>
+                                        <textarea name="" id="" cols="30" rows="10"
+                                        value={goodsDescription}
+                                        onChange={(e) => setGoodsDescription(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
                                         >
-                                            Pay
-                                        </button>
-                                    </div>
-                                </form>
-                            )}
-
+                                        </textarea>
+                                        <div className="flex justify-center mt-[20px]">
+                                            <button type='submit'
+                                            className='bg-lightBlue px-[30px] py-[10px] rounded-[10px] text-[18px] font-[500]'
+                                            >
+                                                Pay
+                                            </button>
+                                        </div>
+                                    </form>
+                                )}
                             </div>
-                        ))}
-                    </div>
-                ) }
-                {squareMetersTrucks.length > 0 && (
-                    <div  className="" >
-                        <div className="">
-                            <p><span>Results</span>{squareMetersTrucks.length}</p>
+                        ))} 
                         </div>
-                        
-                    { squareMetersTrucks.map((item) => (
-                        <div key={item.id} className="flex flex-col gap-[30px] border-[1px] border-[#ccc] p-[10px]">
+                    )}
+                    {carsTransporterTrucks.length > 0 && (
+                        <div  className="" >
                             <div className="">
-                            <p><span>Book Type:</span>{item.book_type}</p>
+                                <p><span>Results</span>{carsTransporterTrucks.length}</p>
                             </div>
-                            <div className="">
-                                <p><span>No of squares:</span>{item.no_of_squareMeter}</p>
-                            </div>
-                            <div className="">
-                                <p><span>Remaining Space:</span>{item.checkRemainingAmount}</p>
-                            </div>
-                            <p>Choosen Route:</p>
-                            <div className="flex justify-center gap-[30px] items-center">
-                                <div className="">
-                                    <p><span>From:</span>{item.from}</p>
-                                </div>
-                                <div className="">
-                                    <p><span>To:</span>{item.to}</p>
-                                </div>
-                            </div>
-                            <p>Truck Route:</p>
-                            <div className="flex justify-center gap-[30px] items-center">
-                                <div className="">
-                                    <p><span>From:</span>{item.start_route}</p>
-                                </div>
-                                <div className="">
-                                    <p><span>To:</span>{item.end_route}</p>
-                                </div>
-                            </div>
-                            <div className="">
-                                <p><span>Departure Date:</span>{item.departureDate}</p>
-                            </div>
-                            <div className="">
-                                <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
-                            </div>
-                            {closeBookBtn &&(
-                                <div className="flex justify-center">
-                                    <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' 
-                                    onClick={() =>handleBook(item.id)}
-                                    >Book
-                                    </button>
-                                </div>
-                            )}
                             
-                            {openPay && currentId === item.id && (
-                                <form className='flex flex-col' onSubmit={(e) => handlePayAndBook(e, item.id)}>
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Phone Number:</label>
-                                    <input type="tel"
-                                    placeholder='Enter Phone number' 
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Email:</label>
-                                    <input type="email"
-                                    placeholder='Enter your Email address'
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Name:</label>
-                                    <input type="text"
-                                    placeholder='Enter full name'
-                                    value={fullName}
-                                    onChange={(e) => setFullName(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Id:</label>
-                                    <input type="number"
-                                    placeholder='Enter your national id'
-                                    value={customerId}
-                                    onChange={(e) => setCustomerId(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Country:</label>
-                                    <input type="text"
-                                    placeholder='Enter your country'
-                                    value={customerCountry}
-                                    onChange={(e) => setCustomerCountry(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Goods Description:</label>
-                                    <textarea name="" id="" cols="30" rows="10"
-                                    value={goodsDescription}
-                                    onChange={(e) => setGoodsDescription(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    >
-                                    </textarea>
-                                    <div className="flex justify-center mt-[20px]">
-                                        <button type='submit'
-                                        className='bg-lightBlue px-[15px] py-[10px] rounded-[10px]'
-                                        >
-                                            Pay
-                                        </button>
+                        {carsTransporterTrucks.map((item) => (
+                            <div key={item.id} className="flex flex-col gap-[30px] border-[1px] border-[#ccc] p-[10px]">
+                                <div className="flex flex-col gap-[20px] items-start">
+                                    <div className="">
+                                    <p><span>Book Type:</span>{item.book_type}</p>
                                     </div>
-                                </form>
-                            )}
-                        </div>
-                    ))} 
-                    </div>
-                )}
-                {carsTransporterTrucks.length > 0 && (
-                    <div  className="" >
-                        <div className="">
-                            <p><span>Results</span>{carsTransporterTrucks.length}</p>
-                        </div>
-                        
-                    {carsTransporterTrucks.map((item) => (
-                        <div key={item.id} className="flex flex-col gap-[30px] border-[1px] border-[#ccc] p-[10px]">
-                            <div className="">
-                            <p><span>Book Type:</span>{item.book_type}</p>
-                            </div>
-                            <div className="">
-                                <p><span>No of Vehicles:</span>{item.no_of_your_vehicles}</p>
-                            </div>
-                            <div className="">
-                                <p><span>Remaining Space:</span>{item.checkRemainingSpace}</p>
-                            </div>
-                            <p>Choosen Route:</p>
-                            <div className="flex justify-center gap-[30px] items-center">
-                                <div className="">
-                                    <p><span>From:</span>{item.from}</p>
-                                </div>
-                                <div className="">
-                                    <p><span>To:</span>{item.to}</p>
-                                </div>
-                            </div>
-                            <p>Truck Route:</p>
-                            <div className="flex justify-center gap-[30px] items-center">
-                                <div className="">
-                                    <p><span>From:</span>{item.start_route}</p>
-                                </div>
-                                <div className="">
-                                    <p><span>To:</span>{item.end_route}</p>
-                                </div>
-                            </div>
-                            <div className="">
-                                <p><span>Departure Date:</span>{item.departureDate}</p>
-                            </div>
-                            <div className="">
-                                <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
-                            </div>
-                            {closeBookBtn &&(
-                                <div className="flex justify-center">
-                                    <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' 
-                                    onClick={() =>handleBook(item.id)}
-                                    >Book
-                                    </button>
-                                </div>
-                            )}
-                            
-                            {openPay && currentId === item.id && (
-                                <form className='flex flex-col' onSubmit={(e) => handlePayAndBook(e, item.id)}>
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Phone Number:</label>
-                                    <input type="tel"
-                                    placeholder='Enter Phone number' 
-                                    value={phoneNumber}
-                                    onChange={(e) => setPhoneNumber(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Email:</label>
-                                    <input type="email"
-                                    placeholder='Enter your Email address'
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Name:</label>
-                                    <input type="text"
-                                    placeholder='Enter full name'
-                                    value={fullName}
-                                    onChange={(e) => setFullName(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Id:</label>
-                                    <input type="number"
-                                    placeholder='Enter your national id'
-                                    value={customerId}
-                                    onChange={(e) => setCustomerId(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Country:</label>
-                                    <input type="text"
-                                    placeholder='Enter your country'
-                                    value={customerCountry}
-                                    onChange={(e) => setCustomerCountry(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    />
-                                    <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Goods Description:</label>
-                                    <textarea name="" id="" cols="30" rows="10"
-                                    value={goodsDescription}
-                                    onChange={(e) => setGoodsDescription(e.target.value)}
-                                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                                    >
-                                    </textarea>
-                                    <div className="flex justify-center mt-[20px]">
-                                        <button type='submit'
-                                        className='bg-lightBlue px-[15px] py-[10px] rounded-[10px]'
-                                        >
-                                            Pay
-                                        </button>
+                                    <div className="">
+                                        <p><span>No of Vehicles:</span>{item.no_of_your_vehicles}</p>
                                     </div>
-                                </form>
-                            )}
+                                    <div className="">
+                                        <p><span>Remaining Space:</span>{item.checkRemainingSpace}</p>
+                                    </div>
+                                    <p>Choosen Route:</p>
+                                    <div className="flex justify-center gap-[30px] items-center">
+                                        <div className="">
+                                            <p><span>From:</span>{item.from}</p>
+                                        </div>
+                                        <div className="">
+                                            <p><span>To:</span>{item.to}</p>
+                                        </div>
+                                    </div>
+                                    <p>Truck Route:</p>
+                                    <div className="flex justify-center gap-[30px] items-center">
+                                        <div className="">
+                                            <p><span>From:</span>{item.start_route}</p>
+                                        </div>
+                                        <div className="">
+                                            <p><span>To:</span>{item.end_route}</p>
+                                        </div>
+                                    </div>
+                                    <div className="">
+                                        <p><span>Departure Date:</span>{item.departureDate}</p>
+                                    </div>
+                                    <div className="">
+                                        <p><span>Price To Pay:</span>Ksh.{item.priceToPay}</p>
+                                    </div>
+                                    {closeBookBtn &&(
+                                        <div className="flex justify-center">
+                                            <button className='bg-lightBlue px-[15px] py-[8px] rounded-[5px]' 
+                                            onClick={() =>handleBook(item.id)}
+                                            >Book
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                                
+                                
+                                {openPay && currentId === item.id && (
+                                    <form className='flex flex-col' onSubmit={(e) => handlePayAndBook(e, item.id)}>
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Phone Number:</label>
+                                        <input type="tel"
+                                        placeholder='Enter Phone number' 
+                                        value={phoneNumber}
+                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Email:</label>
+                                        <input type="email"
+                                        placeholder='Enter your Email address'
+                                        value={email}
+                                        onChange={(e) => setEmail(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Full Name:</label>
+                                        <input type="text"
+                                        placeholder='Enter full name'
+                                        value={fullName}
+                                        onChange={(e) => setFullName(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>National Id:</label>
+                                        <input type="number"
+                                        placeholder='Enter your national id'
+                                        value={customerId}
+                                        onChange={(e) => setCustomerId(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Country:</label>
+                                        <input type="text"
+                                        placeholder='Enter your country'
+                                        value={customerCountry}
+                                        onChange={(e) => setCustomerCountry(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        />
+                                        <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Goods Description:</label>
+                                        <textarea name="" id="" cols="30" rows="10"
+                                        value={goodsDescription}
+                                        onChange={(e) => setGoodsDescription(e.target.value)}
+                                        className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                                        >
+                                        </textarea>
+                                        <div className="flex justify-center mt-[20px]">
+                                            <button type='submit'
+                                            className='bg-lightBlue px-[30px] py-[10px] rounded-[10px] text-[18px] font-[500]'
+                                            >
+                                                Pay
+                                            </button>
+                                        </div>
+                                    </form>
+                                )}
+                            </div>
+                        ))} 
                         </div>
-                    ))} 
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
+            <div className="flex flex-col justify-center mt-[30px]">
+                <div className="flex justify-center items-center mb-[20px]">
+                    <h2 className='text-[20px] font-[600]'>Truck Types</h2>
+                </div>
+                <div className="flex flex-wrap gap-[50px] justify-center">
+                    {truckTypeList.map((type) => (
+                        <div className="flex flex-col justify-center gap-[20px] items-center">
+                            <div className="">
+                                <h2 className='text-[18px] font-[500]'>{type.truck_type}</h2>
+                            </div>
+                            <div className="">
+                            <img src={URL.createObjectURL(new Blob([new Uint8Array(type.image.data)],{type: 'image/jpeg', }))} alt="" 
+                                className='w-[300px] h-[250px] border-[1px] border-[#ddd]'
+                            />
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </div>
+            
         </div>
         
     </div>

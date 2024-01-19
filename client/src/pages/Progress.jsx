@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import DashHeader from './DashHeader';
+import Header from './Header';
 import { API_URL } from './TruckTypes';
 const Progress = () => {
     const[bookingCode, setBookingCode] = useState('');
@@ -25,7 +25,7 @@ const Progress = () => {
    
   return (
     <>
-    <DashHeader />
+    <Header />
     <div className="flex flex-col">
         <div className="mt-[110px] p-[10px] md:p-[20px]">
             <div className="flex flex-col justify-center items-center">
