@@ -121,7 +121,7 @@ const TestForm = () => {
   return (
     <>
     <DashHeader />
-    <div className="absolute mt-[100px] flex flex-col justify-center gap-[40px]">
+    <div className="absolute mt-[100px] flex  justify-center gap-[40px] w-[100%]">
         <form onSubmit={(e) => handleSubmitForm(e)} className='flex flex-col w-[600px]'>
             <label htmlFor="" className='text-[17px] mb-[5px] font-[500] mt-[10px]'>Truck Types:</label>
             <select name="" id=""
