@@ -8,23 +8,23 @@ export const API_URL = `${process.env.REACT_App_API_URL}/api`;
 export const useTruckTypeList = () => {
     const[truckTypeList, setTruckTypeList] = useState([]);
 
-        useEffect(() => {
-            const truckTypeData= async() => {
-                try {
-                    const response = await axios.get(API_URL + '/getTruckTypes');
-                    console.log(response)
-                    const success = response.data.success;
-                    if(success) {
-                        setTruckTypeList(response.data.data);
-                    }
-                }catch (error) {
-                    console.error(error.message);
+        const truckTypeData= async() => {
+            try {
+                const response = await axios.get(API_URL + '/getTruckTypes');
+                console.log(response)
+                const success = response.data.success;
+                if(success) {
+                    setTruckTypeList(response.data.data);
                 }
+            }catch (error) {
+                console.error(error.message);
             }
+        }
+        useEffect(() => {
             truckTypeData();
         },[]);
 
-    return { truckTypeList, setTruckTypeList };
+    return { truckTypeList, setTruckTypeList, truckTypeData };
 }
 
 export const bookTypes = [
@@ -36,7 +36,7 @@ export const bookTypes = [
 const TruckTypes = () => {
     const[openEdit, setOpenEdit] = useState(false);
     const[currentEditId, setCurrentEditId] = useState(null);
-    const { truckTypeList } = useTruckTypeList();
+    const { truckTypeList, truckTypeData } = useTruckTypeList();
 
     const [formData, setFormData] = useState({
         truckTypeName:'',
@@ -62,8 +62,9 @@ const TruckTypes = () => {
             Data.append('bookTypeSize', formData.bookTypeSize);
 
             const response = await axios.post(API_URL + '/addTruckType', Data);
-            console.log(response);
-            useTruckTypeList()
+            if(response.data.success) {
+                truckTypeData();
+            }
         } catch (error) {
             console.error(error.message);
         } 
@@ -95,8 +96,9 @@ const TruckTypes = () => {
             } 
             editForm.append('bookType', bookType);
             const response = await axios.put(`${API_URL}/updateTruckType/${currentEditId}`, editForm);
-            console.log(response);
-            useTruckTypeList()
+            if(response.data.success) {
+                truckTypeData();
+            }
         } catch (error) {
             console.error(error.message);
         }
@@ -106,8 +108,9 @@ const TruckTypes = () => {
 
         try {
             const response = await axios.delete(`${API_URL}/deleteTruckType/${id}`);
-            console.log(response);
-            useTruckTypeList()
+            if(response.data.success) {
+                truckTypeData();
+            }
         }catch (error) {
             console.error(error.message);
         }

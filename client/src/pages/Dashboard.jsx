@@ -54,6 +54,15 @@ const[trucksMoney, setTrucksMoney] = useState('');
   },[]);
   
 
+  const value = 23456788;
+ 
+  function formatNumber(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    
+}
+
+ 
+ 
   
   return (
     <>
@@ -67,7 +76,7 @@ const[trucksMoney, setTrucksMoney] = useState('');
                   <p className='font-[700] text-[20px]'>Total Money Earned</p>
                 </div>
                 <div className="">
-                  <p className='text-[18px] font-[500]'>{someOfMoneyEarned}</p>
+                  <p className='text-[18px] font-[500]'>{formatNumber(someOfMoneyEarned)}</p>
                 </div>
               </div>
             </div>
@@ -77,7 +86,7 @@ const[trucksMoney, setTrucksMoney] = useState('');
                   <p className='font-[700] text-[20px]'>Number of Trucks</p>
                 </div>
                 <div className="">
-                  <p className='text-[18px] font-[500]'>{noOfTrucks}</p>
+                  <p className='text-[18px] font-[500]'>{formatNumber(noOfTrucks)}</p>
                 </div>
               </div>
             </div>
@@ -87,7 +96,7 @@ const[trucksMoney, setTrucksMoney] = useState('');
                   <p className='font-[700] text-[20px]'>Number of Routes</p>
                 </div>
                 <div className="">
-                  <p className='text-[18px] font-[500]'>{noOfRoutes}</p>
+                  <p className='text-[18px] font-[500]'>{formatNumber(noOfRoutes)}</p>
                 </div>
               </div>
             </div>
@@ -97,7 +106,7 @@ const[trucksMoney, setTrucksMoney] = useState('');
                   <p className='font-[700] text-[20px]'>Done Deliveries</p>
                 </div>
                 <div className="">
-                  <p className='text-[18px] font-[500]'>{doneDeliveries}</p>
+                  <p className='text-[18px] font-[500]'>{formatNumber(doneDeliveries)}</p>
                 </div>
               </div>
             </div>
@@ -107,7 +116,7 @@ const[trucksMoney, setTrucksMoney] = useState('');
                   <p className='font-[700] text-[20px]'>Pending Deliveries</p>
                 </div>
                 <div className="">
-                  <p className='text-[18px] font-[500]'>{pendingDeliveries}</p>
+                  <p className='text-[18px] font-[500]'>{formatNumber(pendingDeliveries)}</p>
                 </div>
               </div>
             </div>
@@ -129,7 +138,7 @@ const[trucksMoney, setTrucksMoney] = useState('');
                   <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.number_plate}</td>
                   <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.truck_type}</td>
                   <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.truck_model}</td>
-                  <td className='px-[50px] py-[10px] border border-[#ddd]'>{truck.total_money}</td>
+                  <td className='px-[50px] py-[10px] border border-[#ddd]'>{formatNumber(truck.total_money)}</td>
                 </tr>
               ))}
             </tbody>
