@@ -1,10 +1,14 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashHeader from './DashHeader';
 import { useRoutesList } from './Stations';
 import { API_URL, bookTypes, useTruckTypeList } from './TruckTypes';
 import icons from './services/icons';
+
 export const useTrucksData = () => {
+ 
+
   const[trucksList, setTrucksList] = useState([]);
 
   const trucksData = async() => {
@@ -27,6 +31,8 @@ export const useTrucksData = () => {
   return {trucksList, setTrucksList , trucksData};
 }
 const Trucks = () => {
+  const navigate = useNavigate();
+  let user = JSON.parse(localStorage.getItem('truckAdmin'));
   const {trucksList,trucksData} = useTrucksData();
   const {truckTypeList} = useTruckTypeList();
   const {routesList} = useRoutesList();
@@ -172,6 +178,16 @@ const handleStartDeliverySubmit = async(e) => {
     console.log(error.message);
   }
 }
+
+useEffect(() => {
+  if(user?.role !== 'admin') {
+    navigate('/')
+  }
+  if(!user) {
+    navigate('/');
+  }
+
+ },[user])
 
   return (
     <>

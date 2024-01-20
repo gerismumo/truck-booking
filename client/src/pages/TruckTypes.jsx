@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashHeader from './DashHeader';
 import icons from './services/icons';
 
@@ -34,6 +35,8 @@ export const bookTypes = [
 ]
 
 const TruckTypes = () => {
+    const navigate = useNavigate();
+    let user = JSON.parse(localStorage.getItem('truckAdmin'));
     const[openEdit, setOpenEdit] = useState(false);
     const[currentEditId, setCurrentEditId] = useState(null);
     const { truckTypeList, truckTypeData } = useTruckTypeList();
@@ -115,6 +118,17 @@ const TruckTypes = () => {
             console.error(error.message);
         }
     }
+
+    useEffect(() => {
+        if(user?.role !== 'admin') {
+          navigate('/')
+        }
+        if(!user) {
+          navigate('/');
+        }
+      
+       },[user])
+
   return (
     <>
     <DashHeader />

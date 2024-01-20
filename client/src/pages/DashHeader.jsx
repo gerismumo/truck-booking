@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import icons from './services/icons';
 
 const DashHeader = () => {
+    const navigate = useNavigate();
     const[openToggleNav, setOpenToggleNav] = useState(false);
 
     const handleToggleNav = () => {
         setOpenToggleNav(!openToggleNav);
+    }
+
+    const logout = () => {
+        localStorage.removeItem('truckAdmin');
+        navigate('/');
     }
   return (
     <div className="bg-white fixed z-[1] w-[100%]">
@@ -36,6 +42,13 @@ const DashHeader = () => {
                     <div className="flex flex-col items-center">
                         <h2 className=' text-[16px] Md:text-[18px] font-[700]'>Gerald Mumo</h2>
                         <p className=' text-[14px] md:text-[15px] font-[400]'>Admin</p> 
+                    </div>
+                    <div className="hidden lg1:flex">
+                        <button onClick={logout}
+                        className='bg-lightBlue px-[20px] py-[8px] rounded-[4px] text-[18px] font-[500]'
+                        >
+                            logout
+                        </button>
                     </div>
                     <div className="flex lg1:hidden">
                         <span onClick={handleToggleNav}
@@ -68,6 +81,10 @@ const DashHeader = () => {
                         <p>Truck Type</p>
                         <span>{icons.angleDown}</span>
                     </Link>
+                    <button
+                    onClick={logout}
+                    className='bg-lightBlue py-[6px] rounded-[4px] text-[18px]'
+                    >Logout</button>
                 </div>
             )}         
         </nav>

@@ -19,7 +19,16 @@ const LoginForm = () => {
         password,
       });
       if(response.data.success) {
-        navigate('/dashboard');
+        localStorage.setItem('truckAdmin', JSON.stringify(response.data.result[0]));
+        let user = JSON.parse(localStorage.getItem('truckAdmin'));
+
+        if(user.role === 'admin') {
+            navigate('/dashboard');
+        }else {
+            navigate('/');
+        }
+        
+       
       }else {
         alert(response.data.message);
       }

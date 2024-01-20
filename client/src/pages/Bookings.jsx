@@ -1,9 +1,12 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashHeader from './DashHeader';
 import { API_URL } from './TruckTypes';
 import icons from './services/icons';
+
 export const useBookings = () => {
+
     const[bookingsList, setBookingsList] = useState([]);
 
     const getData = async() => {
@@ -25,6 +28,9 @@ export const useBookings = () => {
     return {bookingsList, setBookingsList,getData}
 }
 const Bookings = () => {
+  const navigate = useNavigate();
+  let user = JSON.parse(localStorage.getItem('truckAdmin'));
+  
     const {bookingsList,getData} = useBookings();
     
     const handleDelete = async(id) => {
@@ -80,6 +86,17 @@ const Bookings = () => {
         console.log(error.message);
       }
     }
+
+    useEffect(() => {
+      if(user?.role !== 'admin') {
+        navigate('/')
+      }
+      if(!user) {
+        navigate('/');
+      }
+    
+     },[user])
+
   return (
     <>
     <DashHeader />

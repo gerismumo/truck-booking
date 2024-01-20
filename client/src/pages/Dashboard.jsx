@@ -1,8 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import DashHeader from './DashHeader';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const API_URL = `${process.env.REACT_App_API_URL}/api`
 
 const[someOfMoneyEarned, setSomeOfMoneyEarned] = useState('');
@@ -11,6 +14,7 @@ const[noOfRoutes, setNoOfRoute] = useState('');
 const[doneDeliveries, setDoneDeliveries] = useState('');
 const[pendingDeliveries, setPendingDeliveries] = useState('');
 const[trucksMoney, setTrucksMoney] = useState('');
+let user = JSON.parse(localStorage.getItem('truckAdmin'));
 
   const getApis = async() => {
     try{
@@ -62,7 +66,15 @@ const[trucksMoney, setTrucksMoney] = useState('');
 }
 
  
- 
+ useEffect(() => {
+  if(user?.role !== 'admin') {
+    navigate('/')
+  }
+  if(!user) {
+    navigate('/');
+  }
+
+ },[user])
   
   return (
     <>

@@ -8,6 +8,7 @@ import { useTrucksData } from './Trucks';
 const PostTruck = () => {
 const {trucksData} = useTrucksData();
     const navigate = useNavigate();
+    let user = JSON.parse(localStorage.getItem('truckAdmin'));
     const {truckTypeList} = useTruckTypeList();
     const {routesList} =useRoutesList();
     const [formData , setFormData ] = useState({
@@ -97,6 +98,17 @@ const {trucksData} = useTrucksData();
             console.error(error.message);
         }
     }
+
+    useEffect(() => {
+        if(user?.role !== 'admin') {
+          navigate('/')
+        }
+        if(!user) {
+          navigate('/');
+        }
+      
+       },[user])
+
   return (
     <>
     <DashHeader />

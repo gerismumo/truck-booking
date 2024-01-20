@@ -1,11 +1,13 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { API_URL } from './TruckTypes';
 import icons from './services/icons';
 
 export const useRoutesList = () => {
+  
     const [routesList, setRoutesList] = useState([]);
-
+   
     useEffect(() => {
         const routesData = async() => {
             try {
@@ -26,6 +28,8 @@ export const useRoutesList = () => {
 }
 
 const Stations = () => {
+    const navigate = useNavigate();
+    let user = JSON.parse(localStorage.getItem('truckAdmin'));
     const { routesList} = useRoutesList();
     const [stationName, setStationName] = useState('');
     const [openEditForm, setOpenEditForm] = useState(false);
@@ -75,7 +79,16 @@ const Stations = () => {
         }
     }
 
-    
+    useEffect(() => {
+        if(user?.role !== 'admin') {
+          navigate('/')
+        }
+        if(!user) {
+          navigate('/');
+        }
+      
+       },[user])
+
     return (
         <div className="flex flex-row justify-center gap-[90px] mt-[30px]">
             <div className="">
