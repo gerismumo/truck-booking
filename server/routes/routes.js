@@ -63,4 +63,7 @@ router.get('/moneyMadeByEachTruck', dashboardController.moneyMadeByEachTruck);
 
 //check progress
 router.get('/checkProgress', progress.checkProgress);
+router.post('/loginAdmin',dashboardController.login);
+
+
 module.exports = router;

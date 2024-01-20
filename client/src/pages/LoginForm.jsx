@@ -1,25 +1,28 @@
 import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from './Header';
-
+import { API_URL } from './TruckTypes';
 const LoginForm = () => {
+    const navigate = useNavigate();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(email);
-    console.log(password);
-
+  
     try {
     
-      const response = await axios.post('YOUR_API_ENDPOINT/login', {
+      const response = await axios.post(`${API_URL}/loginAdmin`, {
         email,
         password,
       });
-
-     
-      console.log('Login successful', response.data);
+      if(response.data.success) {
+        navigate('/dashboard');
+      }else {
+        alert(response.data.message);
+      }
     } catch (error) {
      
       console.error('Login failed', error);
@@ -30,36 +33,39 @@ const LoginForm = () => {
     <>
     <Header/>
      <div className="flex flex-col">
-        <div className="mt-[100px] justify-center items-center p-[10px] md:p-[20px]">
-            <form onSubmit={handleLogin} className='flex flex-col gap-[20px] justify-center'>
-            <label className='flex flex-col gap-[10px]'>
-                Email:
-                <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                />
-            </label>
-            <label className='flex flex-col gap-[10px]'>
-                Password:
-                <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
-                />
-            </label>
-            <div className="flex justify-center items-center">
-                <button type="submit"
-                className='bg-lightBlue px-[25px] py-[8px] rounded-[4px]'
-                >Login
-                </button>
+        <div className="mt-[100px]  p-[10px] md:p-[20px]">
+            <div className="flex justify-center">
+                <form onSubmit={handleLogin} className='flex flex-col gap-[20px]  w-[auto] lg:w-[500px]'>
+                <label className='flex flex-col gap-[10px]'>
+                    Email:
+                    <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                    />
+                </label>
+                <label className='flex flex-col gap-[10px]'>
+                    Password:
+                    <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    className='border-[1px] border-lightBlue outline-none rounded-[3px] text-[17px] py-[4px] px-[3px]'
+                    />
+                </label>
+                <div className="flex justify-center items-center">
+                    <button type="submit"
+                    className='bg-lightBlue px-[25px] py-[8px] rounded-[4px]'
+                    >Login
+                    </button>
+                </div>
+                
+                </form>
             </div>
             
-            </form>
         </div>
     </div>
     </>
