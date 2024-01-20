@@ -156,10 +156,10 @@ const login = async(req, res) => {
         const result = await new Promise((resolve, reject) => {
             connection.query(query, [email, password], (err, result) => {
                 if(err) {
-                    console.error(err);
+                   
                     reject(err);
                 }else {
-                    console.log(result);
+                    
                     resolve(result);
                 }
             })
@@ -167,10 +167,10 @@ const login = async(req, res) => {
     
 
         if (result.length === 1) {
-            console.log('Successfully');
+           
             res.status(200).json({ success: true, message: 'Login successful', result});
           } else {
-            console.log('Failed to login');
+            ;
             res.json({success:false, message: 'Invalid email or password' });
           }
           return result;
