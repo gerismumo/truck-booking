@@ -19,10 +19,10 @@ const pool = mysql.createPool(config);
 
 pool.getConnection()
 .then(connection => {
-    console.log('Connected to the database')
+    // console.log('Connected to the database')
     connection.release();
 }).catch(err => {
-    console.log('Failed to connect to the database', err.message);
+    // console.log('Failed to connect to the database', err.message);
     process.exit(1);
 });
 

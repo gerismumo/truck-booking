@@ -123,6 +123,14 @@ const TestForm = () => {
             console.log(error.message);
         }
     }
+
+    if(truckTypeList.length === 0) {
+        return (
+            <div className='flex justify-center items-center'>
+                <p>loading....</p>
+            </div>
+        )
+    }
   return (
     <>
   <Header />
