@@ -54,7 +54,7 @@ const TestForm = () => {
         
         try {
             const response = await axios.post(API_URL + '/booking', bookingData);
-            // console.log(response.data);
+            console.log('seraching',response.data);
             if(response.data.success) {
                 const trucksData = response.data.trucksData;
                 const success = trucksData.status;

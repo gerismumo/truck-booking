@@ -1,4 +1,4 @@
-const database = require('../Database/Db');
+const pool = require('../Database/Db');
 const queries  = require('../queries/queries');
 const uuid = require('uuid');
 const nodemailer = require('nodemailer');
@@ -19,10 +19,9 @@ const insertData = async(req, res) => {
     const truckImages = req.file;
     const uniqueId = uuid.v4();
 
-    console.log(amount);
+    // console.log(amount);
     try {
-        const connection = await database.createConnection();
-        const data = await connection.query(
+        const [data] = await pool.query(
             queries.trucks.add,
              [uniqueId, 
                 truckType,
@@ -39,32 +38,23 @@ const insertData = async(req, res) => {
                 startRoute,
                 endRoute]
              );
-             database.closeConnection(connection);
              res.json({success:true, message:'Successfully addition'});
         return data;    
     }catch(error) {
-        console.error('Error inserting values into the database', error.message);
+        // console.error('Error inserting values into the database', error.message);
         res.json({success: false, message: error.message});
     }
 }
 
 const selectData = async(req, res) => {
     try {
-        const connection = await database.createConnection();
-        const result =  await new  Promise((resolve, reject)  => {
-            connection.query(queries.trucks.get, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection);
+      
+          const [result] = await   pool.query(queries.trucks.get); 
+
         res.json({success: true, data: result});
         return result; 
     }catch(error) {
-        console.log(error);
+        // console.log(error);
         res.json({success: false, message: error.message});
     }
 }
@@ -74,9 +64,7 @@ const deleteData = async(req, res) => {
     const id = req.params.id;
 
     try{
-        const connection = await database.createConnection();
-        const data = await connection.query(queries.trucks.delete, id);
-        database.closeConnection(connection);
+        const [data] = await pool.query(queries.trucks.delete, id);
         res.json({success: true, message: 'Deleted successfully'});
         return data;
     }catch(error) {
@@ -135,18 +123,10 @@ const updateData = async(req, res) => {
     }
 
     try {
-        const connection = await database.createConnection();
 
-        const data  = await  new Promise((resolve, reject) => {
-            connection.query(query, params, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else{
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection);
+        
+        const [data] = await  pool.query(query, params);
+
         res.json({success: true, message:'Successfully updated'});
         return data;
     }catch (error){
@@ -156,17 +136,7 @@ const updateData = async(req, res) => {
 
 const trucksData = async(req, res) => {
     try {
-        const connection = await database.createConnection();
-        const result =  await new  Promise((resolve, reject)  => {
-            connection.query(queries.trucks.get, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection);
+        const [result] = await pool.query(queries.trucks.get) ;
         return result; 
     }catch(error) {
         console.log(error);
@@ -176,19 +146,9 @@ const trucksData = async(req, res) => {
 
 const getBookingsList = async(req, res) => {
     try {
-        const connection = await database.createConnection();
-        const result =  await new  Promise((resolve, reject)  => {
-            const query = 'SELECT * FROM booking_table';
+        const query = 'SELECT * FROM booking_table';
 
-            connection.query(query, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection);
+        const [result] = await pool.query(query)
         return result; 
 
     }catch(error) {
@@ -196,27 +156,19 @@ const getBookingsList = async(req, res) => {
     }
 }
 
-const updateBookingStartDe = async (connection, deliveryDate, truckId) => {
-    return new Promise((resolve, reject) => {
+const updateBookingStartDe = async (pool, deliveryDate, truckId) => {
         const updateQuery = 'UPDATE booking_table SET start_delivery_date = ? WHERE truck_id = ?';
 
-        connection.query(updateQuery, [deliveryDate, truckId], (err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-         
-                resolve(result);
-            }
-        });
-    });
-};
+       const [result] =  pool.query(updateQuery, [deliveryDate, truckId]);
+       return result;
+}
 
 const updateStartDelivery= async(req, res) => {
     const id = req.params.id;
     const startDate = req.body;
-    console.log(id);
+    // console.log(id);
     const startDeliveryDate = startDate.startDeliveryDate;
-    console.log(startDeliveryDate);
+    // console.log(startDeliveryDate);
 
 
     
@@ -225,28 +177,20 @@ const updateStartDelivery= async(req, res) => {
     // console.log(currentObject);
     if(currentObject.status === 1) {
         try{
-            const connection = await database.createConnection();
             const query ='UPDATE trucks SET on_schedule = true WHERE id = ?';
-            const result = await new Promise((resolve, reject) =>{
-                connection.query(query, [ id], (err, result) => {
-                    if(err) {
-                        reject(err);
-                    }else {
-                        resolve(result);
-                    }
-                });
-            });
+              const [result] = await  pool.query(query, [ id]); 
+
             const bookingList = await getBookingsList(req, res);
         // console.log(bookingList);
                 const matching = bookingList.filter(item => item.truck_id === id);
                 const filterMatching = matching.filter(item => item.done_booking === 0);
-                console.log('filterMatching',filterMatching);
+                // console.log('filterMatching',filterMatching);
                
                 if(filterMatching.length > 0) {
                     filterMatching.forEach(item => {
-                        console.log(item.customer_name);
+                        // console.log(item.customer_name);
                         //update start dates
-                    updateBookingStartDe(connection,startDeliveryDate, item.truck_id )
+                    updateBookingStartDe(pool,startDeliveryDate, item.truck_id )
                         let config = {
                             host: process.env.EMAIL_HOST,
                             port: process.env.EMAIL_PORT,
@@ -271,7 +215,7 @@ const updateStartDelivery= async(req, res) => {
 
                     })
                 }
-                console.log('successfully Updated');
+                // console.log('successfully Updated');
                 res.json({success: true, message:'successfully Updated'})
             return result;
         }catch(error) {
@@ -281,18 +225,11 @@ const updateStartDelivery= async(req, res) => {
     }
 } 
 
-const updateBookingEndDe = async (connection, deliveryDate, truckId) => {
-    return new Promise((resolve, reject) => {
+const updateBookingEndDe = async (pool, deliveryDate, truckId) => {
         const updateQuery = `UPDATE booking_table SET delivery_status = 'delivered', delivery_date = ?, done_booking = true WHERE truck_id = ?`;
 
-        connection.query(updateQuery, [deliveryDate, truckId], (err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result);
-            }
-        });
-    });
+       const [result] = await  pool.query(updateQuery, [deliveryDate, truckId]); 
+       return result;
 };
 
 const updateEndDelivery = async(req, res) => {
@@ -312,27 +249,20 @@ const updateEndDelivery = async(req, res) => {
     const currentObject = data.find(data => data.id === id);
     // console.log('current',currentObject);
     if(currentObject.status === 1) {
-        console.log('you can update')
+        // console.log('you can update')
         try{
-            const connection = await database.createConnection();
             const query ='UPDATE trucks SET max_amount = ?, status = false, on_schedule = false WHERE id = ?';
-            const result = await new Promise((resolve, reject) =>{
-                connection.query(query, [currentObject.full_space, id], (err, result) => {
-                    if(err) {
-                        reject(err);
-                    }else {
-                        resolve(result);
-                    }
-                });
-            });
+            
+            const [result] = await     pool.query(query, [currentObject.full_space, id])
+            
             const bookingList = await getBookingsList(req, res);
         // console.log(bookingList);
                 const matching = bookingList.filter(item => item.truck_id === id);
                 const filterMatching = matching.filter(item => item.done_booking === 0);
                 if(filterMatching.length > 0) {
                     filterMatching.forEach(item => {
-                        console.log(item.customer_name);
-                        updateBookingEndDe(connection,deliveryEndDate, item.truck_id );
+                        // console.log(item.customer_name);
+                        updateBookingEndDe(pool,deliveryEndDate, item.truck_id );
                         let config = {
                             host: process.env.EMAIL_HOST,
                             port: process.env.EMAIL_PORT,

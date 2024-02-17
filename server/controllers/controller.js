@@ -1,23 +1,13 @@
 
-const database = require('../Database/Db');
+const pool = require('../Database/Db');
 const queries  = require('../queries/queries');
-const { connect } = require('../routes/routes');
 
 //sum of money earned
 const sumOfMoney = async(req, res) => {
     try {
-        const connection = await database.createConnection();
         const query = 'SELECT SUM(price) AS total FROM booking_table';
-        const result = await new Promise((resolve, reject) => {
-            connection.query(query, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection)
+        
+        const [result] = await pool.query(query);
         res.json({success: true, result})
         return result;
        
@@ -31,18 +21,10 @@ const sumOfMoney = async(req, res) => {
 
 const noOfTrucks = async(req, res) => {
     try {
-        const connection = await database.createConnection();
         const query = 'SELECT COUNT(*) AS noOfTrucks FROM trucks';
-        const result = await new Promise((resolve, reject) => {
-            connection.query(query, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection)
+     
+        const [result] = await   pool.query(query);
+
         res.json({success: true, result})
         return result;
        
@@ -54,21 +36,12 @@ const noOfTrucks = async(req, res) => {
 //no of available routes
 const noOfRoutes = async(req, res) => {
     try {
-        const connection = await database.createConnection();
         const query = 'SELECT COUNT(*) AS noOfRoutes FROM routes';
-        const result = await new Promise((resolve, reject) => {
-            connection.query(query, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection)
+        
+        const [result] = await pool.query(query);
+                
         res.json({success: true, result})
         return result;
-       
     }catch(error) {
         res.json({success:false, message:error.message})
     }
@@ -77,18 +50,9 @@ const noOfRoutes = async(req, res) => {
 //no of done deliveries
 const noOfDoneDeliveries = async(req, res) => {
     try {
-        const connection = await database.createConnection();
         const query = 'SELECT COUNT(id) AS noOfDoneDeliveries FROM booking_table WHERE done_booking = 1';
-        const result = await new Promise((resolve, reject) => {
-            connection.query(query, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection)
+       
+        const [result] = await pool.query(query ); 
         res.json({success: true, result})
         return result;
        
@@ -100,18 +64,10 @@ const noOfDoneDeliveries = async(req, res) => {
 //no of pending deliveries
 const noOfPendingDeliveries = async(req, res) => {
     try {
-        const connection = await database.createConnection();
         const query = 'SELECT COUNT(id) AS noOfDoneDeliveries FROM booking_table WHERE done_booking = 0';
-        const result = await new Promise((resolve, reject) => {
-            connection.query(query, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection)
+       
+         const [result] = await pool.query(query) ;
+
         res.json({success: true, result})
         return result;
        
@@ -124,20 +80,12 @@ const noOfPendingDeliveries = async(req, res) => {
 
 const moneyMadeByEachTruck = async(req, res) => {
     try {
-        const connection = await database.createConnection();
         const query = `SELECT DISTINCT b.truck_id, t.number_plate ,t.truck_type, t.truck_model, SUM(b.price) 
             AS total_money FROM booking_table b JOIN trucks t ON 
             b.truck_id = t.id GROUP BY b.truck_id, t.number_plate, t.truck_type, t.truck_model `;
-        const result = await new Promise((resolve, reject) => {
-            connection.query(query, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection);
+        
+        const [result] = await pool.query(query);
+                
         res.json({success: true, result})
         return result;
        
@@ -148,24 +96,12 @@ const moneyMadeByEachTruck = async(req, res) => {
 
 const login = async(req, res) => {
     const { email, password } = req.body;
-    console.log(email, password);
+    // console.log(email, password);
     try {
-        const connection = await database.createConnection();
         const query = 'SELECT * FROM admin_table WHERE email = ? AND password = ?';
 
-        const result = await new Promise((resolve, reject) => {
-            connection.query(query, [email, password], (err, result) => {
-                if(err) {
-                   
-                    reject(err);
-                }else {
-                    
-                    resolve(result);
-                }
-            })
-        })
-    
-
+         const [result] = await  pool.query(query, [email, password])
+               
         if (result.length === 1) {
            
             res.status(200).json({ success: true, message: 'Login successful', result});

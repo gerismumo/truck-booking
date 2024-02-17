@@ -1,4 +1,4 @@
-const database = require('../Database/Db');
+const pool = require('../Database/Db');
 const queries  = require('../queries/queries');
 const uuid = require('uuid');
 const nodemailer = require('nodemailer');
@@ -42,62 +42,40 @@ const bookingProcess = async(req, res) => {
     const uniqueId = uuid.v4();
 
 
-    console.log(currentBookData);
+    // console.log(currentBookData);
 
     try {
 
-        const connection = await database.createConnection();
+       
 
-        const updateRemainAmount = (connection, truckId, remainAmount) => {
-            return new Promise((resolve, reject) => {
-                const updateQuery = 'UPDATE trucks SET max_amount = ? WHERE id = ?';
-        
-                connection.query(updateQuery, [remainAmount, truckId], (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                });
-            });
+        const updateRemainAmount = (pool, truckId, remainAmount) => {
+            const updateQuery = 'UPDATE trucks SET max_amount = ? WHERE id = ?';
+              const [result] =  pool.query(updateQuery, [remainAmount, truckId] );
+              return result;
         };
 
-        const updateFull = async (connection, truckId) => {
-            return new Promise((resolve, reject) => {
+        const updateFull = async (pool, truckId) => {
+           
                 const updateQuery = 'UPDATE trucks SET status = true WHERE id = ?';
         
-                connection.query(updateQuery, [truckId], (err, result) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(result);
-                    }
-                });
-            });
+               const [result] =  await pool.query(updateQuery, [truckId] );
+               return result;
         };
 
-        const addBook = async (connection,id, truck_id, booked_truck,book_type,
+        const addBook = async (pool,id, truck_id, booked_truck,book_type,
             customer_name,customer_tel,customer_email,customer_national_id, customer_country,
             goods_description,amount_of_goods,from, to, departure_date, price, booking_code ) => {
-            return new Promise((resolve, reject) => {
+            
                 const addQuery = `INSERT INTO booking_table
-                (id, truck_id, booked_truck, book_type,customer_name,
+                    (id, truck_id, booked_truck, book_type,customer_name,
                     customer_tel, customer_email, customer_national_id,customer_country,
                     goods_description, amount_of_goods, route_from, route_to, departure_date,price, booking_code)
                      VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
         
-                connection.query(addQuery, [id, truck_id, booked_truck,book_type,
+                const [result] = await pool.query(addQuery, [id, truck_id, booked_truck,book_type,
                     customer_name,customer_tel,customer_email,customer_national_id, customer_country,
-                    goods_description,amount_of_goods,from, to, departure_date, price, booking_code], (err, result) => {
-                    if (err) {
-                        
-                        reject(err);
-                    } else {
-                        // console.log('result',result);
-                        resolve(result);
-                    }
-                });
-            });
+                    goods_description,amount_of_goods,from, to, departure_date, price, booking_code]);
+                 return result;
         };
 
         function generateCode ()  {
@@ -113,15 +91,15 @@ const bookingProcess = async(req, res) => {
 
         if(book_type === 'Number of Items') {
             //update remaining amount
-            await updateRemainAmount(connection, id, checkRemainingSpace);
+            await updateRemainAmount(pool, id, checkRemainingSpace);
             //update status according  to remaining about
             if(checkRemainingSpace <= 2) {
-                updateFull(connection, id);
+                updateFull(pool, id);
             }
             //add booking detail, id, phone no., email, routes , payment and generate a unqiue code sen dthrough email
             const uniqueCode = generateCode();
-            console.log(uniqueCode);
-            await addBook(connection,uniqueId, id,
+            // console.log(uniqueCode);
+            await addBook(pool,uniqueId, id,
                  number_plate, book_type, customerFullName,
                  customerPhoneNumber, customerEmail,customerNationalId,customerCountry,
                  customerGoodsDescription, no_of_your_vehicles,from,to, departureDate,priceToPay, uniqueCode );
@@ -174,10 +152,10 @@ const bookingProcess = async(req, res) => {
               });
 
         } else if (book_type === 'Full Truck') {
-            updateFull(connection, id);
+            updateFull(pool, id);
             const uniqueCode = generateCode();
 
-            await addBook(connection,uniqueId, id,
+            await addBook(pool,uniqueId, id,
                 number_plate, book_type, customerFullName,
                 customerPhoneNumber, customerEmail,customerNationalId,customerCountry,
                 customerGoodsDescription, book_type,from,to, departureDate,pricing, uniqueCode );
@@ -231,7 +209,7 @@ const bookingProcess = async(req, res) => {
                   });
         } else if (book_type === 'Square Meter') {
             //update remaining amount
-            await updateRemainAmount(connection, id, checkRemainingAmount);
+            await updateRemainAmount(pool, id, checkRemainingAmount);
 
             if(checkRemainingAmount <= 500) {
                 updateFull(connection, id);
@@ -239,7 +217,7 @@ const bookingProcess = async(req, res) => {
 
             const uniqueCode = generateCode();
 
-            await addBook(connection,uniqueId, id,
+            await addBook(pool,uniqueId, id,
                 number_plate, book_type, customerFullName,
                 customerPhoneNumber, customerEmail,customerNationalId,customerCountry,
                 customerGoodsDescription, no_of_squareMeter,from,to, departureDate,priceToPay, uniqueCode );
@@ -298,19 +276,12 @@ const bookingProcess = async(req, res) => {
 
 const getBookingsList = async(req, res) => {
     try {
-        const connection = await database.createConnection();
-        const result =  await new  Promise((resolve, reject)  => {
-            const query = 'SELECT * FROM booking_table';
+      
+       
+        const query = 'SELECT * FROM booking_table';
 
-            connection.query(query, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection);
+        const [result] = await  pool.query(query);
+
         res.json({success: true, data: result});
         return result; 
 
@@ -323,10 +294,8 @@ const getBookingsList = async(req, res) => {
 const deleteBookings = async(req, res) => {
     const {id }= req.params;
     try{
-        const connection = await database.createConnection();
         const query = 'DELETE FROM booking_table WHERE id = ?'
-        const data = await connection.query(query, id);
-        database.closeConnection(connection);
+        const data = await pool.query(query, id);
         res.json({success: true, message: 'Deleted successfully'});
         return data;
     }catch(error) {
@@ -336,19 +305,9 @@ const deleteBookings = async(req, res) => {
 
 const getBookingListData = async(req, res) => {
     try {
-        const connection = await database.createConnection();
-        const result =  await new  Promise((resolve, reject)  => {
-            const query = 'SELECT * FROM booking_table';
-
-            connection.query(query, (err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
-        database.closeConnection(connection);
+        
+        const query = 'SELECT * FROM booking_table';
+        const [result] = await  pool.query(query) 
         return result; 
 
     }catch(error) {
@@ -370,19 +329,10 @@ const updateDelivery = async(req, res) => {
 
     
     try {
-        const connection = await database.createConnection();
-        
-      
         const query = 'UPDATE booking_table SET delivery_status = ? , delivery_date =? WHERE id = ?';
-        const result = await new Promise((resolve, reject) => {
-            connection.query(query, [deliveryStatus, deliveryDate, id],(err, result) => {
-                if(err) {
-                    reject(err);
-                }else {
-                    resolve(result);
-                }
-            });
-        });
+        
+           const [result] = await pool.query(query, [deliveryStatus, deliveryDate, id] );
+
         if (deliveryStatus === 'delivered') {
             const data = await getBookingListData(req, res);
             const currentObject = data.find(data => data.id === id);

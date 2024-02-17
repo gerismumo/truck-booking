@@ -1,44 +1,40 @@
+
+const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 dotenv.config();
-const mysql = require('mysql');
+
+// const config = {
+//     host: process.env.HOST,
+//     user: process.env.USER,
+//     password: process.env.PASSWORD,
+//     database: process.env.DATABASE,
+//     port: process.env.DB_PORT,
+//     waitForConnections: true,
+//     connectionLimit: 10,
+//     queueLimit: 10,
+// }
 
 const config = {
     host: process.env.HOST,
-    database : process.env.DATABASE,
-    password: process.env.PASSWORD,
     user: process.env.USER,
-    // port: process.env.DB_PORT
-    port: 3306,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE,
+    port: '3306',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 10,
 }
 
-const createConnection = async () => {
-    const connection =   mysql.createConnection(config);;
-    try {
-        await new Promise((resolve, reject) => {
-            connection.connect((err) => {
-                if(err){
-                    reject(err);
-                }else{
-                    resolve();
-                }
-            });
-        });
-        console.log('connection created');
-        return connection;
+const pool = mysql.createPool(config);
 
-    } catch (err) {
-        console.error(err)
-    }
-}
+pool.getConnection()
+.then(connection => {
+    console.log('Connected to the database')
+    connection.release();
+}).catch(err => {
+    console.log('Failed to connect to the database', err.message);
+    process.exit(1);
+});
 
-const closeConnection = (connection) => {
-    connection.end((err) => {
-      if (err) {
-        console.error('Error closing connection:', err);
-      } else {
-        console.log('Connection closed');
-      }
-    });
-  };
+module.exports = pool;
 
-module.exports = {createConnection, closeConnection};

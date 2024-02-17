@@ -28,7 +28,15 @@ const router =  require('./routes/routes')
 app.use('/api', router);
 
 const port = process.env.PORT;
+const pool = require('./Database/Db');
 
-app.listen(port, () => {
-    console.log(`Server listening on port ${port}`);
-  });
+
+
+  const startServer = async() => {
+    await pool;
+    app.listen(port, () => {
+        console.log(`server listening to port ${port}`);
+    });
+}
+
+startServer();

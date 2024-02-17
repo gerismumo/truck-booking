@@ -1,10 +1,9 @@
-const database = require('../Database/Db');
+const pool = require('../Database/Db');
 const queries  = require('../queries/queries');
 const uuid = require('uuid');
 
 const searchProcess = async(req, res) => {
     const bookingData = req.body;
-    console.log(bookingData);
     const truckType = bookingData.truckType;
     const from = bookingData.from;
     const to = bookingData.to;
@@ -14,100 +13,61 @@ const searchProcess = async(req, res) => {
     const bookType = bookingData.bookType;
 
     try {
-        const connection = await database.createConnection();
+       
    
-           const routesResult = await new Promise((resolve, reject) => {
-                connection.query(queries.booking.selectRoutesInOrder, (err, result) => {
-                if (err) {
-                    reject(err);
-                } else {
-                    // console.log(result);
-                    resolve(result);
-                }
-                });
-            });
+           const [routesResult] = await pool.query(queries.booking.selectRoutesInOrder);
+        //    console.log(routesResult)
            
 
-            const updateMaxAmount = (connection, truckId, newMaxAmount) => {
-                return new Promise((resolve, reject) => {
+            const updateMaxAmount = (pool, truckId, newMaxAmount) => {
                     const updateQuery = 'UPDATE trucks SET max_amount = ? WHERE id = ?';
-            
-                    connection.query(updateQuery, [newMaxAmount, truckId], (err, result) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    });
-                });
+                    const [result] = pool.query(updateQuery, [newMaxAmount, truckId]); 
+                    return result;
             };
 
-            const updateFull = async (connection, truckId) => {
-                return new Promise((resolve, reject) => {
+            const updateFull = async (pool, truckId) => {
+                
                     const updateQuery = 'UPDATE trucks SET status = true WHERE id = ?';
             
-                    connection.query(updateQuery, [truckId,true,], (err, result) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    });
-                });
+                    const [result] = await pool.query(updateQuery, [truckId,true,]); 
+                    return result;
             };
 
-            const updateEmpty = async (connection, truckId) => {
-                return new Promise((resolve, reject) => {
-                    const updateQuery = 'UPDATE trucks SET status = false WHERE id = ?';
-            
-                    connection.query(updateQuery, [truckId,true,], (err, result) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    });
-                });
+            const updateEmpty = async (pool, truckId) => {
+                const updateQuery = 'UPDATE trucks SET status = false WHERE id = ?';
+                const [result] = await pool.query(updateQuery, [truckId,true,] );
+                return result;
             };
 
-            const checkForFullTrucks =  (connection, truckId) => {
-                return  new Promise((resolve, reject) => {
+            const checkForFullTrucks =  (pool, truckId) => {
                     const updateQuery = 'SELECT * FROM  trucks  WHERE status = false AND  id = ?';
             
-                    connection.query(updateQuery, [truckId,true,], (err, result) => {
-                        if (err) {
-                            reject(err);
-                        } else {
-                            resolve(result);
-                        }
-                    });
-                });
+                    const [result] =  pool.query(updateQuery, [truckId,true,]); 
+                    return result;
             };
 
             const fromRoute = routesResult.find(route => route.route_name === from);
             const toRoute = routesResult.find(route => route.route_name === to);
+            
+            try{
 
-           const trucksResult = await new Promise((resolve, reject) => {
-                connection.query(queries.booking.selectByTruckType, [truckType, bookType], (err, result) => {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                } else {
-                    console.log('first result',result);
-
+          
+           const [trucksResult] = await pool.query(queries.booking.selectByTruckType, [truckType, bookType]); 
+              
+                    // console.log('first result',result);
                     let returnData = {
                         status: '',
                         data: '',
                         message: '',
                     }
 
-                    if(result.length === 0) {
+                    if(trucksResult.length === 0) {
                         
-                        console.log('The selected type Truck is not available');
+                        // console.log('The selected type Truck is not available');
                         returnData.status = false;
                         returnData.message = 'no trucks available or no space available'
                     }else {
-                        const someTest  = result.map(item => {
+                        const someTest  = trucksResult.map(item => {
                             const StartRoute = item.start_route;
                             const EndRoute = item.end_route;
                             const id = item.id;
@@ -133,8 +93,8 @@ const searchProcess = async(req, res) => {
                               if(isBetween) {
                                 console.log(isBetween);
                                     console.log(id);
-                                    const  availableTrucks = result.find(truck => truck.id === id && isBetween === true);
-                                    console.log('availableTrucks', availableTrucks);
+                                    const  availableTrucks = trucksResult.find(truck => truck.id === id && isBetween === true);
+                                    // console.log('availableTrucks', availableTrucks);
                                     return availableTrucks;  
                               }else {
                                 
@@ -166,17 +126,17 @@ const searchProcess = async(req, res) => {
                             truck.from = from;
                             truck.to = to;
                             truck.departureDate = departureDate;
-                            console.log(maxAmount);
+                            // console.log(maxAmount);
                             if(maxAmount >= 0 && maxAmount <= 500) {
-                                updateFull(connection, id);
+                                updateFull(pool, id);
                             }else {
-                                updateEmpty(connection, id);
+                                updateEmpty(pool, id);
                             }
                             const checkRemainingAmount = (maxAmount - squareMeter);
                             truck.checkRemainingAmount = checkRemainingAmount;
-                            console.log(checkRemainingAmount);
+                            // console.log(checkRemainingAmount);
                             if(checkRemainingAmount >= 0 && checkRemainingAmount <= maxAmount) {
-                                console.log('true',id);
+                                // console.log('true',id);
                                
                                 // updateMaxAmount(connection,id, checkRemainingAmount);
                                 combinedData.push(filterOnSq.find(item => item.id === id));
@@ -194,8 +154,8 @@ const searchProcess = async(req, res) => {
                                 returnData.message = 'successfully';
                                 returnData.data = combinedData;
                             }else {
-                                console.log('false',id);
-                                console.log('Trucks available but no enough space for your goods');
+                                // console.log('false',id);
+                                // console.log('Trucks available but no enough space for your goods');
                                 // returnData = 'Trucks available but no enough space for your goods';
                                 // return returnData;
                                 returnData.status = false;
@@ -211,9 +171,9 @@ const searchProcess = async(req, res) => {
                             const id = item.id;
 
                             if(maxNumberOfVehicles <= 0) {
-                                updateFull(connection, id);
+                                updateFull(pool, id);
                             }else{
-                                updateEmpty(connection, id);
+                                updateEmpty(pool, id);
                             }
                             const pricing = item.pricing;
                             const totalPriceToPay = (itemsNumber * pricing);
@@ -227,7 +187,7 @@ const searchProcess = async(req, res) => {
                             item.checkRemainingSpace = checkRemainingSpace;
                             console.log(checkRemainingSpace);
                             if(checkRemainingSpace >=0 && checkRemainingSpace <= maxNumberOfVehicles) {
-                                console.log('true', id);
+                                // console.log('true', id);
                                 // updateMaxAmount(connection,id, checkRemainingSpace);
                                 combinedData.push(filterVehicleNo.find(items => items.id === id));
                                 // console.log(fullFilledInfo)
@@ -237,7 +197,7 @@ const searchProcess = async(req, res) => {
                                 returnData.data = combinedData;
                                 
                             }else {
-                                console.log('Truck available but no available Space');
+                                // console.log('Truck available but no available Space');
 
                                 // returnData = 'Truck available but no available Space'
 
@@ -265,7 +225,7 @@ const searchProcess = async(req, res) => {
                                 returnData.data = combinedData;
 
                             }else {
-                                console.log('No available Trucks');
+                                // console.log('No available Trucks');
 
                                 // returnData = 'No available  Trucks'
                                 returnData.status = false;
@@ -274,7 +234,7 @@ const searchProcess = async(req, res) => {
                             }
                         })
                     }else {
-                        console.log('no trucks available');
+                        // console.log('no trucks available');
                         // returnData = 'No available Trucks';
                         returnData.status = false;
                         returnData.message = 'No available  Trucks';
@@ -283,13 +243,12 @@ const searchProcess = async(req, res) => {
                     }
                     }
                     
-                    
-                    resolve(returnData);
-                }
-                });
-            });  
-            database.closeConnection(connection);
-            res.json({ success: true, trucksData: trucksResult });
+                
+            res.json({ success: true, trucksData: returnData });
+            // return(returnData);
+        }catch(error) {
+            res.json({success: false, message: error.message})
+        }
 
     }catch(error) {
         console.log(error);
